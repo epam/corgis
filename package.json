@@ -13,7 +13,10 @@
         "prestart": "npm run build:contract && npm run deploy:contract",
         "start": "parcel src/index.html",
         "dev": "nodemon --watch assembly -e ts --exec \"npm run dev:start && npm run start\"",
-        "test": "asp && npm run build:contract && jest test --runInBand"
+        "test": "asp && npm run build:contract && jest test --runInBand",
+        "lint": "eslint --ext js,jsx src",
+        "lint:fix": "npm run lint -- --fix",
+        "lint:fix:dry": "npm run lint -- --fix-dry-run"
     },
     "dependencies": {
         "@babel/runtime": "^7.10.4",
