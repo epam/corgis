@@ -1,10 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { SmallCard } from '../../CorgiCard/Card';
 import Modal from '../../utils/Modal';
 
 import Transfer from './Transafer/Transfer';
 import { CorgiThree } from '../../utils/corgiAnimation';
+
+import { CorgiType } from '../../../types/corgi';
 
 const Send = ({ corgi, show, closeModal, transfering }) => (
   <Modal show={show} Close={closeModal}>
@@ -51,5 +54,12 @@ const Send = ({ corgi, show, closeModal, transfering }) => (
     )}
   </Modal>
 );
+
+Send.propTypes = {
+  corgi: CorgiType.isRequired,
+  show: PropTypes.boolean.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  transfering: PropTypes.boolean.isRequired,
+};
 
 export default Send;

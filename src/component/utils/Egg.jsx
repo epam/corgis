@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { CorgiType } from '../../types/corgi';
+
 const Egg = ({ color }) => (
   <div
     style={{
@@ -51,5 +53,7 @@ const Egg = ({ color }) => (
     </svg>
   </div>
 );
+
+Egg.propTypes = { color: CorgiType.color };
 
 export default Egg;

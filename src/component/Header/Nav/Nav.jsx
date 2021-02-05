@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import Button from '../../utils/Button';
 import IconNav from '../../../assets/images/icon-nav.svg';
@@ -95,6 +96,12 @@ const Nav = ({ number, accountName, requestSignOut }) => (
   </div>
 );
 
+Nav.propTypes = {
+  number: PropTypes.number.isRequired,
+  accountName: PropTypes.string.isRequired,
+  requestSignOut: PropTypes.func.isRequired,
+};
+
 const Card = ({ accountName, requestSignOut }) => {
   const style = {
     textDecoration: 'none',
@@ -121,6 +128,11 @@ const Card = ({ accountName, requestSignOut }) => {
       </div>
     </div>
   );
+};
+
+Card.propTypes = {
+  accountName: PropTypes.string.isRequired,
+  requestSignOut: PropTypes.func.isRequired,
 };
 
 const AddCorgi = () => (

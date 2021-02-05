@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { SmallCard } from '../../CorgiCard/Card';
 import Modal from '../../utils/Modal';
+
+import { CorgiType } from '../../../types/corgi';
 
 const Share = ({ corgi, show, closeModal }) => {
   const [copied, setCopied] = useState(false);
@@ -72,6 +75,12 @@ const Share = ({ corgi, show, closeModal }) => {
       </div>
     </Modal>
   );
+};
+
+Share.propTypes = {
+  corgi: CorgiType.isRequired,
+  show: PropTypes.boolean.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default Share;

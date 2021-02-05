@@ -1,9 +1,13 @@
 import React from 'react';
 import { Redirect, Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { GiDiscussion, GiJumpingDog, GiDogBowl, GiGlassBall } from 'react-icons/gi';
+
 import Button from '../../utils/Button';
 import { Common, Uncommon, Rare, VeryRare } from '../../utils/Photo';
+
+import { CorgiType } from '../../../types/corgi';
 
 const ProfileRow = ({ corgi, deleteCorgi }) => {
   if (!corgi) {
@@ -61,6 +65,11 @@ const ProfileRow = ({ corgi, deleteCorgi }) => {
       </div>
     </div>
   );
+};
+
+ProfileRow.propTypes = {
+  corgi: CorgiType.isRequired,
+  deleteCorgi: PropTypes.func.isRequired,
 };
 
 export default ProfileRow;

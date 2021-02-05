@@ -35,6 +35,7 @@
   ],
   "rules": {
     "import/no-named-as-default": 0,
+    "import/prefer-default-export": "off",
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "jsx-quotes": ["error", "prefer-single"],
     "linebreak-style": ["warn", "windows"],

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { CorgiType } from '../../../types/corgi';
+
 const VeryRare = ({ color }) => (
   <div>
     <svg
@@ -21,5 +23,7 @@ const VeryRare = ({ color }) => (
     </svg>
   </div>
 );
+
+VeryRare.propTypes = { color: CorgiType.color };
 
 export default VeryRare;

@@ -1,10 +1,14 @@
 import React, { useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
 
 import { GiGreekSphinx, GiBeachBall } from 'react-icons/gi';
+
 import useCharacter from '../../../context/character';
 import { ContractContext } from '../../../context/contract';
 
 import Button from '../../utils/Button';
+
+import { CorgiType } from '../../../types/corgi';
 
 const generate = require('project-name-generator');
 const randomColor = require('randomcolor');
@@ -19,8 +23,8 @@ const Info = ({ setColor, color, setBackgroundColor, backgroundColor }) => {
     setName(e.target.value);
   };
   const generateRandomName = () => {
-    const name = generate({ words: 2, alliterative: true }).spaced;
-    setName(name);
+    const newName = generate({ words: 2, alliterative: true }).spaced;
+    setName(newName);
   };
   const generateColor = (e) => {
     setColor(e.target.value);
@@ -29,10 +33,10 @@ const Info = ({ setColor, color, setBackgroundColor, backgroundColor }) => {
     setBackgroundColor(e.target.value);
   };
   const generateRandomColor = () => {
-    const color = randomColor();
-    const backgroundColor = randomColor();
-    setColor(color);
-    setBackgroundColor(backgroundColor);
+    const newColor = randomColor();
+    const newBackgroundColor = randomColor();
+    setColor(newColor);
+    setBackgroundColor(newBackgroundColor);
   };
   const onSubmit = (e) => {
     e.preventDefault();
@@ -176,6 +180,13 @@ const Info = ({ setColor, color, setBackgroundColor, backgroundColor }) => {
             `}</style>
     </div>
   );
+};
+
+Info.propTypes = {
+  setColor: PropTypes.func.isRequired,
+  color: CorgiType.color,
+  setBackgroundColor: PropTypes.func.isRequired,
+  backgroundColor: CorgiType.backgroundColor,
 };
 
 export default Info;

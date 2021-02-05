@@ -1,6 +1,10 @@
 import React from 'react';
+
 import { FaQuoteLeft } from 'react-icons/fa';
+
 import Corgi from './Corgi/Corgi';
+
+import { CorgiType } from '../../types/corgi';
 
 export const BigCard = ({ backgroundColor, color, quote, sausage }) => (
   <div
@@ -18,6 +22,13 @@ export const BigCard = ({ backgroundColor, color, quote, sausage }) => (
   </div>
 );
 
+BigCard.propTypes = {
+  backgroundColor: CorgiType.backgroundColor,
+  color: CorgiType.color,
+  quote: CorgiType.quote,
+  sausage: CorgiType.sausage,
+};
+
 const BigCorgi = ({ color, sausage }) => (
   <div
     style={{
@@ -29,6 +40,11 @@ const BigCorgi = ({ color, sausage }) => (
     <Corgi color={color} sausage={sausage} />
   </div>
 );
+
+BigCorgi.propTypes = {
+  color: CorgiType.color,
+  sausage: CorgiType.sausage,
+};
 
 const BigDialogue = ({ quote, color }) => (
   <div
@@ -50,6 +66,11 @@ const BigDialogue = ({ quote, color }) => (
   </div>
 );
 
+BigDialogue.propTypes = {
+  color: CorgiType.color,
+  quote: CorgiType.quote,
+};
+
 export const SmallCard = ({ backgroundColor, color, quote, sausage }) => (
   <div
     style={{
@@ -63,6 +84,13 @@ export const SmallCard = ({ backgroundColor, color, quote, sausage }) => (
     <Corgi color={color} sausage={sausage} />
   </div>
 );
+
+SmallCard.propTypes = {
+  backgroundColor: CorgiType.backgroundColor,
+  color: CorgiType.color,
+  quote: CorgiType.quote,
+  sausage: CorgiType.sausage,
+};
 
 export const Dialogue = ({ quote, color }) => (
   <div
@@ -83,3 +111,8 @@ export const Dialogue = ({ quote, color }) => (
     </p>
   </div>
 );
+
+Dialogue.propTypes = {
+  color: CorgiType.color,
+  quote: CorgiType.quote,
+};

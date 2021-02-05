@@ -3,6 +3,8 @@ import React from 'react';
 import Corgi from '../../../CorgiCard/Corgi/Corgi';
 import { Dialogue } from '../../../CorgiCard/Card';
 
+import { CorgiType } from '../../../../types/corgi';
+
 const DashCard = ({ corgi }) => (
   <div className='creation'>
     <div className='corgiboard'>
@@ -61,5 +63,7 @@ const DashCard = ({ corgi }) => (
         `}</style>
   </div>
 );
+
+DashCard.propTypes = { corgi: CorgiType.isRequired };
 
 export default DashCard;

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { CorgiType } from '../../types/corgi';
+
 const Rate = ({ rate }) => {
   const gray = '#E6E6E6';
   const orange = '#FBB040';
@@ -115,5 +117,7 @@ const Rate = ({ rate }) => {
     </div>
   );
 };
+
+Rate.propTypes = { rate: CorgiType.rate };
 
 export default Rate;

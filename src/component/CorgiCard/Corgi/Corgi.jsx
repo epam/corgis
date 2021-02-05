@@ -1,4 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
+import { CorgiType } from '../../../types/corgi';
+
+const Corgi = ({ color, sausage }) => (
+  <div style={{ width: '100%', margin: 'auto' }}>
+    <CorgiGroup color={color} sausage={sausage} />
+  </div>
+);
+
+Corgi.propTypes = {
+  color: CorgiType.color,
+  sausage: CorgiType.sausage,
+};
 
 const CorgiGroup = ({ color, sausage, width = '100%', height = '100%' }) => {
   const sa = Number(sausage);
@@ -376,10 +390,10 @@ const CorgiGroup = ({ color, sausage, width = '100%', height = '100%' }) => {
   );
 };
 
-const Corgi = ({ color, sausage }) => (
-  <div style={{ width: '100%', margin: 'auto' }}>
-    <CorgiGroup color={color} sausage={sausage} />
-  </div>
-);
+CorgiGroup.propTypes = {
+  ...Corgi.propTypes,
+  width: PropTypes.string.isRequired,
+  height: PropTypes.string.isRequired,
+};
 
 export default Corgi;

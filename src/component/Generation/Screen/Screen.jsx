@@ -1,8 +1,11 @@
 import React from 'react';
 
 import Egg from '../../utils/Egg';
+
 import raritySample from '../../../assets/images/rarity-sample.svg';
 import shadow from '../../../assets/images/shadow.svg';
+
+import { CorgiType } from '../../../types/corgi';
 
 const tinycolor = require('tinycolor2');
 
@@ -60,6 +63,11 @@ const Screen = ({ backgroundColor, color }) => {
         `}</style>
     </div>
   );
+};
+
+Screen.propTypes = {
+  backgroundColor: CorgiType.backgroundColor,
+  color: CorgiType.color,
 };
 
 export default Screen;

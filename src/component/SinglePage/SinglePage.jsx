@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
@@ -144,6 +145,11 @@ const SendAndShare = ({ openShareModal, openSendModal }) => {
   );
 };
 
+SendAndShare.propTypes = {
+  openShareModal: PropTypes.func.isRequired,
+  openSendModal: PropTypes.func.isRequired,
+};
+
 const SendCard = ({ clicked }) => (
   <button className='card' onClick={clicked}>
     <img src={iconSend} alt='Send' style={{ height: '60%', paddingTop: '20px' }} />
@@ -155,6 +161,8 @@ const SendCard = ({ clicked }) => (
   </button>
 );
 
+SendCard.propTypes = { clicked: PropTypes.func.isRequired };
+
 const ShareCard = ({ clicked }) => (
   <button className='card' onClick={clicked}>
     <img src={iconShare} alt='Share' style={{ height: '60%', paddingTop: '20px' }} />
@@ -165,5 +173,7 @@ const ShareCard = ({ clicked }) => (
     </div>
   </button>
 );
+
+ShareCard.propTypes = { clicked: PropTypes.func.isRequired };
 
 export default SinglePage;

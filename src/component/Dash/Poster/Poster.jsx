@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Button from '../../utils/Button';
 import Spinner from '../../utils/Spinner';
@@ -133,6 +134,13 @@ const Poster = ({ requestSignIn, isLoading, user }) => {
   `}</style>
     </div>
   );
+};
+
+Poster.propTypes = {
+  requestSignIn: PropTypes.func.isRequired,
+  isLoading: PropTypes.boolean.isRequired,
+  // TODO: user type
+  user: PropTypes.shape({ accountId: PropTypes.string.isRequired }),
 };
 
 export default Poster;

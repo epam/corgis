@@ -3,6 +3,8 @@ import React from 'react';
 
 import DashCard from './DashCard/DashCard';
 
+import { CorgisArrayType } from '../../../types/corgi';
+
 const ShowCase = ({ displayCorgis }) => {
   const Corgis = displayCorgis.map((corgi) => (
     <Link
@@ -17,5 +19,7 @@ const ShowCase = ({ displayCorgis }) => {
   ));
   return <div>{Corgis}</div>;
 };
+
+ShowCase.propTypes = { displayCorgis: CorgisArrayType.isRequired };
 
 export default ShowCase;

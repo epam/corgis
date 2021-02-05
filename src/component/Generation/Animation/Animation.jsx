@@ -1,8 +1,11 @@
 import React from 'react';
 
 import { CorgiFour } from '../../utils/corgiAnimation';
+
 import raritySample from '../../../assets/images/rarity-sample.svg';
 import shadow from '../../../assets/images/shadow.svg';
+
+import { CorgiType } from '../../../types/corgi';
 
 const Animation = ({ color, backgroundColor }) => (
   <div>
@@ -63,5 +66,10 @@ const Animation = ({ color, backgroundColor }) => (
         `}</style>
   </div>
 );
+
+Animation.propTypes = {
+  backgroundColor: CorgiType.backgroundColor,
+  color: CorgiType.color,
+};
 
 export default Animation;
