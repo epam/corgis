@@ -1,10 +1,9 @@
-import React from "react";
+import React from 'react';
 
-export default ({ action, description, disabled = false }) => {
-  return (
-    <button className="Button" onClick={action} disabled={disabled}>
-      {description}
-      <style>{`
+const Button = ({ action, description, disabled = false }) => (
+  <button className='Button' onClick={action} disabled={disabled}>
+    {description}
+    <style>{`
         .Button {
           background: #fbb040;
           box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
@@ -30,6 +29,7 @@ export default ({ action, description, disabled = false }) => {
           }
         }
         `}</style>
-    </button>
-  );
-};
+  </button>
+);
+
+export default Button;

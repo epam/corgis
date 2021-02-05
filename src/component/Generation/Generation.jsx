@@ -9,19 +9,14 @@ import Info from './Info/Info';
 import Screen from './Screen/Screen';
 import Animation from './Animation/Animation';
 
-export default () => {
+const Generation = () => {
   const nearContext = useContext(NearContext);
-  const {
-    color,
-    backgroundColor,
-    setColor,
-    setBackgroundColor,
-  } = useCharacter();
+  const { color, backgroundColor, setColor, setBackgroundColor } = useCharacter();
   const useContract = useContext(ContractContext);
   const { creating, created, error } = useContract;
   console.error(error);
   if (!nearContext.user) {
-    return <Redirect to="/" />;
+    return <Redirect to='/' />;
   }
 
   if (creating) {
@@ -29,13 +24,13 @@ export default () => {
   }
 
   if (created) {
-    return <Redirect to="/account" />;
+    return <Redirect to='/account' />;
   }
 
   return (
-    <div className="generation">
-      <h1 className="head">Create a Corgi</h1>
-      <div className="content">
+    <div className='generation'>
+      <h1 className='head'>Create a Corgi</h1>
+      <div className='content'>
         <Info
           setColor={setColor}
           color={color}
@@ -70,3 +65,5 @@ export default () => {
     </div>
   );
 };
+
+export default Generation;

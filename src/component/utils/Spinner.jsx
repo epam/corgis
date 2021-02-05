@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-export default () => (
-  <div className="loader">
+const Spinner = () => (
+  <div className='loader'>
     <style>{`
     .loader {
       font-size: 10px;
@@ -70,3 +70,5 @@ export default () => (
   `}</style>
   </div>
 );
+
+export default Spinner;

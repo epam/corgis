@@ -1,16 +1,16 @@
-import React, { useContext, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { NearContext } from "../../context/NearContext";
-import { ContractContext } from "../../context/contract";
+import { NearContext } from '../../context/NearContext';
+import { ContractContext } from '../../context/contract';
 
-import Nav from "./Nav/Nav";
+import Nav from './Nav/Nav';
 
-import logo from "../../assets/images/logo.png";
-import Spinner from "../utils/Spinner";
-import Button from "../utils/Button";
+import logo from '../../assets/images/logo.png';
+import Spinner from '../utils/Spinner';
+import Button from '../utils/Button';
 
-export default () => {
+const Header = () => {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
   const { getCorgisList, corgis } = useContract;
@@ -33,24 +33,24 @@ export default () => {
   let show;
   if (nearContext.user) {
     show = (
-      <div className="header">
-        <NavLink exact to="/">
-          <img src={logo} style={{ minWidth: "100px", width: "70%" }} alt="" />
+      <div className='header'>
+        <NavLink exact to='/'>
+          <img src={logo} style={{ minWidth: '100px', width: '70%' }} alt='' />
         </NavLink>
         <Nav
           accountName={nearContext.user.accountId}
-          number={corgis ? corgis.length : "..."}
+          number={corgis ? corgis.length : '...'}
           requestSignOut={signOut}
         />
       </div>
     );
   } else {
     show = (
-      <div className="header">
-        <NavLink exact to="/">
-          <img src={logo} style={{ minWidth: "100px", width: "60%" }} alt="" />
+      <div className='header'>
+        <NavLink exact to='/'>
+          <img src={logo} style={{ minWidth: '100px', width: '60%' }} alt='' />
         </NavLink>
-        <Button description="Get Started" action={signIn} />
+        <Button description='Get Started' action={signIn} />
       </div>
     );
   }
@@ -85,3 +85,5 @@ export default () => {
     </div>
   );
 };
+
+export default Header;

@@ -1,40 +1,38 @@
-import React from "react";
+import React from 'react';
 
-import Button from "../../utils/Button";
-import Spinner from "../../utils/Spinner";
+import Button from '../../utils/Button';
+import Spinner from '../../utils/Spinner';
 
-import corgiFull from "../../../assets/images/corgi-full.png";
-import sample from "../../../assets/images/rarity-sample.svg";
+import corgiFull from '../../../assets/images/corgi-full.png';
+import sample from '../../../assets/images/rarity-sample.svg';
 
-export default ({ requestSignIn, isLoading, user }) => {
+const Poster = ({ requestSignIn, isLoading, user }) => {
   let showButton;
   if (isLoading) {
     return <Spinner />;
   }
   if (!user) {
-    showButton = (
-      <Button description="Login with NEAR" action={requestSignIn} />
-    );
+    showButton = <Button description='Login with NEAR' action={requestSignIn} />;
   } else {
-    showButton = <div className="show">Logged In {user.accountId}</div>;
+    showButton = <div className='show'>Logged In {user.accountId}</div>;
   }
   return (
-    <div className="wrapper">
-      <div className="backup">
-        <div className="textPoster">
-          <p className="text1">Create your own </p>
-          <p className="text1">one-of-the-kind</p>
-          <p className="text1">Corgi today</p>
-          <p className="text2">create, collect, send, or trade</p>
+    <div className='wrapper'>
+      <div className='backup'>
+        <div className='textPoster'>
+          <p className='text1'>Create your own </p>
+          <p className='text1'>one-of-the-kind</p>
+          <p className='text1'>Corgi today</p>
+          <p className='text2'>create, collect, send, or trade</p>
           {showButton}
         </div>
-        <div className="imagePoster">
-          <img src={corgiFull} alt="" style={{ width: "100%" }} />
+        <div className='imagePoster'>
+          <img src={corgiFull} alt='' style={{ width: '100%' }} />
         </div>
       </div>
-      <div className="pop">
-        <h2 className="title">Corgis Display</h2>
-        <img src={sample} alt="" />
+      <div className='pop'>
+        <h2 className='title'>Corgis Display</h2>
+        <img src={sample} alt='' />
       </div>
       <style>{`
     .wrapper{
@@ -136,3 +134,5 @@ export default ({ requestSignIn, isLoading, user }) => {
     </div>
   );
 };
+
+export default Poster;

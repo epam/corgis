@@ -1,12 +1,12 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from 'react';
 
-import { NearContext } from "../../context/NearContext";
-import { ContractContext } from "../../context/contract";
+import { NearContext } from '../../context/NearContext';
+import { ContractContext } from '../../context/contract';
 
-import Poster from "./Poster/Poster";
-import ShowCase from "./ShowCase/ShowCase";
+import Poster from './Poster/Poster';
+import ShowCase from './ShowCase/ShowCase';
 
-export default () => {
+const Dash = () => {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
   const { getDisplayCorgis, displayCorgis } = useContract;
@@ -16,12 +16,8 @@ export default () => {
   };
 
   return (
-    <div className="Dash">
-      <Poster
-        requestSignIn={signIn}
-        isLoading={nearContext.isLoading}
-        user={nearContext.user}
-      />
+    <div className='Dash'>
+      <Poster requestSignIn={signIn} isLoading={nearContext.isLoading} user={nearContext.user} />
       <ShowCase displayCorgis={displayCorgis} />
       <style>{`
             .Dash {
@@ -34,3 +30,5 @@ export default () => {
     </div>
   );
 };
+
+export default Dash;

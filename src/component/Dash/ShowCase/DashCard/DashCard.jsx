@@ -1,29 +1,28 @@
-import React from "react";
+import React from 'react';
 
-import Corgi from "../../../CorgiCard/Corgi/Corgi";
-import { Dialogue } from "../../../CorgiCard/Card";
+import Corgi from '../../../CorgiCard/Corgi/Corgi';
+import { Dialogue } from '../../../CorgiCard/Card';
 
-export default ({ corgi }) => {
-  return (
-    <div className="creation">
-      <div className="corgiboard">
-        <div
-          style={{
-            backgroundColor: corgi.backgroundColor,
-            padding: "10px",
-            display: "inline-block",
-            borderRadius: "10px",
-          }}
-        >
-          <Dialogue quote={corgi.quote} color={corgi.color} />
-          <Corgi color={corgi.color} sausage={corgi.sausage} />
-        </div>
+const DashCard = ({ corgi }) => (
+  <div className='creation'>
+    <div className='corgiboard'>
+      <div
+        style={{
+          backgroundColor: corgi.backgroundColor,
+          padding: '10px',
+          display: 'inline-block',
+          borderRadius: '10px',
+        }}
+      >
+        <Dialogue quote={corgi.quote} color={corgi.color} />
+        <Corgi color={corgi.color} sausage={corgi.sausage} />
       </div>
-      <p className="dogname">{corgi.name}</p>
-      <p className="address">
-        Created by <span className="orange">@{corgi.owner}</span>
-      </p>
-      <style>{`
+    </div>
+    <p className='dogname'>{corgi.name}</p>
+    <p className='address'>
+      Created by <span className='orange'>@{corgi.owner}</span>
+    </p>
+    <style>{`
             .creation {
                 margin: 1%;
                 display: inline-block;
@@ -60,6 +59,7 @@ export default ({ corgi }) => {
                 color: lightblue;
             }
         `}</style>
-    </div>
-  );
-};
+  </div>
+);
+
+export default DashCard;

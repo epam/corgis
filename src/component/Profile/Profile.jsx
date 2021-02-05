@@ -9,7 +9,7 @@ import ProfileRow from './ProfileRow/ProfileRow';
 import Spinner from '../utils/Spinner';
 import { CorgiTwo } from '../utils/corgiAnimation';
 
-export default function Profile() {
+const Profile = () => {
   const nearContext = useContext(NearContext);
   const contractContext = useContext(ContractContext);
 
@@ -65,4 +65,6 @@ export default function Profile() {
       </div>
     </div>
   );
-}
+};
+
+export default Profile;

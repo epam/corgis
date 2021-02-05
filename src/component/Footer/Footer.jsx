@@ -1,33 +1,28 @@
-import React from "react";
+import React from 'react';
 
-import nearLogo from "../../assets/images/near_logo_stack.png";
+import nearLogo from '../../assets/images/near_logo_stack.png';
 
-export default () => (
-  <div className="footer">
-    <div className="left">
-      <img src={nearLogo} alt="" style={{ height: "7em" }} />
-      <div className="text">
+const Footer = () => (
+  <div className='footer'>
+    <div className='left'>
+      <img src={nearLogo} alt='' style={{ height: '7em' }} />
+      <div className='text'>
         <p>Crypto Corgis was created to demonstrate the NFT</p>
         <p>capabilities of NEAR Protocol. </p>
         <p>
           Learn more at
-          <a
-            href="https://near.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="blue"
-          >
-            {" "}
+          <a href='https://near.org/' target='_blank' rel='noopener noreferrer' className='blue'>
+            {' '}
             near.org
           </a>
         </p>
       </div>
     </div>
-    <div className="right">
+    <div className='right'>
       <p>© 2019 Near Protocol </p>
       <p>All Rights Reserved.</p>
-      <p className="blue">
-        Privacy Policy <span className="black"> | </span> Terms of Use
+      <p className='blue'>
+        Privacy Policy <span className='black'> | </span> Terms of Use
       </p>
     </div>
     <style>{`
@@ -77,3 +72,5 @@ export default () => (
     `}</style>
   </div>
 );
+
+export default Footer;

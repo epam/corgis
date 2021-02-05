@@ -1,38 +1,35 @@
-import React from "react";
+import React from 'react';
 
-import { SmallCard } from "../../CorgiCard/Card";
-import Modal from "../../utils/Modal";
+import { SmallCard } from '../../CorgiCard/Card';
+import Modal from '../../utils/Modal';
 
-import Transfer from "./Transafer/Transfer";
-import { CorgiThree } from "../../utils/corgiAnimation";
+import Transfer from './Transafer/Transfer';
+import { CorgiThree } from '../../utils/corgiAnimation';
 
-export default ({ corgi, show, closeModal, transfering }) => {
-  return (
-    <Modal show={show} Close={closeModal}>
-      {!transfering ? (
-        <div style={{ width: "100%", height: "100%" }}>
-          <h3>Send a Corgi</h3>
-          <div>
-            <div style={{ width: "100%", height: "90%" }}>
-              <SmallCard
-                backgroundColor={corgi.backgroundColor}
-                color={corgi.color}
-                sausage={corgi.sausage}
-                quote={corgi.quote}
-              />
-            </div>
-            <p style={{ margin: "0" }}>{corgi.name}</p>
-            <span style={{ color: "orange", fontSize: "0.7rem" }}>
-              {corgi.rate}
-            </span>
-            <hr />
+const Send = ({ corgi, show, closeModal, transfering }) => (
+  <Modal show={show} Close={closeModal}>
+    {!transfering ? (
+      <div style={{ width: '100%', height: '100%' }}>
+        <h3>Send a Corgi</h3>
+        <div>
+          <div style={{ width: '100%', height: '90%' }}>
+            <SmallCard
+              backgroundColor={corgi.backgroundColor}
+              color={corgi.color}
+              sausage={corgi.sausage}
+              quote={corgi.quote}
+            />
           </div>
-          <Transfer />
+          <p style={{ margin: '0' }}>{corgi.name}</p>
+          <span style={{ color: 'orange', fontSize: '0.7rem' }}>{corgi.rate}</span>
+          <hr />
         </div>
-      ) : (
-        <div className="box">
-          <CorgiThree color={corgi.color} />
-          <style>{`
+        <Transfer />
+      </div>
+    ) : (
+      <div className='box'>
+        <CorgiThree color={corgi.color} />
+        <style>{`
             .box {
 
               padding-top: 30px;
@@ -50,8 +47,9 @@ export default ({ corgi, show, closeModal, transfering }) => {
               }
             }
           `}</style>
-        </div>
-      )}
-    </Modal>
-  );
-};
+      </div>
+    )}
+  </Modal>
+);
+
+export default Send;

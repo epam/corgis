@@ -1,19 +1,18 @@
-import React from "react";
+import React from 'react';
 
-export default ({ show, Close, children }) => {
-  return (
-    <div>
-      {show ? <div className="Backdrop" onClick={Close}></div> : null}
-      <div
-        className="Modal"
-        style={{
-          transform: show ? "translateY(0)" : "translateY(-100vh)",
-          opacity: show ? "1" : "0",
-        }}
-      >
-        {children}
-      </div>
-      <style>{`
+const Modal = ({ show, Close, children }) => (
+  <div>
+    {show ? <div className='Backdrop' onClick={Close}></div> : null}
+    <div
+      className='Modal'
+      style={{
+        transform: show ? 'translateY(0)' : 'translateY(-100vh)',
+        opacity: show ? '1' : '0',
+      }}
+    >
+      {children}
+    </div>
+    <style>{`
                     .Modal {
                         position: fixed;
                         z-index: 20;
@@ -47,6 +46,7 @@ export default ({ show, Close, children }) => {
                         background-color: rgba(0, 0, 0, 0.5);
                     }
                 `}</style>
-    </div>
-  );
-};
+  </div>
+);
+
+export default Modal;

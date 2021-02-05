@@ -1,22 +1,21 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-import Button from "../../utils/Button";
-import IconNav from "../../../assets/images/icon-nav.svg";
+import Button from '../../utils/Button';
+import IconNav from '../../../assets/images/icon-nav.svg';
 
-export default ({ number, accountName, requestSignOut }) => {
-  return (
-    <div className="wrap">
-      <div className="account">
-        <NavLink to="/account">
-          <Button description={`My Corgis ( ${number} )`} />
-        </NavLink>
-        <Card accountName={accountName} requestSignOut={requestSignOut} />
-      </div>
-      <NavLink to="/generation">       
-        <AddCorgi />
+const Nav = ({ number, accountName, requestSignOut }) => (
+  <div className='wrap'>
+    <div className='account'>
+      <NavLink to='/account'>
+        <Button description={`My Corgis ( ${number} )`} />
       </NavLink>
-      <style>{`
+      <Card accountName={accountName} requestSignOut={requestSignOut} />
+    </div>
+    <NavLink to='/generation'>
+      <AddCorgi />
+    </NavLink>
+    <style>{`
         .wrap {
           margin: auto;
           padding: 5px 30px;
@@ -93,26 +92,25 @@ export default ({ number, accountName, requestSignOut }) => {
           }
         }
       `}</style>
-    </div>
-  );
-};
+  </div>
+);
 
 const Card = ({ accountName, requestSignOut }) => {
-  let style = {
-    textDecoration: "none",
-    display: "block",
-    padding: "auto",
-    color: "#01c9fd",
-    margin: "2%  auto",
-    cursor: "alias",
+  const style = {
+    textDecoration: 'none',
+    display: 'block',
+    padding: 'auto',
+    color: '#01c9fd',
+    margin: '2%  auto',
+    cursor: 'alias',
   };
   return (
-    <div className="dropdown">
-      <button className="menutop">@{accountName}▾</button>
-      <div className="dropdown-content">
-        <ul style={{ textAlign: "center", padding: "2px", marginBottom: "0" }}>
+    <div className='dropdown'>
+      <button className='menutop'>@{accountName}▾</button>
+      <div className='dropdown-content'>
+        <ul style={{ textAlign: 'center', padding: '2px', marginBottom: '0' }}>
           <li style={style}>
-            <NavLink to="/profile">
+            <NavLink to='/profile'>
               <button>Edit Profile</button>
             </NavLink>
           </li>
@@ -128,12 +126,14 @@ const Card = ({ accountName, requestSignOut }) => {
 const AddCorgi = () => (
   <div
     style={{
-      boxShadow: "0 2px 2px 0 rgba(0, 0, 0, 0.5)",
-      borderRadius: "50%",
-      height: "40px",
-      width: "40px",
+      boxShadow: '0 2px 2px 0 rgba(0, 0, 0, 0.5)',
+      borderRadius: '50%',
+      height: '40px',
+      width: '40px',
     }}
   >
-    <img src={IconNav} alt="" />
+    <img src={IconNav} alt='' />
   </div>
 );
+
+export default Nav;

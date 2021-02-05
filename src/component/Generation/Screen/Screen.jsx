@@ -1,41 +1,36 @@
-import React from "react";
+import React from 'react';
 
-import Egg from "../../utils/Egg";
-import raritySample from "../../../assets/images/rarity-sample.svg";
-import shadow from "../../../assets/images/shadow.svg";
+import Egg from '../../utils/Egg';
+import raritySample from '../../../assets/images/rarity-sample.svg';
+import shadow from '../../../assets/images/shadow.svg';
 
-let tinycolor = require("tinycolor2");
+const tinycolor = require('tinycolor2');
 
-export default ({ backgroundColor, color }) => {
-  let textColor = tinycolor
-    .mostReadable(backgroundColor, [color, "#fff", "#000"])
-    .toHexString();
+const Screen = ({ backgroundColor, color }) => {
+  const textColor = tinycolor.mostReadable(backgroundColor, [color, '#fff', '#000']).toHexString();
 
   return (
-    <div className="board">
-      <div className="screen">
-        <p style={{ color: textColor, fontWeight: "600" }}>
-          All corgis come equipped with built-in cuteness and an unlimited
-          capacity to love.
+    <div className='board'>
+      <div className='screen'>
+        <p style={{ color: textColor, fontWeight: '600' }}>
+          All corgis come equipped with built-in cuteness and an unlimited capacity to love.
         </p>
-        <p
-          style={{ color: textColor, fontWeight: "600", marginBottom: "20px" }}
-        >
+        <p style={{ color: textColor, fontWeight: '600', marginBottom: '20px' }}>
           Just choose a name and a few colors and we’ll do the rest.
         </p>
         <Egg color={color} />
         <img
           src={shadow}
-          alt=""
+          alt=''
           style={{
-            position: "relative",
-            top: "-10px",
-            margin: "10px auto",
-            width: "147px",
+            position: 'relative',
+            top: '-10px',
+            margin: '10px auto',
+            width: '147px',
           }}
         />
       </div>
-      <img src={raritySample} alt="" />
+      <img src={raritySample} alt='' />
       <style>{`
             .screen {
               background-color: ${backgroundColor};
@@ -66,3 +61,5 @@ export default ({ backgroundColor, color }) => {
     </div>
   );
 };
+
+export default Screen;

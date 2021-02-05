@@ -1,16 +1,15 @@
 import React, { useEffect, useContext } from 'react';
 
+import { GiGreekSphinx, GiBeachBall } from 'react-icons/gi';
 import useCharacter from '../../../context/character';
 import { ContractContext } from '../../../context/contract';
 
 import Button from '../../utils/Button';
 
-import { GiGreekSphinx, GiBeachBall } from 'react-icons/gi';
-
 const generate = require('project-name-generator');
 const randomColor = require('randomcolor');
 
-export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
+const Info = ({ setColor, color, setBackgroundColor, backgroundColor }) => {
   const { name, quote, setName, setQuote } = useCharacter();
   useEffect(() => setQuote(), [setQuote]);
   const useContract = useContext(ContractContext);
@@ -20,7 +19,7 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
     setName(e.target.value);
   };
   const generateRandomName = () => {
-    let name = generate({ words: 2, alliterative: true }).spaced;
+    const name = generate({ words: 2, alliterative: true }).spaced;
     setName(name);
   };
   const generateColor = (e) => {
@@ -40,72 +39,58 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
     createCorgi(name, color, backgroundColor, quote);
   };
   return (
-    <div className="inputboard">
+    <div className='inputboard'>
       <form onSubmit={onSubmit}>
-        <p className="title">My Corgi is called</p>
-        <GiGreekSphinx onClick={generateRandomName} className="icon" />
+        <p className='title'>My Corgi is called</p>
+        <GiGreekSphinx onClick={generateRandomName} className='icon' />
         <div>
-          <input
-            className="inputname"
-            type="text"
-            value={name}
-            onChange={generateName}
-            required
-          />
+          <input className='inputname' type='text' value={name} onChange={generateName} required />
         </div>
-        <p className="title">Colors</p>
-        <GiBeachBall onClick={generateRandomColor} className="icon" />
+        <p className='title'>Colors</p>
+        <GiBeachBall onClick={generateRandomColor} className='icon' />
         <div>
-          <div className="colorpicker">
+          <div className='colorpicker'>
             <label>
-              <div className="result" style={{ backgroundColor: color }}>
+              <div className='result' style={{ backgroundColor: color }}>
                 <input
-                  type="color"
-                  id="colorPicker"
+                  type='color'
+                  id='colorPicker'
                   value={color}
                   onChange={generateColor}
-                  style={{
-                    display: 'none',
-                  }}
+                  style={{ display: 'none' }}
                 />
-                <div className="select">w</div>
+                <div className='select'>w</div>
               </div>
             </label>
             <div>
-              <p className="icon-title">Corgi</p>
-              <p className="icon-text">{color}</p>
+              <p className='icon-title'>Corgi</p>
+              <p className='icon-text'>{color}</p>
             </div>
           </div>
-          <div className="colorpicker">
+          <div className='colorpicker'>
             <label>
-              <div
-                className="result"
-                style={{ backgroundColor: backgroundColor }}
-              >
+              <div className='result' style={{ backgroundColor }}>
                 <input
-                  type="color"
-                  id="backgroundcolorPicker"
+                  type='color'
+                  id='backgroundcolorPicker'
                   value={backgroundColor}
                   onChange={generateBackgroundColor}
-                  style={{
-                    display: 'none',
-                  }}
+                  style={{ display: 'none' }}
                 />
-                <div className="select">w</div>
+                <div className='select'>w</div>
               </div>
             </label>
             <div>
-              <p className="icon-title">Background</p>
-              <p className="icon-text">{backgroundColor}</p>
+              <p className='icon-title'>Background</p>
+              <p className='icon-text'>{backgroundColor}</p>
             </div>
           </div>
         </div>
-        <Button description="Generate Corgi" />
+        <Button description='Generate Corgi' />
       </form>
-      <p className="quote">
-        This will create a one-of-a-kind Corgi that will develop a unique size
-        and thought process. The size it grows to will untimately determine it’s
-        value
+      <p className='quote'>
+        This will create a one-of-a-kind Corgi that will develop a unique size and thought process. The size it grows to
+        will untimately determine it’s value
       </p>
       <style>{`
             .inputboard {
@@ -192,3 +177,5 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
     </div>
   );
 };
+
+export default Info;

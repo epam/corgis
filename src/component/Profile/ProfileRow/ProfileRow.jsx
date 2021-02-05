@@ -1,31 +1,26 @@
-import React from "react";
-import { Redirect, Link } from "react-router-dom";
+import React from 'react';
+import { Redirect, Link } from 'react-router-dom';
 
-import Button from "../../utils/Button";
-import { Common, Uncommon, Rare, VeryRare } from "../../utils/Photo";
-import {
-  GiDiscussion,
-  GiJumpingDog,
-  GiDogBowl,
-  GiGlassBall,
-} from "react-icons/gi";
+import { GiDiscussion, GiJumpingDog, GiDogBowl, GiGlassBall } from 'react-icons/gi';
+import Button from '../../utils/Button';
+import { Common, Uncommon, Rare, VeryRare } from '../../utils/Photo';
 
-export default ({ corgi, deleteCorgi }) => {
+const ProfileRow = ({ corgi, deleteCorgi }) => {
   if (!corgi) {
-    return <Redirect to="/profile" />;
+    return <Redirect to='/profile' />;
   }
-  const rate = corgi.rate;
+  const { rate } = corgi;
   let show;
-  if (rate === "COMMON") {
+  if (rate === 'COMMON') {
     show = <Common color={corgi.color} />;
-  } else if (rate === "UNCOMMON") {
+  } else if (rate === 'UNCOMMON') {
     show = <Uncommon color={corgi.color} />;
-  } else if (rate === "RARE") {
+  } else if (rate === 'RARE') {
     show = <Rare color={corgi.color} />;
-  } else if (rate === "VERY RARE") {
+  } else if (rate === 'VERY RARE') {
     show = <VeryRare color={corgi.color} />;
-  } else if (rate === "ULTRA RARE") {
-    show = "ULTRA RARE";
+  } else if (rate === 'ULTRA RARE') {
+    show = 'ULTRA RARE';
   }
 
   const DeleteCorgi = () => {
@@ -35,35 +30,37 @@ export default ({ corgi, deleteCorgi }) => {
   return (
     <div
       style={{
-        margin: "5px",
-        display: "flex",
-        flexBasis: "row wrap",
-        justifyContent: "center",
+        margin: '5px',
+        display: 'flex',
+        flexBasis: 'row wrap',
+        justifyContent: 'center',
       }}
     >
       <Link
         to={{
-          pathname: "/@" + corgi.name,
+          pathname: `/@${corgi.name}`,
           hash: corgi.id,
         }}
         key={corgi.id}
       >
         {show}
       </Link>
-      <div style={{ marginLeft: "10px", width: "50%", textAlign: "left" }}>
+      <div style={{ marginLeft: '10px', width: '50%', textAlign: 'left' }}>
         <div>
-          <GiGlassBall style={{ color: "#9437ff" }} /> {corgi.rate}
-          <GiJumpingDog style={{ color: "#9437ff" }} />
+          <GiGlassBall style={{ color: '#9437ff' }} /> {corgi.rate}
+          <GiJumpingDog style={{ color: '#9437ff' }} />
           {corgi.name}
-          <GiDogBowl style={{ color: "#9437ff" }} />
-          from: {corgi.sender.length > 0 ? corgi.sender : "NEAR"}
+          <GiDogBowl style={{ color: '#9437ff' }} />
+          from: {corgi.sender.length > 0 ? corgi.sender : 'NEAR'}
           <p>
-            <GiDiscussion style={{ color: "#9437ff" }} />
-            {corgi.message ? corgi.message : "This lovely corgi is for you"}
+            <GiDiscussion style={{ color: '#9437ff' }} />
+            {corgi.message ? corgi.message : 'This lovely corgi is for you'}
           </p>
-          <Button description="^ delete" action={DeleteCorgi} />
+          <Button description='^ delete' action={DeleteCorgi} />
         </div>
       </div>
     </div>
   );
 };
+
+export default ProfileRow;

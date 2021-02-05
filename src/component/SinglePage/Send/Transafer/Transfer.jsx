@@ -1,16 +1,11 @@
-import React, { useContext, useReducer } from "react";
+import React, { useContext, useReducer } from 'react';
 
-import { NearContext } from "../../../../context/NearContext";
-import { ContractContext } from "../../../../context/contract";
+import * as nearlib from 'near-api-js';
+import { IoIosCheckmarkCircleOutline, IoIosCloseCircleOutline } from 'react-icons/io';
+import { NearContext } from '../../../../context/NearContext';
+import { ContractContext } from '../../../../context/contract';
 
-import * as nearlib from "near-api-js";
-
-import Button from "../../../utils/Button";
-
-import {
-  IoIosCheckmarkCircleOutline,
-  IoIosCloseCircleOutline,
-} from "react-icons/io";
+import Button from '../../../utils/Button';
 
 const initialState = {
   found: false,
@@ -21,24 +16,24 @@ const initialState = {
 
 const transferReducer = (currentState, action) => {
   switch (action.type) {
-    case "FOUND_RECEIVER":
+    case 'FOUND_RECEIVER':
       return {
         ...currentState,
         found: true,
         error: null,
       };
-    case "NOT_FOUND":
+    case 'NOT_FOUND':
       return {
         ...currentState,
         found: false,
         error: action.error,
       };
-    case "RECEIVER":
+    case 'RECEIVER':
       return {
         ...currentState,
         receiver: action.receiver,
       };
-    case "MESSAGE":
+    case 'MESSAGE':
       return {
         ...currentState,
         message: action.message,
@@ -48,39 +43,35 @@ const transferReducer = (currentState, action) => {
   }
 };
 
-export default () => {
+const Transfer = () => {
   const nearContext = useContext(NearContext);
-  const connection = nearContext.nearContent.connection;
+  const { connection } = nearContext.nearContent;
   const useContract = useContext(ContractContext);
   const { transferCorgi } = useContract;
 
-  const [transfer, dispatchTransfer] = useReducer(
-    transferReducer,
-    initialState
-  );
+  const [transfer, dispatchTransfer] = useReducer(transferReducer, initialState);
 
   const id = window.location.hash.slice(1);
 
   const checkAccountLegit = async (value) => {
     try {
-      let result = !!(await new nearlib.Account(connection, value).state());
+      const result = !!(await new nearlib.Account(connection, value).state());
       console.log(result);
       if (result) {
-        dispatchTransfer({ type: "FOUND_RECEIVER" });
+        dispatchTransfer({ type: 'FOUND_RECEIVER' });
       }
     } catch (error) {
-      dispatchTransfer({ type: "NOT_FOUND", error: error.message });
+      dispatchTransfer({ type: 'NOT_FOUND', error: error.message });
     }
   };
 
   const setReceiver = (e) => {
-    let receiver = e.target.value;
+    const receiver = e.target.value;
     checkAccountLegit(receiver);
-    dispatchTransfer({ type: "RECEIVER", receiver });
+    dispatchTransfer({ type: 'RECEIVER', receiver });
   };
 
-  const setMessage = (e) =>
-    dispatchTransfer({ type: "MESSAGE", message: e.target.value });
+  const setMessage = (e) => dispatchTransfer({ type: 'MESSAGE', message: e.target.value });
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -91,10 +82,10 @@ export default () => {
     <label>
       <IoIosCloseCircleOutline
         style={{
-          position: "relative",
-          left: "-30px",
-          fontSize: "1.5rem",
-          color: "Salmon",
+          position: 'relative',
+          left: '-30px',
+          fontSize: '1.5rem',
+          color: 'Salmon',
         }}
       />
     </label>
@@ -104,10 +95,10 @@ export default () => {
       <label>
         <IoIosCheckmarkCircleOutline
           style={{
-            position: "relative",
-            left: "-30px",
-            fontSize: "1.5rem",
-            color: "#78e3a7",
+            position: 'relative',
+            left: '-30px',
+            fontSize: '1.5rem',
+            color: '#78e3a7',
           }}
         />
       </label>
@@ -116,31 +107,31 @@ export default () => {
   return (
     <div>
       <form onSubmit={onSubmit}>
-        <div style={{ textAlign: "left", marginBottom: "3px" }}>
+        <div style={{ textAlign: 'left', marginBottom: '3px' }}>
           <label>To: </label>
           <input
             autoFocus
             required
-            type="text"
-            placeholder="Corgi receiver"
+            type='text'
+            placeholder='Corgi receiver'
             value={transfer.receiver}
             onChange={setReceiver}
-            className="receiver"
+            className='receiver'
           />
           {icon}
         </div>
-        <div style={{ textAlign: "left" }}>
+        <div style={{ textAlign: 'left' }}>
           <label>Text: </label>
           <textarea
-            placeholder="(Optional)Best wish to your friend!"
-            maxLength="140"
+            placeholder='(Optional)Best wish to your friend!'
+            maxLength='140'
             value={transfer.message}
             onChange={setMessage}
-            className="message"
+            className='message'
           />
         </div>
-        <div style={{ marginTop: "5px", marginBottom: "10px" }}>
-          <Button description="Send" disabled={!transfer.found} />
+        <div style={{ marginTop: '5px', marginBottom: '10px' }}>
+          <Button description='Send' disabled={!transfer.found} />
         </div>
       </form>
       <style>{`
@@ -170,3 +161,5 @@ export default () => {
     </div>
   );
 };
+
+export default Transfer;

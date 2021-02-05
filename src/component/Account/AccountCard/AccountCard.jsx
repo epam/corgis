@@ -1,25 +1,25 @@
-import React from "react";
+import React from 'react';
 
-import Corgi from "../../CorgiCard/Corgi/Corgi";
-import { Dialogue } from "../../CorgiCard/Card";
+import Corgi from '../../CorgiCard/Corgi/Corgi';
+import { Dialogue } from '../../CorgiCard/Card';
 
-export default ({ corgi }) => (
-  <div className="creation">
-    <div className="corgiboard">
+const AccountCard = ({ corgi }) => (
+  <div className='creation'>
+    <div className='corgiboard'>
       <div
         style={{
           backgroundColor: corgi.backgroundColor,
-          borderRadius: "10px",
-          padding: "20px",
-          display: "inline-block",
+          borderRadius: '10px',
+          padding: '20px',
+          display: 'inline-block',
         }}
       >
         <Dialogue quote={corgi.quote} color={corgi.color} />
         <Corgi color={corgi.color} sausage={corgi.sausage} />
       </div>
     </div>
-    <p className="dogname">{corgi.name}</p>
-    <p className="address blue">§ {corgi.rate}</p>
+    <p className='dogname'>{corgi.name}</p>
+    <p className='address blue'>§ {corgi.rate}</p>
     <style>{`
                 .creation {
                     margin: 1%;
@@ -59,3 +59,5 @@ export default ({ corgi }) => (
             `}</style>
   </div>
 );
+
+export default AccountCard;

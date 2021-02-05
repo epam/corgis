@@ -1,25 +1,21 @@
-import React from "react";
+import React from 'react';
 
-import { CorgiFour } from "../../utils/corgiAnimation";
-import raritySample from "../../../assets/images/rarity-sample.svg";
-import shadow from "../../../assets/images/shadow.svg";
+import { CorgiFour } from '../../utils/corgiAnimation';
+import raritySample from '../../../assets/images/rarity-sample.svg';
+import shadow from '../../../assets/images/shadow.svg';
 
-export default ({ color, backgroundColor }) => (
+const Animation = ({ color, backgroundColor }) => (
   <div>
     <h3>Generating...</h3>
-    <div className="back" style={{ background: backgroundColor }}>
-      <div className="box bounce-7">
+    <div className='back' style={{ background: backgroundColor }}>
+      <div className='box bounce-7'>
         <CorgiFour color={color} />
       </div>
-      <div className="shadow shadow-7">
-        <img src={shadow} alt="" />
+      <div className='shadow shadow-7'>
+        <img src={shadow} alt='' />
       </div>
     </div>
-    <img
-      src={raritySample}
-      alt=""
-      style={{ width: "100%", maxWidth: "800px" }}
-    />
+    <img src={raritySample} alt='' style={{ width: '100%', maxWidth: '800px' }} />
     <style>{`
           .shadow {
             width: 100%;
@@ -67,3 +63,5 @@ export default ({ color, backgroundColor }) => (
         `}</style>
   </div>
 );
+
+export default Animation;

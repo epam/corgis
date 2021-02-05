@@ -1,20 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Redirect } from "react-router-dom";
+import React, { useContext, useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 
-import { NearContext } from "../../context/NearContext";
-import { ContractContext } from "../../context/contract";
+import { NearContext } from '../../context/NearContext';
+import { ContractContext } from '../../context/contract';
 
-import { BigCard } from "../CorgiCard/Card";
-import Send from "./Send/Send";
-import Share from "./Share/Share";
+import { BigCard } from '../CorgiCard/Card';
+import Send from './Send/Send';
+import Share from './Share/Share';
 
-import Spinner from "../utils/Spinner";
-import Rate from "../utils/Rate";
+import Spinner from '../utils/Spinner';
+import Rate from '../utils/Rate';
 
-import iconSend from "../../assets/images/icon-send.svg";
-import iconShare from "../../assets/images/icon-share.svg";
+import iconSend from '../../assets/images/icon-send.svg';
+import iconShare from '../../assets/images/icon-share.svg';
 
-export default function SinglePage () {
+const SinglePage = () => {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
   const { corgi, loading, getCorgi, transfering } = useContract;
@@ -40,27 +40,22 @@ export default function SinglePage () {
   };
 
   if (corgi && corgi.owner !== nearContext.user.accountId) {
-    return <Redirect to="/account" />;
+    return <Redirect to='/account' />;
   }
 
   if (!nearContext.user) {
-    return <Redirect to="/" />;
+    return <Redirect to='/' />;
   }
   if (!corgi || loading) {
     return <Spinner />;
   }
   if (!id) {
-    return <Redirect to="/account" />;
+    return <Redirect to='/account' />;
   }
 
   return (
     <div>
-      <Send
-        corgi={corgi}
-        transfering={transfering}
-        show={showSend}
-        closeModal={closeModal}
-      />
+      <Send corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
       <Share corgi={corgi} closeModal={closeModal} show={showShare} />
       <div>
         <h1>Meet {corgi.name}!</h1>
@@ -72,12 +67,9 @@ export default function SinglePage () {
             quote={corgi.quote}
           />
         </div>
-        <div className="wrapperS">
+        <div className='wrapperS'>
           <Rate rate={corgi.rate} />
-          <SendAndShare
-            openSendModal={openSendModal}
-            openShareModal={openShareModal}
-          />
+          <SendAndShare openSendModal={openSendModal} openShareModal={openShareModal} />
         </div>
       </div>
       <style>{`
@@ -140,10 +132,10 @@ export default function SinglePage () {
 };
 
 const SendAndShare = ({ openShareModal, openSendModal }) => {
-  let style = { display: "flex", flexDirection: "column", width: "300px" };
+  const style = { display: 'flex', flexDirection: 'column', width: '300px' };
   return (
     <div>
-      <h5 className="icontext">What would you like to do with </h5>
+      <h5 className='icontext'>What would you like to do with </h5>
       <span style={style}>
         <SendCard clicked={openSendModal} />
         <ShareCard clicked={openShareModal} />
@@ -152,36 +144,26 @@ const SendAndShare = ({ openShareModal, openSendModal }) => {
   );
 };
 
-const SendCard = ({ clicked }) => {
-  return (
-    <button className="card" onClick={clicked}>
-      <img
-        src={iconSend}
-        alt="Send"
-        style={{ height: "60%", paddingTop: "20px" }}
-      />
-      <div className="small">Send</div>
-      <div className="text">
-        <h3 className="cardChar">Send as a gift</h3>
-        <p>The perfect gift for any occasion</p>
-      </div>
-    </button>
-  );
-};
+const SendCard = ({ clicked }) => (
+  <button className='card' onClick={clicked}>
+    <img src={iconSend} alt='Send' style={{ height: '60%', paddingTop: '20px' }} />
+    <div className='small'>Send</div>
+    <div className='text'>
+      <h3 className='cardChar'>Send as a gift</h3>
+      <p>The perfect gift for any occasion</p>
+    </div>
+  </button>
+);
 
-const ShareCard = ({ clicked }) => {
-  return (
-    <button className="card" onClick={clicked}>
-      <img
-        src={iconShare}
-        alt="Share"
-        style={{ height: "60%", paddingTop: "20px" }}
-      />
-      <div className="small">Share</div>
-      <div className="text">
-        <h3 className="cardChar">Share on Social</h3>
-        <p>Got something rare? It is time to brag a bit.</p>
-      </div>
-    </button>
-  );
-};
+const ShareCard = ({ clicked }) => (
+  <button className='card' onClick={clicked}>
+    <img src={iconShare} alt='Share' style={{ height: '60%', paddingTop: '20px' }} />
+    <div className='small'>Share</div>
+    <div className='text'>
+      <h3 className='cardChar'>Share on Social</h3>
+      <p>Got something rare? It is time to brag a bit.</p>
+    </div>
+  </button>
+);
+
+export default SinglePage;
