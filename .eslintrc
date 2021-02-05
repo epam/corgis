@@ -35,8 +35,11 @@
   ],
   "rules": {
     "import/no-named-as-default": 0,
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "jsx-quotes": ["error", "prefer-single"],
     "linebreak-style": ["warn", "windows"],
-    "max-len": ["error", { "code": 120, "ignorePattern": "d=\"([\\s\\S]*?)\"" }],
+    "max-len": ["error", { "code": 120, "ignorePattern": "d=[\"']([\\s\\S]*?)[\"']" }],
+    "object-curly-newline": ["error", { "multiline": true }],
     "quotes": ["error", "single"]
   }
 }
