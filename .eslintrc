@@ -6,6 +6,9 @@
       "jsx": true
     }
   },
+  "globals": {
+    "window": true
+  },
   "settings": {
     "react": {
       "version": "detect"
@@ -27,7 +30,7 @@
   "rules": {
     "import/no-named-as-default": 0,
     "linebreak-style": ["warn", "windows"],
-    "max-len": ["error", { "code": 120 }],
+    "max-len": ["error", { "code": 120, "ignorePattern": "d=\"([\\s\\S]*?)\"" }],
     "quotes": ["error", "single"]
   }
 }
