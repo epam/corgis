@@ -14,8 +14,8 @@
   "extends": [
     "eslint:recommended",
     "airbnb-base",
-    "plugin:react/recommended",
-    "prettier/react"
+    "prettier/react",
+    "plugin:react/recommended"
   ],
   "plugins": [
     "eslint-plugin-import",
@@ -25,6 +25,7 @@
     "eslint-plugin-react-hooks"
   ],
   "rules": {
+    "import/no-named-as-default": 0,
     "linebreak-style": ["warn", "windows"],
     "max-len": ["error", { "code": 120 }],
     "quotes": ["error", "single"]
