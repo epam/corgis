@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { SmallCard } from '../../CorgiCard/Card';
-import Modal from '../../utils/Modal';
+import Modal from '../../utils/Modal/Modal';
 
 import { CorgiTypeShape } from '../../../types/CorgiTypes';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { SmallCard } from '../../CorgiCard/Card';
-import Modal from '../../utils/Modal';
+import Modal from '../../utils/Modal/Modal';
 
 import Transfer from './Transafer/Transfer';
 import { CorgiThree } from '../../utils/corgiAnimation';
