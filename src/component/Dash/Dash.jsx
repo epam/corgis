@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 
+import './Dash.scss';
+
 import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
 
@@ -17,17 +19,9 @@ const Dash = () => {
   useEffect(() => getDisplayCorgis(), [getDisplayCorgis]);
 
   return (
-    <div className='Dash'>
+    <div className='dash'>
       <Poster requestSignIn={signIn} isLoading={nearContext.isLoading} user={nearContext.user} />
       <ShowCase displayCorgis={displayCorgis} />
-      <style>{`
-            .Dash {
-                width: 100%;
-                margin: auto;
-                display: grid;
-                text-align: center;
-            }
-        `}</style>
     </div>
   );
 };
