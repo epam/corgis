@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import Button from '../../utils/Button';
+import Button from '../../utils/Button/Button';
 import IconNav from '../../../assets/images/icon-nav.svg';
 
 const NavPropTypes = {

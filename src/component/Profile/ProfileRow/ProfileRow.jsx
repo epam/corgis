@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { GiDiscussion, GiJumpingDog, GiDogBowl, GiGlassBall } from 'react-icons/gi';
 
-import Button from '../../utils/Button';
+import Button from '../../utils/Button/Button';
 import { Common, Uncommon, Rare, VeryRare } from '../../utils/Photo';
 
 import { CorgiTypeShape } from '../../../types/CorgiTypes';

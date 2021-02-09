@@ -7,7 +7,7 @@ import { NearContext } from '../../../../context/NearContext';
 import { ContractContext } from '../../../../context/contract';
 import { TransferContext } from '../../../../context/transfer';
 
-import Button from '../../../utils/Button';
+import Button from '../../../utils/Button/Button';
 
 const Transfer = () => {
   const { nearContent } = useContext(NearContext);

@@ -9,7 +9,7 @@ import { ContractContext } from '../../../context/contract';
 
 import { genRandomName } from '../../../helpers/generators';
 
-import Button from '../../utils/Button';
+import Button from '../../utils/Button/Button';
 
 import { CorgiType } from '../../../types/CorgiTypes';
 

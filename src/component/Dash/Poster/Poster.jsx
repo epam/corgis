@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '../../utils/Button';
+import Button from '../../utils/Button/Button';
 import Spinner from '../../utils/Spinner';
 
 import corgiFull from '../../../assets/images/corgi-full.png';
