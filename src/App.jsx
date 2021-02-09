@@ -23,7 +23,7 @@ const App = () => (
     <Switch>
       <Route exact path='/' component={Dash} />
       <Route exact path='/generation' component={Generation} />
-      <Route exact path='/account' component={Account} />
+      <Route exact path='/account' component={AccountPage} />
       <Route exact path='/profile' component={Profile} />
       <Route exact path='/@:name' component={SinglePage} />
       <Route exact path='/share' component={SharePage} />
