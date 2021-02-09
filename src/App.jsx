@@ -2,6 +2,8 @@ import 'regenerator-runtime/runtime';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import './App.scss'
+
 import Dash from './component/Dash/Dash';
 
 import Account from './component/Account/Account';
@@ -30,24 +32,6 @@ const App = () => (
       />
     </Switch>
     <Footer />
-    <style>{`
-        body {
-          text-align: center;
-          font-family: 'Poppins', sans-serif;
-          position: relative;
-          min-height: calc(100vh - 80px);
-        }
-        
-        button {
-          all: unset;
-          outline:none;
-        }
-        
-        input {
-          all:unset;
-          padding: 5px;
-        }
-      `}</style>
   </div>
 );
 
