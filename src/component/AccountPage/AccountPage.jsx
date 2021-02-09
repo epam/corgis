@@ -28,12 +28,12 @@ const AccountPage = () => {
   }, [getCorgisList]);
 
   return (
-    <div>
-      <div>
-        <h1 className='head'>Your Pack</h1>
-        <p>Create,collect,send or trade</p>
+    <div className='account'>
+      <div className='account__header'>
+        <h1 className='account__title'>Your Pack</h1>
+        <p className='account__description'>Create,collect,send or trade</p>
       </div>
-      <div>
+      <div className='account__corgis'>
         {!loading && corgis && corgis.length > 0 ? (
           corgis.map((corgi) => (
             <Link
