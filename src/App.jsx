@@ -6,7 +6,7 @@ import './App.scss'
 
 import Dash from './component/Dash/Dash';
 
-import Account from './component/Account/Account';
+import AccountPage from './component/AccountPage/AccountPage';
 import Profile from './component/Profile/Profile';
 
 import Generation from './component/Generation/Generation';

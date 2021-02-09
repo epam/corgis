@@ -7,7 +7,7 @@ import { ContractContext } from '../../context/contract';
 import Spinner from '../utils/Spinner/Spinner';
 import AccountCard from './AccountCard/AccountCard';
 
-const Account = () => {
+const AccountPage = () => {
   const { user } = useContext(NearContext);
   const { corgis, created, loading, clearCreatedCorgiState, getCorgisList } = useContext(ContractContext);
 
@@ -54,4 +54,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default AccountPage;
