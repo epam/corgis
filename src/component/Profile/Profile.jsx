@@ -11,9 +11,7 @@ import { CorgiTwo } from '../utils/corgiAnimation';
 
 const Profile = () => {
   const nearContext = useContext(NearContext);
-  const contractContext = useContext(ContractContext);
-
-  const { corgis, loading, deleteCorgi, deleting, error } = contractContext;
+  const { corgis, loading, deleteCorgi, deleting, error } = useContext(ContractContext);
 
   if (!nearContext.user) {
     return <Redirect to='/' />;
