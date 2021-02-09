@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Egg from '../../utils/Egg';
+import Egg from '../../utils/Egg/Egg';
 
 import raritySample from '../../../assets/images/rarity-sample.svg';
 import shadow from '../../../assets/images/shadow.svg';
