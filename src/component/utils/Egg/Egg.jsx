@@ -1,19 +1,13 @@
 import React from 'react';
 
-import { CorgiType } from '../../types/CorgiTypes';
+import './Egg.scss';
+
+import { CorgiType } from '../../../types/CorgiTypes';
 
 const EggPropTypes = { color: CorgiType.color };
 
 const Egg = ({ color }) => (
-  <div
-    style={{
-      width: '100%',
-      height: '100%',
-      margin: 'auto',
-      position: 'relative',
-      zIndex: '10',
-    }}
-  >
+  <div className='egg'>
     <svg
       width='147px'
       height='146px'
