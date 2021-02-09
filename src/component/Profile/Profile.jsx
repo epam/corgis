@@ -6,7 +6,7 @@ import { ContractContext } from '../../context/contract';
 
 import ProfileRow from './ProfileRow/ProfileRow';
 
-import Spinner from '../utils/Spinner';
+import Spinner from '../utils/Spinner/Spinner';
 import { CorgiTwo } from '../utils/corgiAnimation';
 
 const Profile = () => {

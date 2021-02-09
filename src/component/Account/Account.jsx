@@ -4,7 +4,7 @@ import { Redirect, Link } from 'react-router-dom';
 import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
 
-import Spinner from '../utils/Spinner';
+import Spinner from '../utils/Spinner/Spinner';
 import AccountCard from './AccountCard/AccountCard';
 
 const Account = () => {

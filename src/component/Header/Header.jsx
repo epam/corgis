@@ -7,7 +7,7 @@ import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
 
 import Nav from './Nav/Nav';
-import Spinner from '../utils/Spinner';
+import Spinner from '../utils/Spinner/Spinner';
 import Button from '../utils/Button/Button';
 
 const Header = () => {

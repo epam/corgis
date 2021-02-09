@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../../utils/Button/Button';
-import Spinner from '../../utils/Spinner';
+import Spinner from '../../utils/Spinner/Spinner';
 
 import corgiFull from '../../../assets/images/corgi-full.png';
 import sample from '../../../assets/images/rarity-sample.svg';

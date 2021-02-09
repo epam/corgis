@@ -9,7 +9,7 @@ import { BigCard } from '../CorgiCard/Card';
 import Send from './Send/Send';
 import Share from './Share/Share';
 
-import Spinner from '../utils/Spinner';
+import Spinner from '../utils/Spinner/Spinner';
 import Rate from '../utils/Rate';
 
 import iconSend from '../../assets/images/icon-send.svg';

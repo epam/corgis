@@ -6,7 +6,7 @@ import { ContractContext } from '../../context/contract';
 import { NearContext } from '../../context/NearContext';
 
 import { BigCard } from '../CorgiCard/Card';
-import Spinner from '../utils/Spinner';
+import Spinner from '../utils/Spinner/Spinner';
 import { Common, Uncommon, Rare, VeryRare } from '../utils/Photo';
 
 const SharePage = () => {
