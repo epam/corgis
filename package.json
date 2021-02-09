@@ -22,6 +22,7 @@
     "dependencies": {
         "@babel/runtime": "^7.10.4",
         "big.js": "^5.2.2",
+        "classnames": "^2.2.6",
         "near-api-js": "^0.25.1",
         "project-name-generator": "^2.1.7",
         "prop-types": "^15.7.2",
