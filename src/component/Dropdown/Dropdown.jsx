@@ -16,7 +16,14 @@ const Dropdown = ({ dropdownTitle, children }) => {
       <button className='dropdown__title'>{dropdownTitle}</button>
       <div className='dropdown__content'>
         <ul className='dropdown__list'>
-          {!!children.length ? children.map((child) => <li className='dropdown__item'>{child}</li>) : children}
+          {!!children.length
+            ? children.map((child, index) => (
+                // TODO: item ids
+                <li key={`dropdownItem-idSlug${index}`} className='dropdown__item'>
+                  {child}
+                </li>
+              ))
+            : children}
         </ul>
       </div>
     </div>
