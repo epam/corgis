@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 
+import './Profile.scss';
+
 import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
 
@@ -29,38 +31,23 @@ const Profile = () => {
     return <Redirect to='/generation' />;
   }
 
-  if (deleting) {
-    return (
-      <div className='box'>
-        <CorgiTwo color={'black'} />
-        <style>{`
-      .box {
-        animation-name: spin;
-        animation-duration: 5000ms;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear; 
-      }
-      @keyframes spin {
-        from {
-            transform:rotate(0deg);
-        }
-        to {
-            transform:rotate(360deg);
-        }
-      }
-    `}</style>
-      </div>
-    );
-  }
   return (
-    <div>
-      <h1>Your Corgis</h1>
-      <p>look and delete</p>
-      <div>
-        {corgis.map((corgi) => (
-          <ProfileRow deleteCorgi={deleteCorgi} corgi={corgi} key={corgi.id} />
-        ))}
-      </div>
+    <div className='profile'>
+      {!deleting ? (
+        <>
+          <h1 className='profile__title'>Your Corgis</h1>
+          <p className='profile__description'>look and delete</p>
+          <div className='profile__corgis'>
+            {corgis.map((corgi) => (
+              <ProfileRow deleteCorgi={deleteCorgi} corgi={corgi} key={corgi.id} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className='profile__deletion'>
+          <CorgiTwo color={'black'} />
+        </div>
+      )}
     </div>
   );
 };
