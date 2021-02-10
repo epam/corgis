@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import './Nav.scss';
@@ -17,19 +17,19 @@ const NavPropTypes = {
 const Nav = ({ number, accountName, requestSignOut }) => (
   <nav className='nav'>
     <div className='nav__account'>
-      <NavLink to='/account'>
+      <Link to='/account'>
         <Button description={`My Corgis ( ${number} )`} />
-      </NavLink>
+      </Link>
       <Dropdown dropdownTitle={`@${accountName}▾`}>
-        <NavLink to='/profile'>
+        <Link to='/profile'>
           <button>Edit Profile</button>
-        </NavLink>
+        </Link>
         <button onClick={requestSignOut}>Sign Out</button>
       </Dropdown>
     </div>
-    <NavLink to='/generation'>
+    <Link to='/generation'>
       <GenerationLink />
-    </NavLink>
+    </Link>
   </nav>
 );
 Nav.propTypes = NavPropTypes;
