@@ -5,7 +5,7 @@ import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
 
 import Spinner from '../utils/Spinner/Spinner';
-import AccountCard from './AccountCard/AccountCard';
+import AccountCorgiCard from './AccountCorgiCard/AccountCorgiCard';
 
 const AccountPage = () => {
   const { user } = useContext(NearContext);
@@ -43,7 +43,7 @@ const AccountPage = () => {
               }}
               key={corgi.id}
             >
-              <AccountCard corgi={corgi} />
+              <AccountCorgiCard corgi={corgi} />
             </Link>
           ))
         ) : (
