@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import Account from './component/Account/Account';
+import AccountPage from './component/AccountPage/AccountPage';
 import Dash from './component/Dash/Dash';
 import Generation from './component/Generation/Generation';
 import Profile from './component/Profile/Profile';
@@ -17,7 +17,7 @@ const Routes = () => (
       <Generation />
     </Route>
     <Route exact path='/account'>
-      <Account />
+      <AccountPage />
     </Route>
     <Route exact path='/profile'>
       <Profile />
