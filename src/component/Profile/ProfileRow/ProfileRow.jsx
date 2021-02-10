@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { GiDiscussion, GiJumpingDog, GiDogBowl, GiGlassBall } from 'react-icons/gi';
 
 import Button from '../../utils/Button/Button';
-import { Common, Uncommon, Rare, VeryRare } from '../../utils/Photo';
+import SwitchCorgiPhoto from '../../utils/SwitchCorgiPhoto';
 
 import { CorgiTypeShape } from '../../../types/CorgiTypes';
 
@@ -17,19 +17,6 @@ const ProfileRowPropTypes = {
 const ProfileRow = ({ corgi, deleteCorgi }) => {
   if (!corgi) {
     return <Redirect to='/profile' />;
-  }
-  const { rate } = corgi;
-  let show;
-  if (rate === 'COMMON') {
-    show = <Common color={corgi.color} />;
-  } else if (rate === 'UNCOMMON') {
-    show = <Uncommon color={corgi.color} />;
-  } else if (rate === 'RARE') {
-    show = <Rare color={corgi.color} />;
-  } else if (rate === 'VERY RARE') {
-    show = <VeryRare color={corgi.color} />;
-  } else if (rate === 'ULTRA RARE') {
-    show = 'ULTRA RARE';
   }
 
   const DeleteCorgi = () => {
@@ -52,7 +39,7 @@ const ProfileRow = ({ corgi, deleteCorgi }) => {
         }}
         key={corgi.id}
       >
-        {show}
+        <SwitchCorgiPhoto rate={corgi.rate} color={corgi.color} />
       </Link>
       <div style={{ marginLeft: '10px', width: '50%', textAlign: 'left' }}>
         <div>

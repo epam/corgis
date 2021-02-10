@@ -7,7 +7,7 @@ import { NearContext } from '../../context/NearContext';
 
 import { BigCard } from '../CorgiCard/Card';
 import Spinner from '../utils/Spinner/Spinner';
-import { Common, Uncommon, Rare, VeryRare } from '../utils/Photo';
+import SwitchCorgiPhoto from '../utils/SwitchCorgiPhoto';
 
 const SharePage = () => {
   const { user } = useContext(NearContext);
@@ -19,28 +19,6 @@ const SharePage = () => {
 
   const address = `${window.location.origin}/share${window.location.hash}`;
   const sausage = Number(corgi.sausage).toFixed(4);
-
-  const renderSwitchRate = (rate) => {
-    switch (rate) {
-      case 'COMMON':
-        return <Common color={corgi.color} />;
-
-      case 'UNCOMMON':
-        return <Uncommon color={corgi.color} />;
-
-      case 'RARE':
-        return <Rare color={corgi.color} />;
-
-      case 'VERY RARE':
-        return <VeryRare color={corgi.color} />;
-
-      case 'ULTRA RARE':
-        return 'ULTRA RARE';
-
-      default:
-        return 'ULTRA RARE';
-    }
-  };
 
   useEffect(() => {
     if (!!id) {
@@ -66,7 +44,7 @@ const SharePage = () => {
       <div className='text'>
         <div>
           <p>Rarity: {corgi.rate}</p>
-          {renderSwitchRate(corgi.rate)}
+          <SwitchCorgiPhoto rate={corgi.rate} color={corgi.color} />
         </div>
         <div>
           <p>
