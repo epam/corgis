@@ -1,30 +1,89 @@
-//! This contract implements simple counter backed by storage on blockchain.
-//!
-//! The contract provides methods to [increment] / [decrement] counter and
-//! [get it's current value][get_num] or [reset].
-//!
-//! [increment]: struct.Counter.html#method.increment
-//! [decrement]: struct.Counter.html#method.decrement
-//! [get_num]: struct.Counter.html#method.get_num
-//! [reset]: struct.Counter.html#method.reset
-
+use near_sdk::collections::Vector;
+use near_sdk::collections::UnorderedMap;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen};
+use near_sdk::serde::Serialize;
 
 #[global_allocator]
 static ALLOC: near_sdk::wee_alloc::WeeAlloc = near_sdk::wee_alloc::WeeAlloc::INIT;
 
-// add the following attributes to prepare your code for serialization and invocation on the blockchain
-// More built-in Rust attributes here: https://doc.rust-lang.org/reference/attributes.html#built-in-attributes-index
 #[near_bindgen]
-#[derive(Default, BorshDeserialize, BorshSerialize)]
-pub struct Counter {
-    // See more data types at https://doc.rust-lang.org/book/ch03-02-data-types.html
-    val: i8, // i8 is signed. unsigned integers are also available: u8, u16, u32, u64, u128
+#[derive(BorshDeserialize, BorshSerialize)]
+pub struct Model {
+    corgis: UnorderedMap<String, Vector<Corgi>>
+}
+
+/// Represents a `Corgi`.
+/// The `name` and `quote` are set by the user.
+/// 
+/// The `Corgi` struct is used as part of the public interface of the contract.
+/// See, for example, [`get_corgis_by_owner`](Model::get_corgis_by_owner).
+/// Every struct that is part of the public interface needs to be serializable
+/// to JSON as well.
+/// The following attributes allows JSON serialization with no need to import 
+/// serde directly. 
+/// 
+/// ```ignore
+/// #[derive(Serialize)]
+/// #[serde(crate = "near_sdk::serde")]
+/// ```
+/// 
+#[derive(BorshDeserialize, BorshSerialize)]
+#[derive(Serialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct Corgi {
+    id: String,
+    name: String,
+    quote: String,
+}
+
+impl Default for Model {
+    fn default() -> Self {
+        env::log(b"Default initialization of corgis model");
+        Self {
+            corgis: UnorderedMap::new(b"corgis".to_vec()),
+        }
+    }
 }
 
 #[near_bindgen]
-impl Counter {
+impl Model {
+
+    /// Initializes the contract.
+    /// 
+    /// ```sh
+    /// near deploy --wasmFile target/wasm32-unknown-unknown/release/rust_corgis.wasm --initFunction init --initArgs '{}'  
+    /// ```
+    /// 
+    #[init]
+    pub fn new() -> Self {
+        env::log(b"Init non-default CorgisContract");
+        Self {
+            corgis: UnorderedMap::new(b"corgis".to_vec()),
+        }
+    }
+
+    /// Creates a `Corgi` under the `signer_account_id`.
+    /// 
+    /// 
+    pub fn create_corgi(&mut self, name: String, quote: String) {
+        let owner = env::signer_account_id();
+        env::log(format!("create corgi owned by {}", owner).as_bytes());
+
+        let corgi = Corgi {id: "doggy".to_owned(), name, quote};
+        match self.corgis.get(&owner) {
+            None => {
+                let mut list = Vector::new(b"owner".to_vec());
+                list.push(&corgi);
+                self.corgis.insert(&owner, &list);
+            }
+            Some(mut list) => {
+                list.push(&corgi);
+                self.corgis.insert(&owner, &list);
+            }
+        }
+    }
+
     /// Returns 8-bit signed integer of the counter value.
     ///
     /// This must match the type from our struct's 'val' defined above.
@@ -36,62 +95,37 @@ impl Counter {
     /// ```bash
     /// near view counter.YOU.testnet get_num
     /// ```
-    pub fn get_num(&self) -> i8 {
-        return self.val;
+    /// 
+    pub fn get_corgis_by_owner(&self, owner: String) -> Vec<Corgi> {
+        env::log(format!("get corgis by owner <{}>", owner).as_bytes());
+
+        match self.corgis.get(&owner) {
+            None => Vec::new(),
+            Some(list) => list.to_vec(),
+        }
     }
 
-    /// Increment the counter.
-    ///
-    /// Note, the parameter is "&mut self" as this function modifies state.
-    /// In the frontend (/src/main.js) this is added to the "changeMethods" array
-    /// using near-cli we can call this by:
-    ///
-    /// ```bash
-    /// near call counter.YOU.testnet increment --accountId donation.YOU.testnet
-    /// ```
-    pub fn increment(&mut self) {
-        // note: adding one like this is an easy way to accidentally overflow
-        // real smart contracts will want to have safety checks
-        self.val += 1;
-        let log_message = format!("Increased number to {}", self.val);
-        env::log(log_message.as_bytes());
-        after_counter_change();
+    /// Get current users `Corgi`s.
+    pub fn get_my_corgis(&self) -> Vec<Corgi> {
+        let owner = env::current_account_id();
+        env::log(format!("get current user's <{}> corgis", owner).as_bytes());
+
+        self.get_corgis_by_owner(owner)
     }
 
-    /// Decrement (subtract from) the counter.
-    ///
-    /// In (/src/main.js) this is also added to the "changeMethods" array
-    /// using near-cli we can call this by:
-    ///
-    /// ```bash
-    /// near call counter.YOU.testnet decrement --accountId donation.YOU.testnet
-    /// ```
-    pub fn decrement(&mut self) {
-        // note: subtracting one like this is an easy way to accidentally overflow
-        // real smart contracts will want to have safety checks
-        self.val -= 1;
-        let log_message = format!("Decreased number to {}", self.val);
-        env::log(log_message.as_bytes());
-        after_counter_change();
+    pub fn get_global_corgis(&self) -> Vec<Corgi> {
+        env::log(format!("get global list of corgis").as_bytes());
+
+        let mut list = Vec::new();
+        for set in self.corgis.values() {
+            for corgi in set.iter() {
+                list.push(corgi);
+            }
+        }
+        list
     }
 
-    /// Reset to zero.
-    pub fn reset(&mut self) {
-        self.val = 0;
-        // Another way to log is to cast a string into bytes, hence "b" below:
-        env::log(b"Reset counter to zero");
-    }
 }
-
-// unlike the struct's functions above, this function cannot use attributes #[derive(…)] or #[near_bindgen]
-// any attempts will throw helpful warnings upon 'cargo build'
-// while this function cannot be invoked directly on the blockchain, it can be called from an invoked function
-fn after_counter_change() {
-    // show helpful warning that i8 (8-bit signed integer) will overflow above 127 or below -128
-    env::log("Make sure you don't overflow, my friend.".as_bytes());
-}
-
-
 
 // use the attribute below for unit tests
 #[cfg(test)]
@@ -124,40 +158,47 @@ mod tests {
         }
     }
 
-    // mark individual unit tests with #[test] for them to be registered and fired
     #[test]
-    fn increment() {
-        // set up the mock context into the testing environment
+    fn initial_global_corgis() {
         let context = get_context(vec![], false);
         testing_env!(context);
-        // instantiate a contract variable with the counter at zero
-        let mut contract = Counter { val: 0 };
-        contract.increment();
-        println!("Value after increment: {}", contract.get_num());
-        // confirm that we received 1 when calling get_num
-        assert_eq!(1, contract.get_num());
+
+        let contract = Model::new();
+        let corgis = contract.get_global_corgis();
+        assert_eq!(0, corgis.len());
     }
 
     #[test]
-    fn decrement() {
+    fn create_a_corgi() {
         let context = get_context(vec![], false);
+        let signer = context.signer_account_id.to_owned();
         testing_env!(context);
-        let mut contract = Counter { val: 0 };
-        contract.decrement();
-        println!("Value after decrement: {}", contract.get_num());
-        // confirm that we received -1 when calling get_num
-        assert_eq!(-1, contract.get_num());
+
+        let mut contract = Model::new();
+        assert_eq!(0, contract.get_global_corgis().len());
+
+        contract.create_corgi("doggy".to_owned(), "dog".to_owned());
+
+        assert_eq!(1, contract.get_global_corgis().len());
+        assert_eq!(1, contract.get_corgis_by_owner(signer).len());
     }
 
     #[test]
-    fn increment_and_reset() {
+    fn create_a_few_corgis() {
         let context = get_context(vec![], false);
+        let signer = context.signer_account_id.to_owned();
         testing_env!(context);
-        let mut contract = Counter { val: 0 };
-        contract.increment();
-        contract.reset();
-        println!("Value after reset: {}", contract.get_num());
-        // confirm that we received -1 when calling get_num
-        assert_eq!(0, contract.get_num());
+
+        let mut contract = Model::new();
+        assert_eq!(0, contract.get_global_corgis().len());
+
+        let n = 5;
+        for _ in 1..=n {
+            contract.create_corgi("doggy".to_owned(), "dog".to_owned());
+        }
+
+        assert_eq!(n, contract.get_global_corgis().len());
+        assert_eq!(n, contract.get_corgis_by_owner(signer).len());
     }
+
 }
