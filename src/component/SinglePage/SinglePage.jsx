@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import './SinglePage.scss';
+
 import iconSend from '../../assets/images/icon-send.svg';
 import iconShare from '../../assets/images/icon-share.svg';
 
@@ -9,12 +11,13 @@ import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
 import { TransferContextProvider } from '../../context/transfer';
 
-import { BigCard } from '../CorgiCard/Card';
+import CorgiCard from '../CorgiCard/CorgiCard';
 import Send from './Send/Send';
 import Share from './Share/Share';
 
 import Spinner from '../utils/Spinner/Spinner';
 import CorgiRate from '../utils/corgiPhotos/CorgiRate';
+// import CorgiTile from '../CorgiTile/CorgiTile';
 
 const SinglePage = () => {
   const { user } = useContext(NearContext);
@@ -62,20 +65,16 @@ const SinglePage = () => {
   }
 
   return (
-    <div>
+    <div className='corgi-page'>
       <TransferContextProvider>
         <Send corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
         <Share corgi={corgi} closeModal={closeModal} show={showShare} />
-        <div>
+
+        <div className='corgi-page__card'>
           <h1>Meet {corgi.name}!</h1>
-          <div>
-            <BigCard
-              backgroundColor={corgi.backgroundColor}
-              color={corgi.color}
-              sausage={corgi.sausage}
-              quote={corgi.quote}
-            />
-          </div>
+
+          <CorgiCard corgi={corgi} size='big' />
+
           <div className='wrapperS'>
             <CorgiRate rate={corgi.rate} />
             <SendAndShare openSendModal={openSendModal} openShareModal={openShareModal} />

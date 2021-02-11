@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import { SmallCard } from '../../CorgiCard/Card';
+import CorgiCard from '../../CorgiCard/CorgiCard';
 import Modal from '../../utils/Modal/Modal';
 
 import { CorgiTypeShape } from '../../../types/CorgiTypes';
@@ -34,12 +34,7 @@ const Share = ({ corgi, show, closeModal }) => {
               }}
               key={corgi.id}
             >
-              <SmallCard
-                backgroundColor={corgi.backgroundColor}
-                color={corgi.color}
-                sausage={corgi.sausage}
-                quote={corgi.quote}
-              />
+              <CorgiCard corgi={corgi} size='small' />
             </Link>
           </div>
           <p style={{ margin: '0' }}>{corgi.name}</p>

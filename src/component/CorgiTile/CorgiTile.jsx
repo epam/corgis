@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 import './CorgiTile.scss';
 
 import Corgi from '../CorgiCard/Corgi/Corgi';
-import { Dialogue } from '../CorgiCard/Card';
 
 import { CorgiTypeShape } from '../../types/CorgiTypes';
 import { ReactChildrenType } from '../../types/ReactChildrenType';
+import { Quote } from '../utils/Quote/Quote';
+import CorgiCard from '../CorgiCard/CorgiCard';
 
 const CorgiTilePropTypes = {
   corgi: CorgiTypeShape,
@@ -17,15 +18,10 @@ const CorgiTilePropTypes = {
 
 const CorgiTile = ({ corgi, description, children }) => (
   <div className='corgi-tile'>
-    <div
-      className='corgi-tile__card'
-      style={{
-        backgroundColor: corgi.backgroundColor,
-      }}
-    >
-      <Dialogue quote={corgi.quote} color={corgi.color} />
-      <Corgi color={corgi.color} sausage={corgi.sausage} />
+    <div className='corgi-tile__card'>
+      <CorgiCard corgi={corgi} size='small' />
     </div>
+
     <p className='corgi-tile__name'>{corgi.name}</p>
     <p className='corgi-tile__description'>{children || description || `§ ${corgi.rate}`}</p>
   </div>

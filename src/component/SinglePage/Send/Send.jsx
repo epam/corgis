@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { SmallCard } from '../../CorgiCard/Card';
+import CorgiCard from '../../CorgiCard/CorgiCard';
 import Modal from '../../utils/Modal/Modal';
 
 import Transfer from './Transafer/Transfer';
@@ -23,12 +23,7 @@ const Send = ({ corgi, show, closeModal, transfering }) => (
         <h3>Send a Corgi</h3>
         <div>
           <div style={{ width: '100%', height: '90%' }}>
-            <SmallCard
-              backgroundColor={corgi.backgroundColor}
-              color={corgi.color}
-              sausage={corgi.sausage}
-              quote={corgi.quote}
-            />
+            <CorgiCard corgi={corgi} size='small' />
           </div>
           <p style={{ margin: '0' }}>{corgi.name}</p>
           <span style={{ color: 'orange', fontSize: '0.7rem' }}>{corgi.rate}</span>
