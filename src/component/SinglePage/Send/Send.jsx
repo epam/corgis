@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import CorgiCard from '../../CorgiCard/CorgiCard';
 import Modal from '../../utils/Modal/Modal';
 
-import Transfer from './Transafer/Transfer';
+import Transfer from './Transfer/Transfer';
 import { CorgiThree } from '../../utils/corgiAnimation';
 
 import { CorgiTypeShape } from '../../../types/CorgiTypes';
