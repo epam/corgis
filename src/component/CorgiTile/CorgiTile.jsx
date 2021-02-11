@@ -15,7 +15,7 @@ const CorgiTilePropTypes = {
   children: ReactChildrenType,
 };
 
-const CorgiTile = ({ corgi, description }) => (
+const CorgiTile = ({ corgi, description, children }) => (
   <div className='corgi'>
     <div
       className='corgi__card'
