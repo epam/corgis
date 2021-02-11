@@ -1,12 +1,18 @@
 import React, { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 
+import './Generation.scss';
+
+import classNames from 'classnames';
+
+import raritySample from '../../assets/images/rarity-sample.svg';
+
 import { CharacterContext } from '../../context/character';
 import { ContractContext } from '../../context/contract';
 import { NearContext } from '../../context/NearContext';
 
-import Info from './Info/Info';
-import Screen from './Screen/Screen';
+import GenerationForm from './GenerationForm/GenerationForm';
+import GenerationScreen from './GenerationScreen/GenerationScreen';
 import Animation from './Animation/Animation';
 
 const Generation = () => {
@@ -28,34 +34,26 @@ const Generation = () => {
 
   return (
     <div className='generation'>
-      <h1 className='head'>Create a Corgi</h1>
-      <div className='content'>
-        <Info color={color} backgroundColor={backgroundColor} />
-        <Screen color={color} backgroundColor={backgroundColor} />
+      <h1 className='generation__title'>Create a Corgi</h1>
+
+      <div className='generation__field'>
+        <div className={classNames('generation__area', 'generation__form')}>
+          <GenerationForm color={color} backgroundColor={backgroundColor} />
+        </div>
+
+        <div className={classNames('generation__area', 'generation__screen')}>
+          <GenerationScreen color={color} backgroundColor={backgroundColor} />
+        </div>
       </div>
-      <style>{`
-        .generation {
-            max-width: 1100px;
-            width: 96%;
-            text-align: center;
-            margin: auto;
-          }
 
-          .head {
-            font-weight: 600;
-          }
+      <div className='generation__footer'>
+        <p className={classNames('generation__area', 'generation__description')}>
+          This will create a one-of-a-kind Corgi that will develop a unique size and thought process. The size it grows
+          to will untimately determine it’s value
+        </p>
 
-          .content {
-            display: flex;
-            flex-direction: row;
-          }
-
-          @media all and (max-width: 765px) {
-            .content {
-              flex-direction: column;
-            }
-          }
-        `}</style>
+        <img className={classNames('generation__area', 'generation__rarity')} src={raritySample} alt='' />
+      </div>
     </div>
   );
 };
