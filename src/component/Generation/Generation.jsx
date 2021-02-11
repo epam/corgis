@@ -11,9 +11,9 @@ import { CharacterContext } from '../../context/character';
 import { ContractContext } from '../../context/contract';
 import { NearContext } from '../../context/NearContext';
 
+import GenerationAnimation from './GenerationAnimation/GenerationAnimation';
 import GenerationForm from './GenerationForm/GenerationForm';
 import GenerationScreen from './GenerationScreen/GenerationScreen';
-import Animation from './Animation/Animation';
 
 const Generation = () => {
   const { user } = useContext(NearContext);
@@ -25,7 +25,7 @@ const Generation = () => {
   }
 
   if (creating) {
-    return <Animation color={color} backgroundColor={backgroundColor} />;
+    return <GenerationAnimation color={color} backgroundColor={backgroundColor} />;
   }
 
   if (created) {
