@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
-import logo from '../../assets/images/logo.png';
+import './Header.scss';
 
 import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
@@ -9,6 +8,7 @@ import { ContractContext } from '../../context/contract';
 import Nav from './Nav/Nav';
 import Spinner from '../utils/Spinner/Spinner';
 import Button from '../utils/Button/Button';
+import CorgisLogo from './CorgisLogo/CorgisLogo';
 
 const Header = () => {
   const { user, isLoading, signIn, signOut } = useContext(NearContext);
@@ -33,47 +33,14 @@ const Header = () => {
   }
 
   return (
-    <div>
+    <div className='header'>
+      <CorgisLogo />
+
       {!!user ? (
-        <div className='header'>
-          <Link to='/'>
-            <img src={logo} style={{ minWidth: '100px', width: '70%' }} alt='' />
-          </Link>
-          <Nav accountName={user.accountId} number={corgis ? corgis.length : '...'} requestSignOut={signOutAction} />
-        </div>
+        <Nav accountName={user.accountId} number={corgis ? corgis.length : '...'} requestSignOut={signOutAction} />
       ) : (
-        <div className='header'>
-          <Link to='/'>
-            <img src={logo} style={{ minWidth: '100px', width: '60%' }} alt='' />
-          </Link>
-          <Button description='Get Started' action={signInAction} />
-        </div>
+        <Button description='Get Started' action={signInAction} />
       )}
-      <style>{`
-        .header {
-            margin: 1% auto;
-            padding: auto;
-            display: flex;
-            justify-content: space-between;
-            width: 70%;
-            max-width: 1000px;
-        }
-        
-        @media all and (max-width: 751px) {
-            .header{
-                width: 90%;
-                margin: 1% auto;
-            }
-        }
-        
-        @media all and (max-width: 376px) {
-            .header{
-                width: 90%;
-                margin: 1% auto;
-                flex-direction: column;
-            }
-        }    
-    `}</style>
     </div>
   );
 };
