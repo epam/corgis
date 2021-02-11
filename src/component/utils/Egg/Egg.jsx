@@ -1,14 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './Egg.scss';
 
+import classNames from 'classnames';
+
+import shadow from '../../../assets/images/shadow.svg';
+
 import { CorgiType } from '../../../types/CorgiTypes';
 
-const EggPropTypes = { color: CorgiType.color };
+const EggPropTypes = { color: CorgiType.color, showShadow: PropTypes.bool };
 
-const Egg = ({ color }) => (
-  <div className='egg'>
+const Egg = ({ color, showShadow = false }) => (
+  <div className={classNames('egg', { 'egg--shadow': showShadow })}>
     <svg
+      className='egg__svg'
       width='147px'
       height='146px'
       viewBox='0 0 147 146'
@@ -47,6 +53,8 @@ const Egg = ({ color }) => (
         </g>
       </g>
     </svg>
+
+    {showShadow && <img className='egg__shadow' src={shadow} alt='' />}
   </div>
 );
 
