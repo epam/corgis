@@ -1,3 +1,5 @@
+#![deny(warnings)]
+
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
     collections::{UnorderedMap, Vector},
