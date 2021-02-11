@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import './Modal.scss';
 
-import ReactChildrenType from '../../../types/ReactChildrenType';
+import { ReactChildrenType } from '../../../types/ReactChildrenType';
 
 const ModalPropTypes = {
   show: PropTypes.bool.isRequired,

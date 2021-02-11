@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './Dropdown.scss';
 
-import ReactChildrenType from '../../types/ReactChildrenType';
+import { ReactChildrenType } from '../../types/ReactChildrenType';
 
 const DropdownPropTypes = {
   dropdownTitle: PropTypes.string.isRequired,
