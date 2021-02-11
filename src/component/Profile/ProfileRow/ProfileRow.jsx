@@ -7,7 +7,7 @@ import './ProfileRow.scss';
 import { GiDiscussion, GiJumpingDog, GiDogBowl, GiGlassBall } from 'react-icons/gi';
 
 import Button from '../../utils/Button/Button';
-import SwitchCorgiPhoto from '../../utils/SwitchCorgiPhoto';
+import SwitchCorgiPhoto from '../../utils/corgiPhotos/SwitchCorgiPhoto';
 
 import { CorgiTypeShape } from '../../../types/CorgiTypes';
 

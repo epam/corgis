@@ -1,7 +1,10 @@
 import React from 'react';
-import { CorgiType } from '../../types/CorgiTypes';
+import { CorgiType } from '../../../types/CorgiTypes';
 
-import { Common, Uncommon, Rare, VeryRare } from './Photo';
+import Common from './Common';
+import Uncommon from './Uncommon';
+import Rare from './Rare';
+import VeryRare from './VeryRare';
 
 const SwitchCorgiPhotoPropTypes = {
   rate: CorgiType.rate,

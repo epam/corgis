@@ -14,7 +14,7 @@ import Send from './Send/Send';
 import Share from './Share/Share';
 
 import Spinner from '../utils/Spinner/Spinner';
-import CorgiRate from '../utils/corgiPhoto/CorgiRate';
+import CorgiRate from '../utils/corgiPhotos/CorgiRate';
 
 const SinglePage = () => {
   const { user } = useContext(NearContext);

@@ -7,7 +7,7 @@ import { NearContext } from '../../context/NearContext';
 
 import { BigCard } from '../CorgiCard/Card';
 import Spinner from '../utils/Spinner/Spinner';
-import SwitchCorgiPhoto from '../utils/SwitchCorgiPhoto';
+import SwitchCorgiPhoto from '../utils/corgiPhotos/SwitchCorgiPhoto';
 
 const SharePage = () => {
   const { user } = useContext(NearContext);
