@@ -1,8 +1,8 @@
-use near_sdk::collections::Vector;
-use near_sdk::collections::UnorderedMap;
-use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen};
-use near_sdk::serde::Serialize;
+use near_sdk::{
+    borsh::{self, BorshDeserialize, BorshSerialize},
+    collections::{UnorderedMap, Vector},
+    env, near_bindgen, serde::Serialize
+};
 
 #[global_allocator]
 static ALLOC: near_sdk::wee_alloc::WeeAlloc = near_sdk::wee_alloc::WeeAlloc::INIT;
