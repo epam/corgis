@@ -1,16 +1,18 @@
-import { Link } from 'react-router-dom';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-import DashCard from './DashCard/DashCard';
+import './ShowCase.scss';
+
+import CorgiTile from '../../CorgiTile/CorgiTile';
 
 import { CorgisArrayType } from '../../../types/CorgiTypes';
 
-const ShowCasePropTypes = { displayCorgis: CorgisArrayType.isRequired };
+const ShowCasePropTypes = { corgis: CorgisArrayType.isRequired };
 
-const ShowCase = ({ displayCorgis }) => {
+const ShowCase = ({ corgis }) => {
   return (
-    <div>
-      {displayCorgis.map((corgi) => (
+    <div className='showcase'>
+      {corgis.map((corgi) => (
         <Link
           to={{
             pathname: '/share',
@@ -18,7 +20,9 @@ const ShowCase = ({ displayCorgis }) => {
           }}
           key={corgi.id}
         >
-          <DashCard corgi={corgi} />
+          <CorgiTile corgi={corgi}>
+            Created by <span style={{ color: 'orange' }}>@{corgi.owner}</span>
+          </CorgiTile>
         </Link>
       ))}
     </div>

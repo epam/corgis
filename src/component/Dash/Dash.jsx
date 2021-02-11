@@ -21,7 +21,7 @@ const Dash = () => {
   return (
     <div className='dash'>
       <Poster requestSignIn={signIn} isLoading={nearContext.isLoading} user={nearContext.user} />
-      <ShowCase displayCorgis={displayCorgis} />
+      <ShowCase corgis={displayCorgis} />
     </div>
   );
 };
