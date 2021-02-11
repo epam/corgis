@@ -2,19 +2,19 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import iconSend from '../../assets/images/icon-send.svg';
+import iconShare from '../../assets/images/icon-share.svg';
+
 import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
+import { TransferContextProvider } from '../../context/transfer';
 
 import { BigCard } from '../CorgiCard/Card';
 import Send from './Send/Send';
 import Share from './Share/Share';
 
 import Spinner from '../utils/Spinner/Spinner';
-import Rate from '../utils/Rate';
-
-import iconSend from '../../assets/images/icon-send.svg';
-import iconShare from '../../assets/images/icon-share.svg';
-import { TransferContextProvider } from '../../context/transfer';
+import CorgiRate from '../utils/corgiPhoto/CorgiRate';
 
 const SinglePage = () => {
   const { user } = useContext(NearContext);
@@ -77,7 +77,7 @@ const SinglePage = () => {
             />
           </div>
           <div className='wrapperS'>
-            <Rate rate={corgi.rate} />
+            <CorgiRate rate={corgi.rate} />
             <SendAndShare openSendModal={openSendModal} openShareModal={openShareModal} />
           </div>
         </div>
