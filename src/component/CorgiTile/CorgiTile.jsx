@@ -16,9 +16,9 @@ const CorgiTilePropTypes = {
 };
 
 const CorgiTile = ({ corgi, description, children }) => (
-  <div className='corgi'>
+  <div className='corgi-tile'>
     <div
-      className='corgi__card'
+      className='corgi-tile__card'
       style={{
         backgroundColor: corgi.backgroundColor,
       }}
@@ -26,8 +26,8 @@ const CorgiTile = ({ corgi, description, children }) => (
       <Dialogue quote={corgi.quote} color={corgi.color} />
       <Corgi color={corgi.color} sausage={corgi.sausage} />
     </div>
-    <p className='corgi__name'>{corgi.name}</p>
-    <p className='corgi__description'>{children || description || `§ ${corgi.rate}`}</p>
+    <p className='corgi-tile__name'>{corgi.name}</p>
+    <p className='corgi-tile__description'>{children || description || `§ ${corgi.rate}`}</p>
   </div>
 );
 
