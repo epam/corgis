@@ -72,8 +72,12 @@ const GenerationForm = () => {
 
         <GiBeachBall onClick={() => generateRandomColor()} className='generation-form__icon' />
 
-        <Colorpicker title={'Corgi'} color={color} pickColor={handleColor} />
-        <Colorpicker title={'Background'} color={backgroundColor} pickColor={handleBackgroundColor} />
+        <div className='generation-form__colorpicker'>
+          <Colorpicker title={'Corgi'} color={color} pickColor={handleColor} />
+        </div>
+        <div className='generation-form__colorpicker'>
+          <Colorpicker title={'Background'} color={backgroundColor} pickColor={handleBackgroundColor} />
+        </div>
       </div>
       <Button description='Generate Corgi' />
     </form>
