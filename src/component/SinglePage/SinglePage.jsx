@@ -12,12 +12,11 @@ import { ContractContext } from '../../context/contract';
 import { TransferContextProvider } from '../../context/transfer';
 
 import CorgiCard from '../CorgiCard/CorgiCard';
-import Send from './Send/Send';
-import Share from './Share/Share';
+import SendModal from './SendModal/SendModal';
+import ShareModal from './ShareModal/ShareModal';
 
 import Spinner from '../utils/Spinner/Spinner';
 import CorgiRate from '../utils/corgiPhotos/CorgiRate';
-// import CorgiTile from '../CorgiTile/CorgiTile';
 
 const SinglePage = () => {
   const { user } = useContext(NearContext);
@@ -67,8 +66,8 @@ const SinglePage = () => {
   return (
     <div className='corgi-page'>
       <TransferContextProvider>
-        <Send corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
-        <Share corgi={corgi} closeModal={closeModal} show={showShare} />
+        <SendModal corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
+        <ShareModal corgi={corgi} closeModal={closeModal} show={showShare} />
 
         <div className='corgi-page__card'>
           <h1>Meet {corgi.name}!</h1>
