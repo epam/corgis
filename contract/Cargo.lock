@@ -19,6 +19,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b41b7ea54a0c9d92199de89e20e58d49f02f8e699814ef3fdf266f6f748d15c7"
 
 [[package]]
+name = "base64"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "904dfeac50f3cdaba28fc6f57fdcddb75f49ed61346676a78c4ffe55877802fd"
+
+[[package]]
 name = "block-buffer"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -219,7 +225,7 @@ version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e7247d658c51447ea3cd6e86ea55131cf85d17a40f844fc22a0699346ba2fd93"
 dependencies = [
- "base64",
+ "base64 0.11.0",
  "borsh",
  "bs58",
  "near-runtime-fees",
@@ -271,7 +277,7 @@ version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3700022c10e0a6cceb6c380952a4e94a582b83da91392eb37ed15c8a20e06304"
 dependencies = [
- "base64",
+ "base64 0.11.0",
  "bs58",
  "byteorder",
  "near-runtime-fees",
@@ -353,6 +359,7 @@ dependencies = [
 name = "rust-corgis"
 version = "0.1.0"
 dependencies = [
+ "base64 0.13.0",
  "near-sdk",
 ]
 

@@ -21,20 +21,46 @@ pub struct Model {
 /// Every struct that is part of the public interface needs to be serializable
 /// to JSON as well.
 /// The following attributes allows JSON serialization with no need to import 
-/// serde directly. 
+/// `serde` directly. 
 /// 
-/// ```ignore
+/// ```example
 /// #[derive(Serialize)]
 /// #[serde(crate = "near_sdk::serde")]
 /// ```
 /// 
+/// In addition, we use the following attributes
+/// 
+/// ```example
+/// #[cfg_attr(test, derive(PartialEq, Debug))]
+/// ```
+/// 
+/// to indicate that our struct uses both `PartialEq` and `Debug` traits
+/// but only for testing purposes.
 #[derive(BorshDeserialize, BorshSerialize)]
 #[derive(Serialize)]
 #[serde(crate = "near_sdk::serde")]
+#[cfg_attr(test, derive(PartialEq, Debug))]
 pub struct Corgi {
     id: String,
     name: String,
     quote: String,
+    color: String,
+    background_color: String,
+    rate: Rarity,
+    sausage: String,
+}
+
+#[derive(BorshDeserialize, BorshSerialize)]
+#[derive(Serialize)]
+#[serde(crate = "near_sdk::serde")]
+#[cfg_attr(test, derive(PartialEq, Debug))]
+#[allow(non_camel_case_types)]
+pub enum Rarity {
+    COMMON,
+    UNCOMMON,
+    RARE,
+    VERY_RARE,
+    ULTRA_RARE
 }
 
 impl Default for Model {
@@ -65,12 +91,57 @@ impl Model {
 
     /// Creates a `Corgi` under the `signer_account_id`.
     /// 
-    /// 
-    pub fn create_corgi(&mut self, name: String, quote: String) {
+    /// Returns the `id` of the generated `Corgi` encoded using base64.
+    pub fn create_corgi(&mut self, name: String, quote: String, color: String, background_color: String) -> String {
         let owner = env::signer_account_id();
         env::log(format!("create corgi owned by {}", owner).as_bytes());
 
-        let corgi = Corgi {id: "doggy".to_owned(), name, quote};
+        let corgi = {
+            fn random_number() -> u64 {
+                pack(&env::random_seed()) % 100
+            }
+
+            let id = {
+                let seed = env::random_seed();
+                env::log(format!("seed size: {}", seed.len()).as_bytes());
+                let data = env::sha256(&seed);
+                base64::encode(&data)
+            };
+            let rate = {
+                let rate = random_number();
+                if rate > 10 {
+                    Rarity::COMMON
+                } else if rate > 5 {
+                    Rarity::UNCOMMON
+                } else if rate > 1 {
+                    Rarity::RARE
+                } else if rate > 0 {
+                    Rarity::VERY_RARE
+                } else {
+                    Rarity::ULTRA_RARE
+                }
+            };
+            let sausage = {
+                let l = random_number() / 2;
+                match rate {
+                    Rarity::ULTRA_RARE => 0,
+                    Rarity::VERY_RARE => l + 150,
+                    Rarity::RARE => l + 100,
+                    Rarity::UNCOMMON => l + 50,
+                    Rarity::COMMON => l,
+                }
+            }.to_string();
+            Corgi {
+                id,
+                name,
+                quote,
+                color,
+                background_color,
+                rate,
+                sausage,
+            }
+        };
+
         match self.corgis.get(&owner) {
             None => {
                 let mut list = Vector::new(b"owner".to_vec());
@@ -81,21 +152,23 @@ impl Model {
                 list.push(&corgi);
                 self.corgis.insert(&owner, &list);
             }
-        }
+        };
+
+        corgi.id
     }
 
-    /// Returns 8-bit signed integer of the counter value.
+    /// Gets the `Corgi`s owned by the `owner` account id.
+    /// The `owner` must be a valid account id.
     ///
-    /// This must match the type from our struct's 'val' defined above.
-    ///
-    /// Note, the parameter is `&self` (without being mutable) meaning it doesn't modify state.
-    /// In the frontend (/src/main.js) this is added to the "viewMethods" array
-    /// using near-cli we can call this by:
-    ///
-    /// ```bash
-    /// near view counter.YOU.testnet get_num
-    /// ```
+    /// Note, the parameter is `&self` (without being mutable)
+    /// meaning it doesn't modify state.
+    /// In the frontend (`/src/index.js`) this is added to the `"viewMethods"` array.
     /// 
+    /// Using `near-cli` we can call this contract by:
+    ///
+    /// ```sh
+    /// near view YOU.testnet get_corgis_by_owner
+    /// ```
     pub fn get_corgis_by_owner(&self, owner: String) -> Vec<Corgi> {
         env::log(format!("get corgis by owner <{}>", owner).as_bytes());
 
@@ -105,14 +178,29 @@ impl Model {
         }
     }
 
-    /// Get current users `Corgi`s.
+    /// Get the `Corgi`s of the current account id.
+    /// 
+    /// Using `near-cli` we can call this contract by:
+    ///
+    /// ```sh
+    /// near view YOU.testnet get_my_corgis
+    /// ```
     pub fn get_my_corgis(&self) -> Vec<Corgi> {
-        let owner = env::current_account_id();
+        let owner = env::signer_account_id();
         env::log(format!("get current user's <{}> corgis", owner).as_bytes());
 
         self.get_corgis_by_owner(owner)
     }
 
+    /// Get all `Corgi`s from all users.
+    /// 
+    /// Using `near-cli` we can call this contract by:
+    ///
+    /// ```sh
+    /// near view YOU.testnet get_global_corgis
+    /// ```
+    /// 
+    /// Returns a list of all `Corgi`s.
     pub fn get_global_corgis(&self) -> Vec<Corgi> {
         env::log(format!("get global list of corgis").as_bytes());
 
@@ -125,6 +213,15 @@ impl Model {
         list
     }
 
+}
+
+fn pack(data: &[u8]) -> u64 {
+    let mut result = 0u64;
+    for i in 0..std::cmp::min(data.len(), 8) {
+        result += (0xff & data[i] as u64) << (i*8);
+    }
+
+    result
 }
 
 // use the attribute below for unit tests
@@ -151,7 +248,7 @@ mod tests {
             storage_usage: 0,
             attached_deposit: 0,
             prepaid_gas: 10u64.pow(18),
-            random_seed: vec![0, 1, 2],
+            random_seed: vec![3, 2, 1],
             is_view,
             output_data_receivers: vec![],
             epoch_height: 19,
@@ -177,10 +274,20 @@ mod tests {
         let mut contract = Model::new();
         assert_eq!(0, contract.get_global_corgis().len());
 
-        contract.create_corgi("doggy".to_owned(), "dog".to_owned());
+        let id = create_test_corgi(&mut contract, 0);
 
-        assert_eq!(1, contract.get_global_corgis().len());
-        assert_eq!(1, contract.get_corgis_by_owner(signer).len());
+        let global_corgis = contract.get_global_corgis();
+        assert_eq!(1, global_corgis.len());
+        assert_eq!(id, global_corgis.get(0).unwrap().id);
+
+        let corgis_by_owner = contract.get_corgis_by_owner(signer);
+        assert_eq!(1, corgis_by_owner.len());
+
+        let corgi = corgis_by_owner.get(0).unwrap();
+        println!("Corgi: {:?}", corgi);
+        assert_eq!(id, corgi.id);
+
+        assert_eq!(corgis_by_owner, contract.get_my_corgis());
     }
 
     #[test]
@@ -192,13 +299,40 @@ mod tests {
         let mut contract = Model::new();
         assert_eq!(0, contract.get_global_corgis().len());
 
+        let mut ids = Vec::new();
         let n = 5;
-        for _ in 1..=n {
-            contract.create_corgi("doggy".to_owned(), "dog".to_owned());
+        for i in 1..=n {
+            let id = create_test_corgi(&mut contract, i);
+            println!("Test Corgi id: {}", id);
+            ids.push(id);
         }
 
         assert_eq!(n, contract.get_global_corgis().len());
-        assert_eq!(n, contract.get_corgis_by_owner(signer).len());
+
+        let corgis_by_owner = contract.get_corgis_by_owner(signer);
+        assert_eq!(n, corgis_by_owner.len());
+        let cids: Vec<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
+        assert_eq!(ids, cids);
+    }
+
+    fn create_test_corgi(contract: &mut Model, i: usize) -> String {
+        contract.create_corgi(
+            format!("doggy dog {}", i),
+            "To err is human — to forgive, canine".to_string(),
+            "green".to_string(),
+            "blue".to_string())
+    }
+
+    #[test]
+    fn pack_test() {
+        assert_eq!(0, pack(&[0, 0, 0]));
+        assert_eq!(127, pack(&[127, 0, 0]));
+        assert_eq!(256, pack(&[0, 1, 0]));
+        assert_eq!(512, pack(&[0, 2, 0]));
+        assert_eq!(65536, pack(&[0, 0, 1]));
+        assert_eq!(65536+256+1, pack(&[1, 1, 1]));
+
+        assert_eq!(3, pack(&[3, 0, 0, 0, 0, 0, 0, 0, 1]));
     }
 
 }
