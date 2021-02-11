@@ -1,10 +1,14 @@
 .generation-form {
-  background: #f8f8f8;
-  border-radius: 10px;
-  padding: 1%;
-  text-align: left;
   width: 50%;
+
+  padding: 1%;
   margin: 1%;
+
+  border-radius: 10px;
+
+  background-color: #f8f8f8;
+
+  text-align: left;
 
   &__area {
     display: flex;
@@ -12,27 +16,37 @@
   }
 
   &__title {
+    display: block;
+
+    margin: 10px 0;
+
     font-weight: 600;
     font-size: 1.5em;
-    margin: 10px 0;
-    display: block;
   }
 
   &__icon {
     margin: 10px;
-    color: #a51cea;
-    font-size: 1.5rem;
+
     border-radius: 50%;
+
+    color: #a51cea;
+    background-color: #f5ebff;
+
     box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 0 5px 2px #ffffff;
-    background: #f5ebff;
+
+    font-size: 1.5rem;
+
     cursor: pointer;
   }
 
   &__input {
-    background: #ffffff;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
     width: 80%;
+
+    border-radius: 5px;
+
+    background-color: #ffffff;
+
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
   }
 }
 
