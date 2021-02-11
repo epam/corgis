@@ -5,7 +5,6 @@ import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
 
 import Spinner from '../utils/Spinner/Spinner';
-import AccountCorgiCard from './AccountCorgiCard/AccountCorgiCard';
 import CorgiTile from '../CorgiTile/CorgiTile';
 
 const AccountPage = () => {
