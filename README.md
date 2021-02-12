@@ -185,7 +185,32 @@ This contract returns the `id` of the created `Corgi`.
 Returns the `Corgi` given by `id`.
 
 ```sh
-near view $CONTRACT_NAME get_corgis_by_id '{"id": "<corgi id>"}'
+near view $CONTRACT_NAME get_corgi_by_id '{"id": "<corgi-id>"}'
+```
+
+The response returns an the specified `Corgi`, for example:
+
+```js
+{
+  id: 'J9fEDeGE6vBODSjyetsZpLL7hCjm/IyvKmBTA1jUl3o=',
+  name: 'doggy dog',
+  quote: 'To err is human — to forgive, canine',
+  color: 'green',
+  background_color: 'blue',
+  rate: 'COMMON',
+  sausage: '27',
+  owner: 'luis.testnet'
+}
+```
+
+The `rate` field has the following type:
+
+```typescript
+type Rarity = 'COMMON'
+            | 'UNCOMMON'
+            | 'RARE'
+            | 'VERY_RARE'
+            | 'ULTRA_RARE'
 ```
 
 #### `get_corgis_by_owner`
@@ -210,6 +235,14 @@ The response returns an array of corgis, similar to:
     sausage: '27'
   },
 ]
+```
+
+#### `delete_corgi`
+
+Deletes a `Corgi` by the given `id`.
+
+```sh
+near --accountId $ACCOUNT_NAME call $CONTRACT_NAME delete_corgi '{"id": "<corgi-id>"}'
 ```
 
 #### `get_global_corgis`
