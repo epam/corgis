@@ -33,12 +33,12 @@ const GenerationForm = () => {
     setName(genRandomName());
   };
 
-  const handleColor = (color) => {
-    setColor(color);
+  const handleColor = (newColor) => {
+    setColor(newColor);
   };
 
-  const handleBackgroundColor = (color) => {
-    setBackgroundColor(color);
+  const handleBackgroundColor = (newColor) => {
+    setBackgroundColor(newColor);
   };
 
   const generateRandomColor = () => {
