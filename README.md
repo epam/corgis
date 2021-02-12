@@ -178,7 +178,15 @@ you must be logged in with the `$ACCOUNT_NAME`.
 near --accountId $ACCOUNT_NAME call $CONTRACT_NAME create_corgi '{"name":"doggy dog","quote":"To err is human — to forgive, canine","color":"green","background_color":"blue"}'
 ```
 
-This contract returns the id of the created corgi.
+This contract returns the `id` of the created `Corgi`.
+
+#### `get_corgi_by_id`
+
+Returns the `Corgi` given by `id`.
+
+```sh
+near view $CONTRACT_NAME get_corgis_by_id '{"id": "<corgi id>"}'
+```
 
 #### `get_corgis_by_owner`
 
@@ -204,18 +212,7 @@ The response returns an array of corgis, similar to:
 ]
 ```
 
-#### `get_my_corgis`
-
-This contract is similar to the previous one.
-Returns the corgis of the current logged-in user.
-
-```sh
-near --accountId $ACCOUNT_NAME call $CONTRACT_NAME get_my_corgis
-```
-
-For the response body, see `get_corgis_by_owner`.
-
-#### Display global list of corgis
+#### `get_global_corgis`
 
 This command returns all corgis that have been created.
 
