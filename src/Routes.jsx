@@ -6,7 +6,7 @@ import Dash from './component/Dash/Dash';
 import Generation from './component/Generation/Generation';
 import Profile from './component/Profile/Profile';
 import SharePage from './component/SharePage/SharePage';
-import SinglePage from './component/SinglePage/SinglePage';
+import CorgiPage from './component/CorgiPage/CorgiPage';
 
 const Routes = () => (
   <Switch>
@@ -23,7 +23,7 @@ const Routes = () => (
       <Profile />
     </Route>
     <Route exact path='/@:name'>
-      <SinglePage />
+      <CorgiPage />
     </Route>
     <Route exact path='/share'>
       <SharePage />
