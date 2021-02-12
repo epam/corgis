@@ -19,7 +19,9 @@ const CorgiCard = ({ corgi, size = 'small' }) => {
 
   return (
     <div className='corgi-card' style={{ backgroundColor }}>
-      <Quote text={quote} color={color} size={size} />
+      <div className='corgi-card__quote'>
+        <Quote text={quote} color={color} size={size} />
+      </div>
       <Corgi color={color} sausage={sausage} />
     </div>
   );
