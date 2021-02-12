@@ -9,9 +9,7 @@ import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
 export const CharacterContext = React.createContext(initialCharacterState);
 
-const CharacterContextProviderPropTypes = {
-  children: ReactChildrenTypeRequired,
-};
+const CharacterContextProviderPropTypes = { children: ReactChildrenTypeRequired };
 
 export const CharacterContextProvider = ({ children }) => {
   const [characterState, dispatchCharacter] = useReducer(characterReducer, initialCharacterState);
