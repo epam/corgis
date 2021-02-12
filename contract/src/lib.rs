@@ -1,6 +1,11 @@
 #![deny(warnings)]
 
-use near_sdk::{borsh::{self, BorshDeserialize, BorshSerialize}, collections::{UnorderedMap, UnorderedSet}, env, near_bindgen, serde::Serialize};
+use near_sdk::{
+    borsh::{self, BorshDeserialize, BorshSerialize},
+    collections::{UnorderedMap, UnorderedSet},
+    env, near_bindgen,
+    serde::Serialize,
+};
 
 #[global_allocator]
 static ALLOC: near_sdk::wee_alloc::WeeAlloc = near_sdk::wee_alloc::WeeAlloc::INIT;
@@ -12,34 +17,33 @@ const TRY_DELETE_UNKNOWN_ACCOUNT_MSG: &str = "The account does not have any corg
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
     corgis: UnorderedMap<String, Corgi>,
-    corgis_by_owner: UnorderedMap<String, UnorderedSet<String>>
+    corgis_by_owner: UnorderedMap<String, UnorderedSet<String>>,
 }
 
 /// Represents a `Corgi`.
 /// The `name` and `quote` are set by the user.
-/// 
+///
 /// The `Corgi` struct is used as part of the public interface of the contract.
 /// See, for example, [`get_corgis_by_owner`](Model::get_corgis_by_owner).
 /// Every struct that is part of the public interface needs to be serializable
 /// to JSON as well.
-/// The following attributes allows JSON serialization with no need to import 
-/// `serde` directly. 
-/// 
+/// The following attributes allows JSON serialization with no need to import
+/// `serde` directly.
+///
 /// ```example
 /// #[derive(Serialize)]
 /// #[serde(crate = "near_sdk::serde")]
 /// ```
-/// 
+///
 /// In addition, we use the following attributes
-/// 
+///
 /// ```example
 /// #[cfg_attr(test, derive(PartialEq, Debug))]
 /// ```
-/// 
+///
 /// to indicate that our struct uses both `PartialEq` and `Debug` traits
 /// but only for testing purposes.
-#[derive(BorshDeserialize, BorshSerialize)]
-#[derive(Serialize)]
+#[derive(BorshDeserialize, BorshSerialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 #[cfg_attr(test, derive(PartialEq, Debug))]
 pub struct Corgi {
@@ -55,8 +59,7 @@ pub struct Corgi {
     message: String,
 }
 
-#[derive(BorshDeserialize, BorshSerialize)]
-#[derive(Serialize)]
+#[derive(BorshDeserialize, BorshSerialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 #[cfg_attr(test, derive(PartialEq, Debug))]
 #[allow(non_camel_case_types)]
@@ -65,7 +68,7 @@ pub enum Rarity {
     UNCOMMON,
     RARE,
     VERY_RARE,
-    ULTRA_RARE
+    ULTRA_RARE,
 }
 
 impl Default for Model {
@@ -80,13 +83,12 @@ impl Default for Model {
 
 #[near_bindgen]
 impl Model {
-
     /// Initializes the contract.
-    /// 
+    ///
     /// ```sh
     /// near deploy --wasmFile target/wasm32-unknown-unknown/release/rust_corgis.wasm --initFunction init --initArgs '{}'  
     /// ```
-    /// 
+    ///
     #[init]
     pub fn new() -> Self {
         env::log(b"Init non-default CorgisContract");
@@ -97,9 +99,15 @@ impl Model {
     }
 
     /// Creates a `Corgi` under the `signer_account_id`.
-    /// 
+    ///
     /// Returns the `id` of the generated `Corgi` encoded using base64.
-    pub fn create_corgi(&mut self, name: String, quote: String, color: String, background_color: String) -> String {
+    pub fn create_corgi(
+        &mut self,
+        name: String,
+        quote: String,
+        color: String,
+        background_color: String,
+    ) -> String {
         let owner = env::signer_account_id();
         env::log(format!("create corgi owned by {}", owner).as_bytes());
 
@@ -137,7 +145,8 @@ impl Model {
                     Rarity::UNCOMMON => l + 50,
                     Rarity::COMMON => l,
                 }
-            }.to_string();
+            }
+            .to_string();
             Corgi {
                 id,
                 name,
@@ -173,13 +182,15 @@ impl Model {
 
         match self.corgis_by_owner.get(&owner) {
             None => Vec::new(),
-            Some(list) => {
-                list.to_vec().into_iter().map(|id| {
+            Some(list) => list
+                .to_vec()
+                .into_iter()
+                .map(|id| {
                     let corgi = self.corgis.get(&id);
                     assert!(corgi.is_some());
                     corgi.unwrap()
-                }).collect()
-            }
+                })
+                .collect(),
         }
     }
 
@@ -205,13 +216,13 @@ impl Model {
     }
 
     /// Get all `Corgi`s from all users.
-    /// 
+    ///
     /// Using `near-cli` we can call this contract by:
     ///
     /// ```sh
     /// near view YOU.testnet get_global_corgis
     /// ```
-    /// 
+    ///
     /// Returns a list of all `Corgi`s.
     pub fn get_global_corgis(&self) -> Vec<Corgi> {
         env::log(format!("get global list of corgis").as_bytes());
@@ -226,9 +237,15 @@ impl Model {
     /// Transfer the given corgi to `receiver`.
     pub fn transfer_corgi(&mut self, receiver: String, id: String, message: String) {
         let owner = env::signer_account_id();
-        let mut corgi = self.corgis.get(&id).expect("The Corgi with the given id does not exist");
+        let mut corgi = self
+            .corgis
+            .get(&id)
+            .expect("The Corgi with the given id does not exist");
 
-        assert!(corgi.owner == owner, "The specified Corgi does not belong to sender");
+        assert!(
+            corgi.owner == owner,
+            "The specified Corgi does not belong to sender"
+        );
         corgi.owner = receiver;
         corgi.sender = owner;
         corgi.message = message;
@@ -239,7 +256,11 @@ impl Model {
 
     fn append_corgi(&mut self, corgi: &Corgi) {
         let previous_corgi = self.corgis.insert(&corgi.id, corgi);
-        assert!(previous_corgi.is_none(), "A previous Corgi already exists with id `{}`, aborting", corgi.id);
+        assert!(
+            previous_corgi.is_none(),
+            "A previous Corgi already exists with id `{}`, aborting",
+            corgi.id
+        );
 
         let mut ids = self
             .corgis_by_owner
@@ -250,13 +271,12 @@ impl Model {
 
         self.corgis_by_owner.insert(&corgi.owner, &ids);
     }
-
 }
 
 fn pack(data: &[u8]) -> u64 {
     let mut result = 0u64;
     for i in 0..std::cmp::min(data.len(), 8) {
-        result += (0xff & data[i] as u64) << (i*8);
+        result += (0xff & data[i] as u64) << (i * 8);
     }
 
     result
@@ -265,11 +285,11 @@ fn pack(data: &[u8]) -> u64 {
 // use the attribute below for unit tests
 #[cfg(test)]
 mod tests {
-    use std::collections::HashSet;
 
     use super::*;
     use near_sdk::MockedBlockchain;
     use near_sdk::{testing_env, VMContext};
+    use std::collections::HashSet;
 
     // part of writing unit tests is setting up a mock context
     // in this example, this is only needed for env::log in the contract
@@ -297,17 +317,25 @@ mod tests {
         }
     }
 
-    fn create_test_corgi(contract: &mut Model, i: usize) -> (String, String, String, String, String) {
+    fn create_test_corgi(
+        contract: &mut Model,
+        i: usize,
+    ) -> (String, String, String, String, String) {
         let name = format!("doggy dog {}", i);
         let quote = "To err is human — to forgive, canine";
         let color = "green";
         let background_color = "blue";
         (
-            contract.create_corgi(name.to_string(), quote.to_string(), color.to_string(), background_color.to_string()),
+            contract.create_corgi(
+                name.to_string(),
+                quote.to_string(),
+                color.to_string(),
+                background_color.to_string(),
+            ),
             name.to_string(),
             quote.to_string(),
             color.to_string(),
-            background_color.to_string()
+            background_color.to_string(),
         )
     }
 
@@ -374,7 +402,7 @@ mod tests {
         assert_eq!(1, contract.get_global_corgis().len());
 
         contract.delete_corgi(id);
-        
+
         assert_eq!(0, contract.get_global_corgis().len());
     }
 
@@ -429,7 +457,12 @@ mod tests {
             let corgis_by_owner = contract.get_corgis_by_owner(signer.to_string());
             assert_eq!(corgis_by_owner.len(), ids.len());
             let cids: HashSet<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
-            assert_eq!(ids.iter().map(|id| id.to_string()).collect::<HashSet<String>>(), cids);
+            assert_eq!(
+                ids.iter()
+                    .map(|id| id.to_string())
+                    .collect::<HashSet<String>>(),
+                cids
+            );
         };
 
         let id = ids.remove(2);
@@ -479,10 +512,19 @@ mod tests {
         let (id, ..) = create_test_corgi(&mut contract, 42);
         println!("Test Corgi id: {}", id);
         assert_eq!(1, contract.get_global_corgis().len());
-        assert_eq!(contract.get_corgis_by_owner(context.signer_account_id.to_string()).len(), 1);
+        assert_eq!(
+            contract
+                .get_corgis_by_owner(context.signer_account_id.to_string())
+                .len(),
+            1
+        );
 
         let receiver = "bob.testnet";
-        contract.transfer_corgi(receiver.to_string(), id.to_string(), "A Corgi will make you happier!".to_string());
+        contract.transfer_corgi(
+            receiver.to_string(),
+            id.to_string(),
+            "A Corgi will make you happier!".to_string(),
+        );
 
         assert_eq!(1, contract.get_global_corgis().len());
 
@@ -504,7 +546,7 @@ mod tests {
 
         let mut contract = Model::new();
         assert_eq!(0, contract.get_global_corgis().len());
-        
+
         let mut ids = Vec::new();
         let n = 5;
         for i in 1..=n {
@@ -515,10 +557,19 @@ mod tests {
         }
 
         assert_eq!(contract.get_global_corgis().len(), n);
-        assert_eq!(contract.get_corgis_by_owner(context.signer_account_id.to_string()).len(), n);
+        assert_eq!(
+            contract
+                .get_corgis_by_owner(context.signer_account_id.to_string())
+                .len(),
+            n
+        );
 
         let receiver = "bob.testnet";
-        contract.transfer_corgi(receiver.to_string(), ids[2].to_string(), "A Corgi will make you happier!".to_string());
+        contract.transfer_corgi(
+            receiver.to_string(),
+            ids[2].to_string(),
+            "A Corgi will make you happier!".to_string(),
+        );
 
         println!("asdf")
         // assert_eq!(1, contract.get_global_corgis().len());
@@ -541,9 +592,8 @@ mod tests {
         assert_eq!(256, pack(&[0, 1, 0]));
         assert_eq!(512, pack(&[0, 2, 0]));
         assert_eq!(65536, pack(&[0, 0, 1]));
-        assert_eq!(65536+256+1, pack(&[1, 1, 1]));
+        assert_eq!(65536 + 256 + 1, pack(&[1, 1, 1]));
 
         assert_eq!(3, pack(&[3, 0, 0, 0, 0, 0, 0, 0, 1]));
     }
-
 }
