@@ -5,8 +5,8 @@ import './Poster.scss';
 
 import corgiFull from '~assets/images/corgi-full.png';
 
-import PosterFooter from '~modules/home/components/PosterFooter/PosterFooter';
 import { Button, Spinner } from '~modules/common';
+import { PosterFooter } from '~modules/home/components';
 
 const PosterPropTypes = {
   requestSignIn: PropTypes.func.isRequired,

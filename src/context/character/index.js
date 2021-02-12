@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useReducer } from 'react';
-import { ReactChildrenTypeRequired } from '../../types/ReactChildrenType';
+
+import { genRandomQuote } from '~helpers/generators';
 
 import { characterReducer, initialCharacterState } from './reducer';
 import { NAME, COLOR, BACKGROUND_COLOR, QUOTE, CLEAR } from './types';
 
-import { genRandomQuote } from '../../helpers/generators';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
 export const CharacterContext = React.createContext(initialCharacterState);
 
