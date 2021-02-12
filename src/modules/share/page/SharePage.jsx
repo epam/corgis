@@ -21,7 +21,6 @@ const SharePage = () => {
   const id = hash.length ? hash.slice(1) : hash;
 
   const address = `${window.location.origin}/share${window.location.hash}`;
-  const sausage = Number(corgi.sausage).toFixed(4);
 
   useEffect(() => {
     if (id) {
@@ -32,6 +31,8 @@ const SharePage = () => {
   if (!corgi || loading) {
     return <Spinner />;
   }
+
+  const sausage = Number(corgi.sausage).toFixed(4);
 
   return (
     <div className='share'>
