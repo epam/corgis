@@ -9,8 +9,7 @@ import { GiBowTieRibbon, GiImperialCrown } from 'react-icons/gi';
 import { ContractContext } from '~context/contract';
 import { NearContext } from '~context/NearContext';
 
-import { Spinner } from '~modules/common';
-import { CorgiCard, SwitchCorgiPhoto } from '~modules/corgi/components';
+import { CorgiCard, Spinner, SwitchCorgiPhoto } from '~modules/common';
 
 const SharePage = () => {
   const { user } = useContext(NearContext);
