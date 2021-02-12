@@ -10,9 +10,7 @@ import { CorgiType } from '~types/CorgiTypes';
 const gray = '#E6E6E6';
 const orange = '#FBB040';
 
-const CorgiRatePropTypes = {
-  rate: CorgiType.rate,
-};
+const CorgiRatePropTypes = { rate: CorgiType.rate };
 
 const CorgiRate = ({ rate }) => (
   <div style={{ width: '200px' }}>

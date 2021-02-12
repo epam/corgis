@@ -19,13 +19,13 @@ const SharePage = () => {
   const [isCopied, setIsCopied] = useState(false);
 
   const { hash } = useLocation();
-  const id = !!hash.length ? hash.slice(1) : hash;
+  const id = hash.length ? hash.slice(1) : hash;
 
   const address = `${window.location.origin}/share${window.location.hash}`;
   const sausage = Number(corgi.sausage).toFixed(4);
 
   useEffect(() => {
-    if (!!id) {
+    if (id) {
       getCorgi(id);
     }
   }, [getCorgi, id]);

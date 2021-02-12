@@ -39,7 +39,7 @@ const Transfer = () => {
 
     const isAccountLegit = await checkAccountLegit(newReceiver);
 
-    if (!!isAccountLegit) {
+    if (isAccountLegit) {
       transferContext.setReceiver(newReceiver);
     }
   };

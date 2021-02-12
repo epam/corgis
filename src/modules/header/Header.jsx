@@ -22,7 +22,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (!!user) {
+    if (user) {
       getCorgisList(user.accountId);
     }
   }, [getCorgisList, user]);
@@ -35,7 +35,7 @@ const Header = () => {
     <div className='header'>
       <CorgisLogo />
 
-      {!!user ? (
+      {user ? (
         <Nav accountName={user.accountId} number={corgis ? corgis.length : '...'} requestSignOut={signOutAction} />
       ) : (
         <Button description='Get Started' action={signInAction} />

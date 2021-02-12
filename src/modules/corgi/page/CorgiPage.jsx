@@ -18,10 +18,10 @@ const CorgiPage = () => {
   const [showShare, setShare] = useState(false);
 
   const { hash } = useLocation();
-  const id = !!hash.length ? hash.slice(1) : hash;
+  const id = hash.length ? hash.slice(1) : hash;
 
   useEffect(() => {
-    if (!!id) {
+    if (id) {
       getCorgi(id);
     }
   }, [getCorgi, id]);
