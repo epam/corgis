@@ -1,5 +1,4 @@
-/* TODO: fill this in! */
-const CONTRACT_NAME = process.env.CONTRACT_NAME || 'new-corgis';
+const CONTRACT_NAME = process.env.CONTRACT_NAME;
 
 function getConfig(env) {
   switch (env) {
@@ -8,21 +7,24 @@ function getConfig(env) {
         networkId: 'mainnet',
         nodeUrl: 'https://rpc.mainnet.near.org',
         contractName: CONTRACT_NAME,
-        walletUrl: 'https://wallet.mainnet.near.org'
+        walletUrl: 'https://wallet.mainnet.near.org',
+        helperUrl: 'https://helper.mainnet.near.org',
       };
     case 'development':
       return {
         networkId: 'testnet',
         nodeUrl: 'https://rpc.testnet.near.org',
         contractName: CONTRACT_NAME,
-        walletUrl: 'https://wallet.testnet.near.org'
+        walletUrl: 'https://wallet.testnet.near.org',
+        helperUrl: 'https://helper.testnet.near.org',
       };
     case 'betanet':
       return {
         networkId: 'betanet',
         nodeUrl: 'https://rpc.betanet.near.org',
         contractName: CONTRACT_NAME,
-        walletUrl: 'https://wallet.betanet.near.org'
+        walletUrl: 'https://wallet.betanet.near.org',
+        helperUrl: 'https://helper.betanet.near.org',
       };
     case 'local':
       return {
@@ -30,7 +32,7 @@ function getConfig(env) {
         nodeUrl: 'http://localhost:3030',
         keyPath: `${process.env.HOME}/.near/validator_key.json`,
         walletUrl: 'http://localhost:4000/wallet',
-        contractName: CONTRACT_NAME
+        contractName: CONTRACT_NAME,
       };
     default:
       throw Error(
