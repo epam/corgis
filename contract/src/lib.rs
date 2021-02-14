@@ -1,8 +1,10 @@
 #![deny(warnings)]
 
+use std::collections::HashSet;
+
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
-    collections::{UnorderedMap, UnorderedSet},
+    collections::UnorderedMap,
     env, near_bindgen,
     serde::Serialize,
 };
@@ -17,7 +19,7 @@ const TRY_DELETE_UNKNOWN_ACCOUNT_MSG: &str = "The account does not have any corg
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
     corgis: UnorderedMap<String, Corgi>,
-    corgis_by_owner: UnorderedMap<String, UnorderedSet<String>>,
+    corgis_by_owner: UnorderedMap<String, HashSet<String>>,
 }
 
 /// Represents a `Corgi`.
@@ -168,7 +170,9 @@ impl Model {
 
     /// Gets the `Corgi` by the given `id`.
     pub fn get_corgi_by_id(&self, id: String) -> Corgi {
-        self.corgis.get(&id).unwrap()
+        let corgi = self.corgis.get(&id).expect("Corgi not found");
+        assert!(corgi.id == id);
+        corgi
     }
 
     /// Gets the `Corgi`s owned by the `owner` account id.
@@ -183,12 +187,12 @@ impl Model {
         match self.corgis_by_owner.get(&owner) {
             None => Vec::new(),
             Some(list) => list
-                .to_vec()
                 .into_iter()
                 .map(|id| {
-                    let corgi = self.corgis.get(&id);
-                    assert!(corgi.is_some());
-                    corgi.unwrap()
+                    let corgi = self.corgis.get(&id).expect("Could not find Corgi by id");
+                    assert!(corgi.id == id);
+                    assert!(corgi.owner == owner, "The corgi with id `{}` owned by `{}` was found while fetching `{}`'s corgis", id, corgi.owner, owner);
+                    corgi
                 })
                 .collect(),
         }
@@ -206,7 +210,10 @@ impl Model {
             Some(mut list) => {
                 let was_removed_from_global_list = self.corgis.remove(&id);
                 assert!(was_removed_from_global_list.is_some());
-                assert!(was_removed_from_global_list.unwrap().owner == owner);
+
+                let removed_corgi = was_removed_from_global_list.unwrap();
+                assert!(removed_corgi.owner == owner);
+                assert!(removed_corgi.id == id);
 
                 let was_removed_from_owner_list = list.remove(&id);
                 assert!(was_removed_from_owner_list);
@@ -243,6 +250,7 @@ impl Model {
             .get(&id)
             .expect("The Corgi with the given id does not exist");
 
+        assert!(corgi.id == id);
         assert!(
             corgi.owner == owner,
             "The specified Corgi does not belong to sender"
@@ -266,8 +274,8 @@ impl Model {
         let mut ids = self
             .corgis_by_owner
             .get(&corgi.owner)
-            .unwrap_or_else(|| UnorderedSet::new(b"owner".to_vec()));
-        let is_new_element = ids.insert(&corgi.id);
+            .unwrap_or_else(|| HashSet::new());
+        let is_new_element = ids.insert(corgi.id.to_string());
         assert!(is_new_element);
 
         self.corgis_by_owner.insert(&corgi.owner, &ids);
@@ -338,6 +346,18 @@ mod tests {
             color.to_string(),
             background_color.to_string(),
         )
+    }
+
+    fn assert_eq_as_sets(left: &Vec<String>, right: &Vec<String>) {
+        assert_eq!(
+            left.iter()
+                .map(|id| id.to_string())
+                .collect::<HashSet<String>>(),
+            right
+                .iter()
+                .map(|id| id.to_string())
+                .collect::<HashSet<String>>(),
+        );
     }
 
     #[test]
@@ -430,7 +450,7 @@ mod tests {
         let corgis_by_owner = contract.get_corgis_by_owner(signer);
         assert_eq!(n, corgis_by_owner.len());
         let cids: Vec<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
-        assert_eq!(ids, cids);
+        assert_eq_as_sets(&ids, &cids);
     }
 
     #[test]
@@ -457,13 +477,8 @@ mod tests {
             assert_eq!(contract.get_global_corgis().len(), ids.len());
             let corgis_by_owner = contract.get_corgis_by_owner(signer.to_string());
             assert_eq!(corgis_by_owner.len(), ids.len());
-            let cids: HashSet<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
-            assert_eq!(
-                ids.iter()
-                    .map(|id| id.to_string())
-                    .collect::<HashSet<String>>(),
-                cids
-            );
+            let cids: Vec<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
+            assert_eq_as_sets(ids, &cids);
         };
 
         let id = ids.remove(2);
@@ -572,17 +587,31 @@ mod tests {
             "A Corgi will make you happier!".to_string(),
         );
 
-        // assert_eq!(1, contract.get_global_corgis().len());
+        assert_eq!(contract.get_global_corgis().len(), n);
+        assert_eq!(
+            contract
+                .get_corgis_by_owner(context.signer_account_id.to_string())
+                .len(),
+            n - 1
+        );
+        assert_eq!(contract.get_corgis_by_owner(receiver.to_string()).len(), 1);
 
-        // let corgi = contract.get_corgi_by_id(id.to_string());
-        // assert_eq!(corgi.owner, receiver);
+        let corgi = contract.get_corgi_by_id(ids[2].to_string());
+        assert_eq!(corgi.owner, receiver);
 
-        // let receivers_corgis = contract.get_corgis_by_owner(receiver.to_string());
-        // assert_eq!(receivers_corgis.len(), 1);
-        // assert_eq!(receivers_corgis.get(0).unwrap().id, id);
+        let receivers_corgis = contract.get_corgis_by_owner(receiver.to_string());
+        assert_eq!(receivers_corgis.len(), 1);
+        assert_eq!(receivers_corgis.get(0).unwrap().id, ids[2].to_string());
 
-        // let senders_corgis = contract.get_corgis_by_owner(context.signer_account_id);
-        // assert_eq!(senders_corgis.len(), 0);
+        let senders_corgis = contract.get_corgis_by_owner(context.signer_account_id);
+        assert_eq!(
+            senders_corgis
+                .iter()
+                .filter(|corgi| corgi.id == ids[2].to_string())
+                .collect::<Vec<&Corgi>>()
+                .len(),
+            0
+        );
     }
 
     #[test]
