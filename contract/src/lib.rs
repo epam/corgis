@@ -86,7 +86,7 @@ impl Model {
     /// Initializes the contract.
     ///
     /// ```sh
-    /// near deploy --wasmFile target/wasm32-unknown-unknown/release/rust_corgis.wasm --initFunction init --initArgs '{}'  
+    /// near deploy --wasmFile target/wasm32-unknown-unknown/release/corgis_nft.wasm --initFunction init --initArgs '{}'  
     /// ```
     ///
     #[init]
@@ -571,7 +571,6 @@ mod tests {
             "A Corgi will make you happier!".to_string(),
         );
 
-        println!("asdf")
         // assert_eq!(1, contract.get_global_corgis().len());
 
         // let corgi = contract.get_corgi_by_id(id.to_string());
