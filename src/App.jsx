@@ -1,12 +1,12 @@
 import 'regenerator-runtime/runtime';
 import React from 'react';
 import { HashRouter as Router } from 'react-router-dom';
-import Routes from './Routes';
+import Routes from '~router/Routes';
 
 import './App.scss';
 
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
+import { Header } from '~modules/header';
+import { Footer } from '~modules/footer';
 
 const App = () => (
   <div className='App'>
