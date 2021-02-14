@@ -107,7 +107,7 @@ impl Model {
         quote: String,
         color: String,
         background_color: String,
-    ) -> String {
+    ) -> Corgi {
         let owner = env::signer_account_id();
         env::log(format!("create corgi owned by {}", owner).as_bytes());
 
@@ -163,7 +163,7 @@ impl Model {
 
         self.append_corgi(&corgi);
 
-        corgi.id
+        corgi
     }
 
     /// Gets the `Corgi` by the given `id`.
@@ -320,7 +320,7 @@ mod tests {
     fn create_test_corgi(
         contract: &mut Model,
         i: usize,
-    ) -> (String, String, String, String, String) {
+    ) -> (Corgi, String, String, String, String) {
         let name = format!("doggy dog {}", i);
         let quote = "To err is human — to forgive, canine";
         let color = "green";
@@ -366,10 +366,10 @@ mod tests {
         let mut contract = Model::new();
         assert_eq!(0, contract.get_global_corgis().len());
 
-        let (id, name, quote, color, background_color) = create_test_corgi(&mut contract, 0);
+        let (new_corgi, name, quote, color, background_color) = create_test_corgi(&mut contract, 0);
 
-        let corgi = contract.get_corgi_by_id(id.to_string());
-        assert_eq!(id, corgi.id);
+        let corgi = contract.get_corgi_by_id(new_corgi.id.to_string());
+        assert_eq!(new_corgi.id, corgi.id);
         assert_eq!(name, corgi.name);
         assert_eq!(quote, corgi.quote);
         assert_eq!(color, corgi.color);
@@ -378,14 +378,14 @@ mod tests {
 
         let global_corgis = contract.get_global_corgis();
         assert_eq!(1, global_corgis.len());
-        assert_eq!(id, global_corgis.get(0).unwrap().id);
+        assert_eq!(new_corgi.id, global_corgis.get(0).unwrap().id);
 
         let corgis_by_owner = contract.get_corgis_by_owner(signer);
         assert_eq!(1, corgis_by_owner.len());
 
         let corgi = corgis_by_owner.get(0).unwrap();
         println!("Corgi: {:?}", corgi);
-        assert_eq!(id, corgi.id);
+        assert_eq!(new_corgi.id, corgi.id);
     }
 
     #[test]
@@ -397,11 +397,11 @@ mod tests {
 
         assert_eq!(0, contract.get_global_corgis().len());
 
-        let (id, ..) = create_test_corgi(&mut contract, 0);
+        let (new_corgi, ..) = create_test_corgi(&mut contract, 0);
 
         assert_eq!(1, contract.get_global_corgis().len());
 
-        contract.delete_corgi(id);
+        contract.delete_corgi(new_corgi.id);
 
         assert_eq!(0, contract.get_global_corgis().len());
     }
@@ -418,10 +418,10 @@ mod tests {
         let mut ids = Vec::new();
         let n = 5;
         for i in 1..=n {
-            let (id, ..) = create_test_corgi(&mut contract, i);
+            let (new_corgi, ..) = create_test_corgi(&mut contract, i);
             testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
-            println!("Test Corgi id: {}", id);
-            ids.push(id);
+            println!("Test Corgi id: {}", new_corgi.id);
+            ids.push(new_corgi.id);
         }
 
         assert_eq!(n, contract.get_global_corgis().len());
@@ -444,10 +444,10 @@ mod tests {
         let mut ids = Vec::new();
         let n = 5;
         for i in 1..=n {
-            let (id, ..) = create_test_corgi(&mut contract, i);
+            let (new_corgi, ..) = create_test_corgi(&mut contract, i);
             testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
-            println!("Test Corgi id: {}", id);
-            ids.push(id);
+            println!("Test Corgi id: {}", new_corgi.id);
+            ids.push(new_corgi.id);
         }
 
         assert_eq!(contract.get_global_corgis().len(), n);
@@ -509,8 +509,8 @@ mod tests {
         let mut contract = Model::new();
         assert_eq!(0, contract.get_global_corgis().len());
 
-        let (id, ..) = create_test_corgi(&mut contract, 42);
-        println!("Test Corgi id: {}", id);
+        let (new_corgi, ..) = create_test_corgi(&mut contract, 42);
+        println!("Test Corgi id: {}", new_corgi.id);
         assert_eq!(1, contract.get_global_corgis().len());
         assert_eq!(
             contract
@@ -522,18 +522,18 @@ mod tests {
         let receiver = "bob.testnet";
         contract.transfer_corgi(
             receiver.to_string(),
-            id.to_string(),
+            new_corgi.id.to_string(),
             "A Corgi will make you happier!".to_string(),
         );
 
         assert_eq!(1, contract.get_global_corgis().len());
 
-        let corgi = contract.get_corgi_by_id(id.to_string());
+        let corgi = contract.get_corgi_by_id(new_corgi.id.to_string());
         assert_eq!(corgi.owner, receiver);
 
         let receivers_corgis = contract.get_corgis_by_owner(receiver.to_string());
         assert_eq!(receivers_corgis.len(), 1);
-        assert_eq!(receivers_corgis.get(0).unwrap().id, id);
+        assert_eq!(receivers_corgis.get(0).unwrap().id, new_corgi.id);
 
         let senders_corgis = contract.get_corgis_by_owner(context.signer_account_id);
         assert_eq!(senders_corgis.len(), 0);
@@ -550,10 +550,10 @@ mod tests {
         let mut ids = Vec::new();
         let n = 5;
         for i in 1..=n {
-            let (id, ..) = create_test_corgi(&mut contract, i);
+            let (new_corgi, ..) = create_test_corgi(&mut contract, i);
             testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
-            println!("Test Corgi id: {}", id);
-            ids.push(id);
+            println!("Test Corgi id: {}", new_corgi.id);
+            ids.push(new_corgi.id);
         }
 
         assert_eq!(contract.get_global_corgis().len(), n);
