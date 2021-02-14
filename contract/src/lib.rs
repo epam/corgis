@@ -204,13 +204,14 @@ impl Model {
         match self.corgis_by_owner.get(&owner) {
             None => env::panic(TRY_DELETE_UNKNOWN_ACCOUNT_MSG.as_bytes()),
             Some(mut list) => {
+                let was_removed_from_global_list = self.corgis.remove(&id);
+                assert!(was_removed_from_global_list.is_some());
+                assert!(was_removed_from_global_list.unwrap().owner == owner);
+
                 let was_removed_from_owner_list = list.remove(&id);
                 assert!(was_removed_from_owner_list);
 
                 self.corgis_by_owner.insert(&owner, &list);
-
-                let was_removed_from_global_list = self.corgis.remove(&id);
-                assert!(was_removed_from_global_list.is_some());
             }
         }
     }
