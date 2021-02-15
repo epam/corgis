@@ -32,3 +32,10 @@ jobs:
     - run: yarn test:contract
     - run: yarn dev-deploy:contract
     - run: yarn api-test:contract
+
+    - name: generate key for contract on gh-pages
+      end:
+        seed_phrase: ${{ secrets.SEED_PHRASE }}
+      run: near generate-key corgis-nft.testnet --seedPhrase="$seed_phrase"
+
+    - run: CONTRACT_NAME=corgis-nft.testnet yarn deploy
