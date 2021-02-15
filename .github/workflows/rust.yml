@@ -23,24 +23,41 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    # Disables event tracking consent question, which blocks the CI pipeline
-    # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
-    - run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
-    - run: rustup target add wasm32-unknown-unknown 
-    - run: yarn install --frozen-lockfile
-    - run: yarn build:contract
-    - run: yarn test:contract
-    # - run: yarn dev-deploy:contract
-    # - run: yarn api-test:contract
 
-    - name: generate key for contract on gh-pages
+    # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
+    - name: Disable near-cli event tracking consent question (which block the CI pipeline)
+      run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
+      
+    - name: Install Rust target wasm32 to compile for the NEAR platform
+      run: rustup target add wasm32-unknown-unknown
+
+    - name: Install yarn dependencies
+      run: yarn install --frozen-lockfile
+      
+    - name: Build the Rust Corgis contract
+      run: yarn build:contract
+      
+    - name: Run unit tests for the Rust Corgis contract locally
+      run: yarn test:contract
+    
+    - name: Deploy the Rust Corgis contract to testnet using a dev account
+      run: yarn dev-deploy:contract
+
+    - name: Run API tests for the Rust Corgis contract against testnet using the dev account
+      run: yarn api-test:contract
+
+    - name: Generate key the account to be used by gh-pages 
+      run: yarn near generate-key corgis-nft.testnet --seedPhrase="$seed_phrase"
       env:
         seed_phrase: ${{ secrets.SEED_PHRASE }}
-      run: yarn near generate-key corgis-nft.testnet --seedPhrase="$seed_phrase"
-
-    - name: Deploy
-      run: |
-        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-        CONTRACT_NAME=corgis-nft.testnet yarn deploy
+      if: ${{ github.ref == 'refs/heads/master' }}
+    
+    - name: Set up origin to be able to push to gh-pages
+      run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: ${{ github.ref == 'refs/heads/master' }}
+      
+    - name: Deploy the Rust Corgis contract to testnet and the React app to gh-pages
+      run: CONTRACT_NAME=corgis-nft.testnet yarn deploy
+      if: ${{ github.ref == 'refs/heads/master' }}
