@@ -34,7 +34,7 @@ jobs:
     # - run: yarn api-test:contract
 
     - name: generate key for contract on gh-pages
-      end:
+      env:
         seed_phrase: ${{ secrets.SEED_PHRASE }}
       run: near generate-key corgis-nft.testnet --seedPhrase="$seed_phrase"
 
