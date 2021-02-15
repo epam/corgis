@@ -1,4 +1,4 @@
-name: Build & test Rust contract
+name: Corgis NFT contract & app CI/CD
 
 on:
   # We want to trigger the build & test pipelines in every branch.
@@ -46,18 +46,18 @@ jobs:
     - name: Run API tests for the Rust Corgis contract against testnet using the dev account
       run: yarn api-test:contract
 
-    - name: Generate key the account to be used by gh-pages 
+    - name: Generate key the account to be used by gh-pages (only in master)
       run: yarn near generate-key corgis-nft.testnet --seedPhrase="$seed_phrase"
       env:
         seed_phrase: ${{ secrets.SEED_PHRASE }}
       if: ${{ github.ref == 'refs/heads/master' }}
     
-    - name: Set up origin to be able to push to gh-pages
+    - name: Set up origin to be able to push to gh-pages (only in master)
       run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: ${{ github.ref == 'refs/heads/master' }}
       
-    - name: Deploy the Rust Corgis contract to testnet and the React app to gh-pages
+    - name: Deploy the Rust Corgis contract to testnet and the React app to gh-pages (only in master)
       run: CONTRACT_NAME=corgis-nft.testnet yarn deploy
       if: ${{ github.ref == 'refs/heads/master' }}
