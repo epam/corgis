@@ -8,7 +8,7 @@ export const CorgiType = {
   quote: PropTypes.string,
   color: PropTypes.string,
   backgroundColor: PropTypes.string,
-  rate: PropTypes.oneOfType([
+  rate: PropTypes.oneOf([
     CORGI_RATES.COMMON,
     CORGI_RATES.UNCOMMON,
     CORGI_RATES.RARE,
