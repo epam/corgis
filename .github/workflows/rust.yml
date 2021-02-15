@@ -36,6 +36,6 @@ jobs:
     - name: generate key for contract on gh-pages
       env:
         seed_phrase: ${{ secrets.SEED_PHRASE }}
-      run: near generate-key corgis-nft.testnet --seedPhrase="$seed_phrase"
+      run: yarn near generate-key corgis-nft.testnet --seedPhrase="$seed_phrase"
 
     - run: CONTRACT_NAME=corgis-nft.testnet yarn deploy
