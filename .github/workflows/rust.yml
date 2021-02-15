@@ -30,8 +30,8 @@ jobs:
     - run: yarn install --frozen-lockfile
     - run: yarn build:contract
     - run: yarn test:contract
-    - run: yarn dev-deploy:contract
-    - run: yarn api-test:contract
+    # - run: yarn dev-deploy:contract
+    # - run: yarn api-test:contract
 
     - name: generate key for contract on gh-pages
       end:
