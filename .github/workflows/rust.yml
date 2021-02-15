@@ -38,4 +38,9 @@ jobs:
         seed_phrase: ${{ secrets.SEED_PHRASE }}
       run: yarn near generate-key corgis-nft.testnet --seedPhrase="$seed_phrase"
 
-    - run: CONTRACT_NAME=corgis-nft.testnet yarn deploy
+    - name: Deploy
+      run: |
+        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        CONTRACT_NAME=corgis-nft.testnet yarn deploy
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
