@@ -2,11 +2,7 @@
 
 pub mod pack;
 
-use std::{
-    collections::HashSet,
-    time::{SystemTime, UNIX_EPOCH},
-    usize,
-};
+use std::{collections::HashSet, usize};
 
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
@@ -65,8 +61,8 @@ pub struct Corgi {
     pub owner: String,
     sender: String,
     message: String,
-    created: u128,
-    modified: u128,
+    created: u64,
+    modified: u64,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize)]
@@ -144,7 +140,7 @@ impl Model {
                 }
             };
 
-            let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+            let now = env::block_timestamp();
 
             Corgi {
                 id,
