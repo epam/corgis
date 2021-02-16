@@ -30,7 +30,9 @@ const Header = () => {
 
   return (
     <header className='header'>
-      <CorgisLogo />
+      <div className='header__logo'>
+        <CorgisLogo />
+      </div>
 
       {user ? (
         <Nav accountName={user.accountId} number={corgis ? corgis.length : '...'} requestSignOut={signOutAction} />
