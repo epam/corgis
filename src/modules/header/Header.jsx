@@ -29,7 +29,7 @@ const Header = () => {
   }, [getCorgisList, user]);
 
   return (
-    <div className='header'>
+    <header className='header'>
       <CorgisLogo />
 
       {user ? (
@@ -37,7 +37,7 @@ const Header = () => {
       ) : (
         <Button description='Get Started' action={signInAction} />
       )}
-    </div>
+    </header>
   );
 };
 

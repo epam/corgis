@@ -2,27 +2,16 @@
   display: flex;
   justify-content: space-between;
 
-  width: 70%;
-  max-width: 1000px;
+  width: 100%;
 
-  margin: 1% auto;
-  padding: auto;
+  margin: 0;
+  padding: 0.5rem 10%;
+
+  box-sizing: border-box;
 }
 
 @media all and (max-width: 751px) {
   .header {
-    width: 90%;
-
-    margin: 1% auto;
-  }
-}
-
-@media all and (max-width: 376px) {
-  .header {
-    flex-direction: column;
-
-    width: 90%;
-
-    margin: 1% auto;
+    padding: 0.5rem 5%;
   }
 }
