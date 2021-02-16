@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { useDetectClickOutside } from '~hooks/';
 
 import { ReactChildrenType } from '~types/ReactChildrenType';
+import { InfoTile } from '~modules/common';
 
 const DropdownPropTypes = {
   dropdownTitle: PropTypes.string.isRequired,
@@ -32,7 +33,7 @@ const Dropdown = ({ dropdownTitle, children }) => {
   return (
     <div className={classNames('dropdown', { 'dropdown--opened': isOpened })} ref={dropdownRef}>
       <button className='dropdown__title' onClick={() => handleOpen()}>
-        {dropdownTitle}
+        <InfoTile text={dropdownTitle} />
       </button>
 
       <div className='dropdown__content'>
