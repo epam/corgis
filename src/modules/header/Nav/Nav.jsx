@@ -32,12 +32,11 @@ const Nav = ({ number, accountName, requestSignOut }) => (
     </div>
 
     <div className='nav__item'>
-      <Link to='/generation'>
-        <GenerationLink />
-      </Link>
+      <GenerationLink />
     </div>
   </nav>
 );
+
 Nav.propTypes = NavPropTypes;
 
 export default Nav;
