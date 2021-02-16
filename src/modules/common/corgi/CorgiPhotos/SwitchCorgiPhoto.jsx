@@ -28,9 +28,6 @@ const SwitchCorgiPhoto = ({ rate, color }) => {
     case CORGI_RATES.VERY_RARE:
       return <CorgiVeryRare color={color} />;
 
-    case CORGI_RATES.ULTRA_RARE:
-      return 'ULTRA RARE';
-
     default:
       return <CorgiCommon color={color} />;
   }
