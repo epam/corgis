@@ -1,9 +1,5 @@
 .dropdown {
-  display: inline-block;
-
   position: relative;
-
-  margin: 0 15px;
 
   &__title {
     padding: 5px 30px;
@@ -15,7 +11,7 @@
 
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
 
-    cursor: grabbing;
+    cursor: pointer;
   }
 
   &__content {
@@ -61,7 +57,7 @@
     }
   }
 
-  &:hover {
+  &--opened {
     .dropdown__content {
       display: block;
     }
