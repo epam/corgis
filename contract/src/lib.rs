@@ -2,7 +2,11 @@
 
 pub mod pack;
 
-use std::{collections::HashSet, usize};
+use std::{
+    collections::HashSet,
+    time::{SystemTime, UNIX_EPOCH},
+    usize,
+};
 
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
@@ -58,10 +62,11 @@ pub struct Corgi {
     pub color: String,
     pub background_color: String,
     rate: Rarity,
-    sausage: String,
     pub owner: String,
     sender: String,
     message: String,
+    created: u128,
+    modified: u128,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize)]
@@ -73,7 +78,6 @@ pub enum Rarity {
     UNCOMMON,
     RARE,
     VERY_RARE,
-    ULTRA_RARE,
 }
 
 impl Default for Model {
@@ -135,23 +139,13 @@ impl Model {
                     Rarity::UNCOMMON
                 } else if rate > 1 {
                     Rarity::RARE
-                } else if rate > 0 {
-                    Rarity::VERY_RARE
                 } else {
-                    Rarity::ULTRA_RARE
+                    Rarity::VERY_RARE
                 }
             };
-            let sausage = {
-                let l = random_number() / 2;
-                match rate {
-                    Rarity::ULTRA_RARE => 0,
-                    Rarity::VERY_RARE => l + 150,
-                    Rarity::RARE => l + 100,
-                    Rarity::UNCOMMON => l + 50,
-                    Rarity::COMMON => l,
-                }
-            }
-            .to_string();
+
+            let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+
             Corgi {
                 id,
                 name,
@@ -159,10 +153,11 @@ impl Model {
                 color,
                 background_color,
                 rate,
-                sausage,
                 owner,
                 sender: "".to_string(),
                 message: "".to_string(),
+                created: now,
+                modified: now,
             }
         };
 
