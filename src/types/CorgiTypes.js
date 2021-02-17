@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import CORGI_RATES from '~constants/CorgiRates';
+import { RATES } from '~constants/corgi';
 
 export const CorgiType = {
   id: PropTypes.string,
@@ -8,7 +8,7 @@ export const CorgiType = {
   quote: PropTypes.string,
   color: PropTypes.string,
   backgroundColor: PropTypes.string,
-  rate: PropTypes.oneOf([CORGI_RATES.COMMON, CORGI_RATES.UNCOMMON, CORGI_RATES.RARE, CORGI_RATES.VERY_RARE]),
+  rate: PropTypes.oneOf([RATES.COMMON, RATES.UNCOMMON, RATES.RARE, RATES.VERY_RARE]),
   sausage: PropTypes.string,
   sender: PropTypes.string,
   message: PropTypes.string,

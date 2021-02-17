@@ -1,8 +1,8 @@
-const CORGI_RATES = {
+const RATES = {
   COMMON: 'COMMON',
   UNCOMMON: 'UNCOMMON',
   RARE: 'RARE',
   VERY_RARE: 'VERY_RARE',
 };
 
-export default CORGI_RATES;
+export default RATES;
