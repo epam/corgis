@@ -1,8 +1,8 @@
 const SAUSAGE = {
-  COMMON: 1,
-  UNCOMMON: 10,
-  RARE: 25,
-  VERY_RARE: 50,
+  COMMON: 25,
+  UNCOMMON: 50,
+  RARE: 100,
+  VERY_RARE: 200,
 };
 
 export default SAUSAGE;
