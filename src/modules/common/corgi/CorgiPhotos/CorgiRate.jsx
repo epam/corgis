@@ -5,7 +5,7 @@ import CorgiUncommon from './CorgiUncommon';
 import CorgiRare from './CorgiRare';
 import CorgiVeryRare from './CorgiVeryRare';
 
-import RATES from '~constants/corgi';
+import { RATES } from '~constants/corgi';
 
 import { CorgiType } from '~types/CorgiTypes';
 
