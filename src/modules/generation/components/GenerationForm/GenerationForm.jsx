@@ -10,7 +10,7 @@ import randomColor from 'randomcolor';
 import { CharacterContext } from '~context/character';
 import { ContractContext } from '~context/contract';
 
-import { Button, Colorpicker } from '~modules/common';
+import { Button, Colorpicker, Input } from '~modules/common';
 
 import { genRandomName } from '~helpers/generators';
 
@@ -22,7 +22,10 @@ const GenerationForm = () => {
   const { createCorgi } = useContext(ContractContext);
   const { name, quote, color, backgroundColor, setName, setColor, setBackgroundColor } = useContext(CharacterContext);
 
-  const [formError, setFormError] = useState('');
+  const [timeoutId, setTimeoutId] = useState(null);
+
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showError, setShowError] = useState(false);
 
   const handleName = (event) => {
     setName(event.target.value);
@@ -45,6 +48,13 @@ const GenerationForm = () => {
     setBackgroundColor(randomColor());
   };
 
+  const clearTimeoutId = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      setTimeoutId(null);
+    }
+  };
+
   const onSubmit = (event) => {
     event.preventDefault();
 
@@ -53,28 +63,71 @@ const GenerationForm = () => {
     if (validationMessage === CORGI_VALIDATION_MESSAGES.SUCCESS) {
       createCorgi(name, color, backgroundColor, quote);
 
-      setFormError('');
+      setShowError(false);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     } else {
-      setFormError(validationMessage);
+      setErrorMessage(validationMessage);
+      setShowError(true);
     }
   };
 
   useEffect(() => {
-    console.log(formError);
-  }, [formError]);
+    if (!timeoutId && showError) {
+      setTimeoutId(
+        setTimeout(() => {
+          setShowError(false);
+
+          clearTimeoutId();
+        }, 3000),
+      );
+    }
+
+    return () => {
+      clearTimeoutId();
+    };
+  }, [timeoutId, showError, setTimeoutId, setShowError]);
+
+  useEffect(() => {
+    if (!timeoutId && !showError && errorMessage && errorMessage.length) {
+      setTimeoutId(
+        setTimeout(() => {
+          setErrorMessage('');
+
+          clearTimeoutId();
+        }, 1000),
+      );
+    }
+
+    return () => {
+      clearTimeoutId();
+    };
+  }, [timeoutId, showError, errorMessage, setTimeoutId, setErrorMessage]);
 
   return (
     <form className='generation-form' onSubmit={(event) => onSubmit(event)}>
       <p className='generation-form__title'>My Corgi is called</p>
 
       <div className={classNames('generation-form__area', 'generation-form__name')}>
-        <input
-          className='generation-form__input'
-          type='text'
-          value={name}
-          onChange={(event) => handleName(event)}
-          required
-        />
+        <div className='generation-form__input'>
+          {/* <input
+            className='generation-form__input'
+            type='text'
+            value={name}
+            onChange={(event) => handleName(event)}
+            required
+          /> */}
+          <Input
+            type='text'
+            value={name}
+            onChange={handleName}
+            placeholder='Sweet Corgi'
+            error={errorMessage}
+            showError={showError}
+            required
+          />
+        </div>
 
         <GiGreekSphinx onClick={() => generateRandomName()} className='generation-form__icon' />
       </div>
