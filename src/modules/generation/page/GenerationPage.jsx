@@ -9,12 +9,10 @@ import raritySample from '~assets/images/rarity-sample.svg';
 
 import { CharacterContext } from '~context/character';
 import { ContractContext } from '~context/contract';
-import { NearContext } from '~context/NearContext';
 
 import { GenerationAnimation, GenerationForm, GenerationScreen } from '~modules/generation/components';
 
 const GenerationPage = () => {
-  const { user } = useContext(NearContext);
   const { creating, created } = useContext(ContractContext);
   const { color, backgroundColor } = useContext(CharacterContext);
 
