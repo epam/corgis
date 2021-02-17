@@ -121,6 +121,62 @@ fn create_a_corgi() {
 }
 
 #[test]
+#[should_panic]
+fn should_panic_when_name_is_too_large() {
+    test_context(vec![], false, None);
+    let mut contract = Model::new();
+
+    contract.create_corgi(
+        ['?'; 32 + 1].iter().collect(),
+        "Q".into(),
+        "C".into(),
+        "B".into(),
+    );
+}
+
+#[test]
+#[should_panic]
+fn should_panic_when_quote_is_too_large() {
+    test_context(vec![], false, None);
+    let mut contract = Model::new();
+
+    contract.create_corgi(
+        "N".into(),
+        ['?'; 256 + 1].iter().collect(),
+        "C".into(),
+        "B".into(),
+    );
+}
+
+#[test]
+#[should_panic]
+fn should_panic_when_color_is_too_large() {
+    test_context(vec![], false, None);
+    let mut contract = Model::new();
+
+    contract.create_corgi(
+        "N".into(),
+        "Q".into(),
+        ['?'; 64 + 1].iter().collect(),
+        "B".into(),
+    );
+}
+
+#[test]
+#[should_panic]
+fn should_panic_when_background_color_is_too_large() {
+    test_context(vec![], false, None);
+    let mut contract = Model::new();
+
+    contract.create_corgi(
+        "N".into(),
+        "Q".into(),
+        "C".into(),
+        ['?'; 64 + 1].iter().collect(),
+    );
+}
+
+#[test]
 fn create_and_delete_corgi() {
     test_context(vec![], false, None);
     let mut contract = Model::new();
