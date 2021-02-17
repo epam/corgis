@@ -7,9 +7,8 @@ export const CorgiType = {
   name: PropTypes.string,
   quote: PropTypes.string,
   color: PropTypes.string,
-  backgroundColor: PropTypes.string,
+  background_color: PropTypes.string,
   rate: PropTypes.oneOf([RATES.COMMON, RATES.UNCOMMON, RATES.RARE, RATES.VERY_RARE]),
-  sausage: PropTypes.string,
   sender: PropTypes.string,
   message: PropTypes.string,
 };
