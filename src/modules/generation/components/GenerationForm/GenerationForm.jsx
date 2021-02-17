@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import './GenerationForm.scss';
 
@@ -14,9 +14,15 @@ import { Button, Colorpicker } from '~modules/common';
 
 import { genRandomName } from '~helpers/generators';
 
+import { CORGI_VALIDATION_MESSAGES } from '~constants/validation/corgi';
+
+import { validateCorgiName } from '~validators';
+
 const GenerationForm = () => {
   const { createCorgi } = useContext(ContractContext);
   const { name, quote, color, backgroundColor, setName, setColor, setBackgroundColor } = useContext(CharacterContext);
+
+  const [formError, setFormError] = useState('');
 
   const handleName = (event) => {
     setName(event.target.value);
@@ -41,8 +47,21 @@ const GenerationForm = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    createCorgi(name, color, backgroundColor, quote);
+
+    const validationMessage = validateCorgiName(name);
+
+    if (validationMessage === CORGI_VALIDATION_MESSAGES.SUCCESS) {
+      createCorgi(name, color, backgroundColor, quote);
+
+      setFormError('');
+    } else {
+      setFormError(validationMessage);
+    }
   };
+
+  useEffect(() => {
+    console.log(formError);
+  }, [formError]);
 
   return (
     <form className='generation-form' onSubmit={(event) => onSubmit(event)}>
