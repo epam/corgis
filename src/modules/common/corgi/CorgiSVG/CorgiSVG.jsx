@@ -14,7 +14,7 @@ const CorgiSVGPropTypes = {
   height: PropTypes.string,
 };
 
-const fullWidth = 520;
+const fullWidth = 525;
 const backPartMargin = 221;
 
 const CorgiSVG = ({ color, sausage, width = '100%', height = '100%' }) => {
