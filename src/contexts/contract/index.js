@@ -1,7 +1,6 @@
 import React, { useReducer, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-import Big from 'big.js';
 import {
   CLEAR,
   CLEAR_CREATED_CORGI_STATE,
@@ -21,9 +20,7 @@ import { contractReducer, initialContractState } from './reducer';
 
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
-const BOATLOAD_OF_GAS = Big(1)
-  .times(10 ** 14)
-  .toFixed();
+import BOATLOAD_OF_GAS from '~constants/corgi';
 
 export const ContractContext = React.createContext();
 
