@@ -33,7 +33,7 @@ const Input = ({
       placeholder={placeholder}
       required={required}
     />
-    <p className={classNames('input__error', { 'input__error--show': showError && error.length })}>{error}</p>
+    <p className='input__error'>{error}</p>
   </div>
 );
 

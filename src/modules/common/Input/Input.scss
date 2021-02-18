@@ -14,6 +14,8 @@
     box-sizing: border-box;
 
     background-color: #ffffff;
+
+    transition: 0.1s ease-out;
   }
 
   &__error {
@@ -39,18 +41,11 @@
     transition: 0.4s ease-out;
 
     z-index: -1;
-
-    &--show {
-      top: 100%;
-
-      max-height: 1000%;
-
-      opacity: 1;
-    }
   }
 
   &--show-error {
     .input__field {
+      background-color: #ef9a9a;
     }
 
     .input__error {
