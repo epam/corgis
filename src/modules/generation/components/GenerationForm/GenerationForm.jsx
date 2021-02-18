@@ -55,6 +55,11 @@ const GenerationForm = () => {
     }
   };
 
+  const hideError = () => {
+    setShowError(false);
+    clearTimeoutId();
+  };
+
   const onSubmit = (event) => {
     event.preventDefault();
 
@@ -63,10 +68,7 @@ const GenerationForm = () => {
     if (validationMessage === CORGI_VALIDATION_MESSAGES.SUCCESS) {
       createCorgi(name, color, backgroundColor, quote);
 
-      setShowError(false);
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      hideError();
     } else {
       setErrorMessage(validationMessage);
       setShowError(true);
@@ -77,10 +79,8 @@ const GenerationForm = () => {
     if (!timeoutId && showError) {
       setTimeoutId(
         setTimeout(() => {
-          setShowError(false);
-
-          clearTimeoutId();
-        }, 3000),
+          hideError();
+        }, 5000),
       );
     }
 
