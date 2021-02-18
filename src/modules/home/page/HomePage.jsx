@@ -18,7 +18,7 @@ const HomePage = () => {
 
   return (
     <div className='home'>
-      <Poster requestSignIn={signIn} isLoading={nearContext.isLoading} user={nearContext.user} />
+      <Poster requestSignIn={signIn} user={nearContext.user} />
       <ShowCase corgis={displayCorgis} />
     </div>
   );
