@@ -2,8 +2,7 @@ import React, { useContext, useEffect } from 'react';
 
 import './HomePage.scss';
 
-import { NearContext } from '~context/NearContext';
-import { ContractContext } from '~context/contract';
+import { ContractContext, NearContext } from '~contexts';
 
 import { Poster, ShowCase } from '~modules/home/components';
 

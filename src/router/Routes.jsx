@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import { NearContext } from '~context/NearContext';
+import { NearContext } from '~contexts';
 
 import GuardedRoute from '~router/GuardedRoute';
 
