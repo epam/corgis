@@ -111,13 +111,6 @@ const GenerationForm = () => {
 
       <div className={classNames('generation-form__area', 'generation-form__name')}>
         <div className='generation-form__input'>
-          {/* <input
-            className='generation-form__input'
-            type='text'
-            value={name}
-            onChange={(event) => handleName(event)}
-            required
-          /> */}
           <Input
             type='text'
             value={name}
