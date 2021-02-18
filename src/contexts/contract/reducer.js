@@ -49,6 +49,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
         ...currentState,
         loading: false,
         corgi: action.payload.corgi,
+        error: null,
       };
 
     case GET_CORGIS_SUCCESS:
@@ -56,6 +57,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
         ...currentState,
         loading: false,
         corgis: action.payload.corgis,
+        error: null,
       };
 
     case GET_DISPLAY_CORGIS_SUCCESS:
@@ -63,6 +65,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
         ...currentState,
         loading: false,
         displayCorgis: action.payload.corgis,
+        error: null,
       };
 
     case CREATE_CORGI_START:
@@ -76,6 +79,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
         ...currentState,
         creating: false,
         created: true,
+        error: null,
       };
 
     case TRANSFER_CORGI_START:
@@ -88,6 +92,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
       return {
         ...currentState,
         transfering: false,
+        error: null,
       };
 
     case DELETE_CORGI_START:
@@ -100,6 +105,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
       return {
         ...currentState,
         deleting: false,
+        error: null,
       };
 
     case CLEAR_STATE:
