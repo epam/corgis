@@ -15,16 +15,25 @@ const InputPropTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-const Input = ({ error = '', onChange = () => {}, showError = false, type = 'text', value = '', required = false }) => (
-  <div className='input'>
+const Input = ({
+  error = '',
+  onChange = () => {},
+  placeholder = '',
+  showError = false,
+  type = 'text',
+  value = '',
+  required = false,
+}) => (
+  <div className='input' className={classNames('input', { 'input--show-error': showError && error.length })}>
     <input
       className='input__field'
       type={type}
       value={value}
       onChange={(event) => onChange(event)}
+      placeholder={placeholder}
       required={required}
     />
-    <div className={classNames('input__error', { 'input__error--show': showError && error.length })}>{error}</div>
+    <p className={classNames('input__error', { 'input__error--show': showError && error.length })}>{error}</p>
   </div>
 );
 
