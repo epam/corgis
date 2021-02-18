@@ -27,8 +27,24 @@ const GenerationForm = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showError, setShowError] = useState(false);
 
+  const clearTimeoutId = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      setTimeoutId(null);
+    }
+  };
+
+  const hideError = () => {
+    setShowError(false);
+    clearTimeoutId();
+  };
+
   const handleName = (event) => {
     setName(event.target.value);
+
+    if (showError) {
+      hideError();
+    }
   };
 
   const generateRandomName = () => {
@@ -46,18 +62,6 @@ const GenerationForm = () => {
   const generateRandomColor = () => {
     setColor(randomColor());
     setBackgroundColor(randomColor());
-  };
-
-  const clearTimeoutId = () => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-      setTimeoutId(null);
-    }
-  };
-
-  const hideError = () => {
-    setShowError(false);
-    clearTimeoutId();
   };
 
   const onSubmit = (event) => {
