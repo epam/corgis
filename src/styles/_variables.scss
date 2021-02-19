@@ -31,7 +31,8 @@ $border-basic-black: $border-basic $color-black;
 $border-radius-basic: 2px;
 $border-radius-big: $border-radius-basic * 2;
 
-$border-radius-dropdown: 0 0 $border-radius-basic $border-radius-basic;
+$border-radius-dropdown-title: $border-radius-basic $border-radius-basic 0 0;
+$border-radius-dropdown-list: 0 0 $border-radius-basic $border-radius-basic;
 
 // shadows
 
