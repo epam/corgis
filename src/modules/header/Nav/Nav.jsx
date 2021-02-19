@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 
 import './Nav.scss';
 
-import { Button, Dropdown, ExternalLink } from '~modules/common';
-import GenerationLink from '../GenerationLink/GenerationLink';
 import { NearContext } from '~contexts/';
+
+import { Button, Dropdown, ExternalLink } from '~modules/common';
+
+import GenerationLink from '../GenerationLink/GenerationLink';
 
 const NavPropTypes = {
   number: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -17,13 +19,11 @@ const NavPropTypes = {
 const Nav = ({ number, accountName, requestSignOut }) => {
   const { nearContent } = useContext(NearContext);
 
-  console.log(nearContent.config.walletUrl);
-
   return (
     <nav className='nav'>
       <div className='nav__item'>
         <Link to='/account'>
-          <Button description={`My Corgis ( ${number} )`} />
+          <Button description='My Corgis' badge={number} />
         </Link>
       </div>
 
@@ -36,7 +36,9 @@ const Nav = ({ number, accountName, requestSignOut }) => {
             target='_blank'
           />
 
-          <button onClick={requestSignOut}>Sign Out</button>
+          <a href='' onClick={() => requestSignOut()}>
+            Sign out
+          </a>
         </Dropdown>
       </div>
 
