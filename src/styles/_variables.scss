@@ -16,9 +16,11 @@ $color-dropdown-item-hover: $color-gray;
 
 // margins and paddings
 
-$padding-infotile: 0.25rem 1.5rem;
+$padding-button: 0.25rem 1.5rem;
 
-$padding-dropdown-item: $padding-infotile;
+$padding-infotile: $padding-button;
+
+$padding-dropdown-item: $padding-button;
 
 // gaps
 
