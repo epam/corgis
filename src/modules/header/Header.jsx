@@ -28,9 +28,9 @@ const Header = () => {
       </div>
 
       {user ? (
-        <Nav accountName={user.accountId} number={corgis ? corgis.length : '...'} requestSignOut={signOutAction} />
+        <Nav accountName={user.accountId} number={corgis ? corgis.length : 0} requestSignOut={signOutAction} />
       ) : (
-        <Button description='Get Started' action={signInAction} />
+        <Button description='Login with NEAR' action={signInAction} />
       )}
     </header>
   );
