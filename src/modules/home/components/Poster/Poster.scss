@@ -1,38 +1,30 @@
+@import 'mixins';
+@import 'variables';
+
 .poster {
-  display: flex;
-  flex-direction: column;
+  background-color: $color-main;
 
-  width: 90%;
-  max-width: 1100px;
+  border-radius: $border-radius-big;
 
-  margin: auto;
+  padding: 1rem;
 
-  &__background {
-    display: grid;
-    grid-template-areas: 'text image';
-    grid-template-columns: 1fr 2fr;
-    grid-column-gap: 2%;
+  // display: flex;
 
-    margin: 2% auto;
+  // width: 90%;
+  // max-width: 1100px;
 
-    padding: 1.5rem;
-
-    border-radius: 10px;
-
-    background: rgba(251, 176, 64, 0.5);
-
-    justify-items: center;
-    align-items: center;
-  }
+  // margin: auto;
 
   &__description {
-    grid-area: text;
+    @include dis-flex-column(space-evenly, center);
 
-    width: 100%;
+    padding: 1rem;
+
+    // grid-area: text;
+
+    // width: 100%;
 
     box-sizing: border-box;
-
-    text-align: left;
   }
 
   &__text {
@@ -55,39 +47,33 @@
     }
   }
 
-  &__login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  // &__image {
+  //   // grid-area: image;
 
-  &__image {
-    grid-area: image;
+  //   // width: 100%;
 
-    width: 100%;
-
-    margin-top: -10%;
-  }
+  //   // margin-top: -10%;
+  // }
 
   &__corgi {
     width: 100%;
   }
 }
 
-@media all and (max-width: 1000px) {
-  .poster {
-    &__background {
-      display: grid;
-      grid-template-areas:
-        'image'
-        'text';
+// @media all and (max-width: 1000px) {
+//   .poster {
+//     &__background {
+//       display: grid;
+//       grid-template-areas:
+//         'image'
+//         'text';
 
-      grid-template-columns: none;
-      grid-template-rows: 2fr 1fr;
-    }
+//       grid-template-columns: none;
+//       grid-template-rows: 2fr 1fr;
+//     }
 
-    &__text {
-      text-align: center;
-    }
-  }
-}
+//     &__text {
+//       text-align: center;
+//     }
+//   }
+// }

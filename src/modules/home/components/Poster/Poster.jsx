@@ -5,8 +5,7 @@ import './Poster.scss';
 
 import corgiFull from '~assets/images/corgi-full.png';
 
-import { Button, InfoTile, Spinner } from '~modules/common';
-import { PosterFooter } from '~modules/home/components';
+import { Button } from '~modules/common';
 
 const PosterPropTypes = {
   requestSignIn: PropTypes.func.isRequired,
@@ -15,28 +14,20 @@ const PosterPropTypes = {
 };
 
 const Poster = ({ requestSignIn, user }) => (
-  <div className='poster'>
-    <div className='poster__background'>
-      <div className='poster__description'>
+  <div className='poster container-fluid'>
+    <div className='row'>
+      <div className='poster__description col-xl-3'>
         <p className='poster__text'>Create your own one-of-the-kind Corgi today</p>
 
-        <p className='poster__text poster__text--small'>create, collect, send, or trade</p>
+        <p className='poster__text poster__text--small'>Mint, collect, gift and trade Corgis on Blockchain</p>
 
-        <div className='poster__login'>
-          {user ? (
-            <InfoTile text={`Logged In as @${user.accountId}`} />
-          ) : (
-            <Button description='Login with NEAR' action={requestSignIn} />
-          )}
-        </div>
+        {!user && <Button description='Get Started ' action={requestSignIn} />}
       </div>
 
-      <div className='poster__image'>
+      <div className='poster__image col-xl-9'>
         <img className='poster__corgi' src={corgiFull} alt='' />
       </div>
     </div>
-
-    <PosterFooter />
   </div>
 );
 
