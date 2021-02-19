@@ -1,8 +1,9 @@
+@import 'mixins';
+
 .nav {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  @include dis-flex(space-between, center);
+
+  padding: 0.5rem 0;
 
   font-size: 1em;
 
@@ -19,14 +20,28 @@
   }
 }
 
-@media all and (max-width: 1200px) {
+@media all and (max-width: 500px) {
   .nav {
-    font-size: 0.8em;
-  }
-}
+    flex-wrap: wrap;
 
-@media all and (max-width: 450px) {
-  .nav {
-    font-size: 0.6em;
+    width: 100%;
+
+    &__item {
+      margin: 0.5rem 0;
+
+      order: 1;
+
+      &:first-child {
+        order: 2;
+      }
+
+      &:last-child {
+        order: 3;
+      }
+
+      &--expandable {
+        width: 100%;
+      }
+    }
   }
 }

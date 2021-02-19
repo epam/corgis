@@ -27,7 +27,7 @@ const Nav = ({ number, accountName, requestSignOut }) => {
         </Link>
       </div>
 
-      <div className='nav__item'>
+      <div className='nav__item nav__item--expandable'>
         <Dropdown dropdownTitle={`@${accountName}`}>
           <ExternalLink
             description='Wallet'
