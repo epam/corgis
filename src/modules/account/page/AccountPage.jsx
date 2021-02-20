@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { ContractContext } from '~contexts';
 
-import { CorgiTile, Spinner } from '~modules/common';
+import { CorgisShowCase, Spinner } from '~modules/common';
 
 const AccountPage = () => {
   const { corgis, created, loading, clearCreatedCorgi } = useContext(ContractContext);
@@ -25,17 +25,7 @@ const AccountPage = () => {
         <p className='account__description'>Create,collect,send or trade</p>
       </div>
 
-      <div className='account__corgis'>
-        {!loading && corgis && corgis.length > 0 ? (
-          corgis.map((corgi) => (
-            <Link to={`/corgi/${corgi.id}`} key={corgi.id}>
-              <CorgiTile corgi={corgi} />
-            </Link>
-          ))
-        ) : (
-          <Spinner />
-        )}
-      </div>
+      <div className='account__corgis'>{!loading ? <CorgisShowCase corgis={corgis} showRarity /> : <Spinner />}</div>
     </div>
   );
 };
