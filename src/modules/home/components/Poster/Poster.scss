@@ -34,10 +34,8 @@
   }
 
   &__corgi {
-    position: relative;
-
     width: 100%;
 
-    top: -3%;
+    transform: translateY(-3%);
   }
 }
