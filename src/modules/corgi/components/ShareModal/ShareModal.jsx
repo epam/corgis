@@ -27,21 +27,7 @@ const ShareModal = ({ corgi, show, closeModal }) => {
         <p>Click the card to see the share page</p>
 
         <div className='share-modal__corgi'>
-          <Link
-            to={{
-              pathname: '/share',
-              hash: corgi.id,
-            }}
-            key={corgi.id}
-            style={{
-              textDecoration: 'none',
-            }}
-          >
-            <CorgiCard corgi={corgi} size='small' />
-          </Link>
-
-          <p>{corgi.name}</p>
-          <span style={{ color: 'orange', fontSize: '0.7rem' }}>{corgi.rate}</span>
+          <CorgiCard corgi={corgi} size='small' showRarity />
         </div>
 
         <hr />
