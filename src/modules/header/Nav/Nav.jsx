@@ -30,15 +30,16 @@ const Nav = ({ number, accountName, requestSignOut }) => {
       <div className='nav__item nav__item--expandable'>
         <Dropdown dropdownTitle={`@${accountName}`}>
           <ExternalLink
+            customClasses='nav__link'
             description='Wallet'
             href={nearContent.config.walletUrl}
             rel='noopener noreferrer'
             target='_blank'
           />
 
-          <a href='' onClick={() => requestSignOut()}>
+          <Link className='nav__link' to='/' onClick={() => requestSignOut()}>
             Sign out
-          </a>
+          </Link>
         </Dropdown>
       </div>
 

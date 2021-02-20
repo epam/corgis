@@ -1,4 +1,5 @@
 @import 'mixins';
+@import 'variables';
 
 .nav {
   @include dis-flex(space-between, center);
@@ -17,6 +18,12 @@
     &:last-child {
       margin-right: 0;
     }
+  }
+
+  &__link {
+    @include fill-parent;
+
+    padding: $padding-dropdown-item;
   }
 }
 
