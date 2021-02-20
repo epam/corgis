@@ -9,13 +9,13 @@ import { ShareCopyLink } from '~modules/corgi/components';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
 
-const SharePropTypes = {
+const ShareModalPropTypes = {
   corgi: CorgiTypeShape.isRequired,
   show: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
 };
 
-const Share = ({ corgi, show, closeModal }) => {
+const ShareModal = ({ corgi, show, closeModal }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const address = `${window.location.origin}/share${window.location.hash}`;
@@ -63,6 +63,6 @@ const Share = ({ corgi, show, closeModal }) => {
   );
 };
 
-Share.propTypes = SharePropTypes;
+ShareModal.propTypes = ShareModalPropTypes;
 
-export default Share;
+export default ShareModal;
