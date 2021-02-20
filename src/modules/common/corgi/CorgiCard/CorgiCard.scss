@@ -20,6 +20,8 @@
   }
 
   &__quote {
+    @include flex-center;
+
     min-height: 6rem;
     max-width: 75%;
 
