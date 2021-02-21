@@ -1,8 +1,7 @@
-name: Corgis NFT contract&app CI/CD
+name: Corgis NFT
 
 on:
   # We want to trigger the build & test pipelines in every branch.
-  # This will help us to detect errors earlier in the development process.
   push:
     # But do no run the pipeline when only `md` files are modified.
     paths-ignore:
@@ -13,6 +12,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  FORCE_COLOR: 1
 
 jobs:
 
@@ -20,89 +20,56 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Cache cargo
-      uses: actions/cache@v2
+    - uses: actions/cache@v2
       with:
         path: |
           ~/.cargo/registry
-          ~/.cargo/git
           contract/target
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       
-    - name: Install Rust target wasm32 to compile for the NEAR platform
-      run: rustup target add wasm32-unknown-unknown
-      
-    - name: Build the Rust Corgis contract
-      run: yarn build:contract
+    - run: rustup target add wasm32-unknown-unknown
+    - run: yarn build:contract
+    - run: cd contract && cargo metadata --no-deps --format-version 1 > target/wasm32-unknown-unknown/release/metadata.json
 
-    - name: Upload corgis_nft wasm contract
-      uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v2
       with:
         name: corgis_nft
-        path: contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
-        retention-days: 1
+        path: |
+          contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
+          contract/target/wasm32-unknown-unknown/release/metadata.json
 
   test-contract:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Cache cargo
-      uses: actions/cache@v2
+    - uses: actions/cache@v2
       with:
         path: |
           ~/.cargo/registry
-          ~/.cargo/git
           contract/target
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
         
-    - name: Run Rust Corgis contract unit tests
-      run: yarn test:contract
+    - run: yarn test:contract
 
   api-test-contract:
     needs: build-contract
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Get yarn cache directory path
-      id: yarn-cache-dir-path
-      run: echo "::set-output name=dir::$(yarn cache dir)"
-
-    - name: Cache yarn
-      uses: actions/cache@v2
-      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-      with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
-
-    - name: Cache node_modules
-      uses: actions/cache@v2
+    - uses: actions/cache@v2
       with:
         path: '**/node_modules'
         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
-    
-    - name: Download corgis_nft wasm contract
-      uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2
       with:
         name: corgis_nft
         path: contract/target/wasm32-unknown-unknown/release
 
-    - name: Install yarn dependencies to install near-cli
-      run: yarn install --frozen-lockfile
-
-    # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
     - name: Disable near-cli event tracking consent question (which blocks the CI pipeline)
-      run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
-                
-    - name: Deploy the Rust Corgis contract to testnet using a dev account
-      run: yarn dev-deploy:contract
-      
-    - name: Run API tests for the Rust Corgis contract against testnet using the dev account
-      run: yarn api-test:contract
+      run: "mkdir ~/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > ~/.near-config/settings.json"
+    - run: yarn install --frozen-lockfile
+    - run: yarn dev-deploy:contract
+    - run: yarn api-test:contract
 
   deploy:
     needs: api-test-contract
@@ -110,63 +77,20 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MASTER_ACCOUNT: corgis-nft.testnet
-      CONTRACT_NAME: sha-${{ github.sha }}.corgis-nft.testnet
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Get yarn cache directory path
-      id: yarn-cache-dir-path
-      run: echo "::set-output name=dir::$(yarn cache dir)"
-
-    - name: Cache yarn
-      uses: actions/cache@v2
-      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-      with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
-
-    - name: Cache node_modules
-      uses: actions/cache@v2
+    - uses: actions/cache@v2
       with:
         path: '**/node_modules'
         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
-            
-    - name: Download corgis_nft wasm contract
-      uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2
       with:
         name: corgis_nft
         path: contract/target/wasm32-unknown-unknown/release
 
-    - name: Install yarn dependencies
-      run: yarn install --frozen-lockfile
-    
-    - name: Build the React app into dist/
-      run: yarn build:web
-
-    # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
-    - name: Disable near-cli event tracking consent question (which block the CI pipeline)
-      run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
-
-    - name: Generate key for the master account to be able to create sub account
-      run: yarn near generate-key $MASTER_ACCOUNT --seedPhrase="$seed_phrase"
-      env:
-        seed_phrase: ${{ secrets.SEED_PHRASE }}
-
-    - name: Create brand new account (sub-account of master account) to be used by gh-pages
-      run: yarn near create-account $CONTRACT_NAME --masterAccount $MASTER_ACCOUNT --initialBalance 10
-      
-    - name: Deploy the Rust Corgis contract to testnet
-      run: yarn deploy:contract
-      
-    - name: Set up git remote to be able to push to gh-pages 
-      run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Clean up gh-pages cache
-      run: yarn gh-pages-clean
-      
-    - name: Deploy the React app to gh-pages
-      run: yarn deploy:web --user "Github Workflow Bot <noemail@epam.github.io>"
+    - run: yarn install --frozen-lockfile
+    - run: SEED_PHRASE="${{ secrets.SEED_PHRASE }}" node ci/deploy.mjs
+    - run: CONTRACT_NAME=`cat version`.$MASTER_ACCOUNT yarn build:web
+    - run: git remote set-url origin https://git:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git
+    - run: yarn gh-pages-clean
+    - run: yarn deploy:web --user "Github Workflow Bot <noemail@epam.github.io>"
