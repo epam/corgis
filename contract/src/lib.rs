@@ -26,7 +26,7 @@ pub type AccountIdHash = Vec<u8>;
 pub type CorgiId = String;
 
 /// This trait provides the baseline of functions as described at:
-/// https://github.com/nearprotocol/NEPs/blob/nep-4/specs/Standards/Tokens/NonFungibleToken.md
+/// <https://github.com/nearprotocol/NEPs/blob/nep-4/specs/Standards/Tokens/NonFungibleToken.md>
 pub trait NEP4 {
     // Grant the access to the given `accountId` for the given `tokenId`.
     // Requirements:
