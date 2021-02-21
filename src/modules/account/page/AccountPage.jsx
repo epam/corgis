@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
+import './AccountPage.scss';
+
 import { ContractContext } from '~contexts';
 
 import { CorgisShowCase, Spinner } from '~modules/common';
@@ -22,7 +24,7 @@ const AccountPage = () => {
     <div className='account'>
       <div className='account__header'>
         <h1 className='account__title'>Your Pack</h1>
-        <p className='account__description'>Create,collect,send or trade</p>
+        <p className='account__description'>Create, collect, send or trade</p>
       </div>
 
       <div className='account__corgis'>{!loading ? <CorgisShowCase corgis={corgis} showRarity /> : <Spinner />}</div>
