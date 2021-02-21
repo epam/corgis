@@ -286,14 +286,17 @@ impl Model {
     /// Transfer the given corgi to `receiver`.
     pub fn transfer_corgi(&mut self, receiver: AccountId, id: String) {
         let owner = env::signer_account_id();
+
+        assert_ne!(receiver, owner, "Self transfers are not accepted");
+
         let mut corgi = self
             .corgis
             .get(&id)
             .expect("The Corgi with the given id does not exist");
 
-        assert!(corgi.id == id);
-        assert!(
-            corgi.owner == owner,
+        assert_eq!(corgi.id, id);
+        assert_eq!(
+            corgi.owner, owner,
             "The specified Corgi does not belong to sender"
         );
         corgi.owner = receiver;
