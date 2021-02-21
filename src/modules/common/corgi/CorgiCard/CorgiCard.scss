@@ -9,8 +9,6 @@
   border: $border-basic-gray;
   border-radius: $border-radius-big;
 
-  box-sizing: border-box;
-
   &__image {
     @include dis-flex-column(flex-start, center);
 
