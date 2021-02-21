@@ -1,55 +1,63 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import './Nav.scss';
 
-import { NearContext } from '~contexts/';
+import { ContractContext, NearContext } from '~contexts';
 
 import { Button, Dropdown, ExternalLink } from '~modules/common';
 
 import GenerationLink from '../GenerationLink/GenerationLink';
 
-const NavPropTypes = {
-  number: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  accountName: PropTypes.string.isRequired,
-  requestSignOut: PropTypes.func.isRequired,
-};
+const Nav = () => {
+  const { nearContent, user, signIn, signOut } = useContext(NearContext);
+  const { corgis } = useContext(ContractContext);
 
-const Nav = ({ number, accountName, requestSignOut }) => {
-  const { nearContent } = useContext(NearContext);
+  const signInAction = () => {
+    signIn();
+  };
+
+  const signOutAction = () => {
+    signOut();
+  };
 
   return (
     <nav className='nav'>
-      <div className='nav__item'>
-        <Link to='/account'>
-          <Button description='My Corgis' badge={number} />
-        </Link>
-      </div>
+      {user ? (
+        <>
+          <div className='nav__item'>
+            <Link to='/account'>
+              <Button description='My Corgis' badge={corgis ? corgis.length : 0} />
+            </Link>
+          </div>
 
-      <div className='nav__item nav__item--expandable'>
-        <Dropdown dropdownTitle={`@${accountName}`}>
-          <ExternalLink
-            customClasses='nav__link'
-            description='Wallet'
-            href={nearContent.config.walletUrl}
-            rel='noopener noreferrer'
-            target='_blank'
-          />
+          <div className='nav__item nav__item--expandable'>
+            <Dropdown dropdownTitle={`@${user.accountId}`}>
+              <ExternalLink
+                customClasses='nav__link'
+                description='Wallet'
+                href={nearContent.config.walletUrl}
+                rel='noopener noreferrer'
+                target='_blank'
+              />
 
-          <Link className='nav__link' to='/' onClick={() => requestSignOut()}>
-            Sign out
-          </Link>
-        </Dropdown>
-      </div>
+              <Link className='nav__link' to='/' onClick={() => signInAction()}>
+                Sign out
+              </Link>
+            </Dropdown>
+          </div>
 
-      <div className='nav__item'>
-        <GenerationLink />
-      </div>
+          <div className='nav__item'>
+            <GenerationLink />
+          </div>
+        </>
+      ) : (
+        <div className='nav__login'>
+          <Button description='Login with NEAR' action={signOutAction} />
+        </div>
+      )}
     </nav>
   );
 };
-
-Nav.propTypes = NavPropTypes;
 
 export default Nav;
