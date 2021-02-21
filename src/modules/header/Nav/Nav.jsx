@@ -41,7 +41,7 @@ const Nav = () => {
                 target='_blank'
               />
 
-              <Link className='nav__link' to='/' onClick={() => signInAction()}>
+              <Link className='nav__link' to='/' onClick={() => signOutAction()}>
                 Sign out
               </Link>
             </Dropdown>
@@ -53,7 +53,7 @@ const Nav = () => {
         </>
       ) : (
         <div className='nav__login'>
-          <Button description='Login with NEAR' action={signOutAction} />
+          <Button description='Login with NEAR' action={signInAction} />
         </div>
       )}
     </nav>
