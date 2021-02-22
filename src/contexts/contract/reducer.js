@@ -3,7 +3,7 @@ import {
   ACTION_ERROR,
   GET_CORGI_SUCCESS,
   GET_CORGIS_SUCCESS,
-  GET_DISPLAY_CORGIS_SUCCESS,
+  GET_GLOBAL_CORGIS_SUCCESS,
   CREATE_CORGI_START,
   CREATE_CORGI_SUCCESS,
   DELETE_CORGI_START,
@@ -60,7 +60,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
         error: null,
       };
 
-    case GET_DISPLAY_CORGIS_SUCCESS:
+    case GET_GLOBAL_CORGIS_SUCCESS:
       return {
         ...currentState,
         loading: false,

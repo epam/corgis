@@ -6,7 +6,7 @@ import {
   ACTION_ERROR,
   GET_CORGI_SUCCESS,
   GET_CORGIS_SUCCESS,
-  GET_DISPLAY_CORGIS_SUCCESS,
+  GET_GLOBAL_CORGIS_SUCCESS,
   CREATE_CORGI_START,
   CREATE_CORGI_SUCCESS,
   DELETE_CORGI_START,
@@ -63,7 +63,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const getGlobalCorgis = useCallback(() => {
     dispatchContract({ type: ACTION_START });
     Contract.get_global_corgis()
-      .then((corgis) => dispatchContract({ type: GET_DISPLAY_CORGIS_SUCCESS, payload: { corgis } }))
+      .then((corgis) => dispatchContract({ type: GET_GLOBAL_CORGIS_SUCCESS, payload: { corgis } }))
       .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
   }, [Contract]);
 
