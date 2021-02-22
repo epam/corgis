@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 import { CorgiType } from '~types/CorgiTypes';
 
-const RarityStringPropTypes = { corgi: CorgiType.rate.isRequired };
+const RarityStringPropTypes = { rate: CorgiType.rate.isRequired };
 
 const RarityString = ({ rate }) => {
   const rateString = rate.indexOf('_') !== -1 ? rate.split('_').join(' ') : rate;
