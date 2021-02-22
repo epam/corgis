@@ -7,6 +7,7 @@ import InfoTile from './InfoTile/InfoTile';
 import Input from './Input/Input';
 import Modal from './Modal/Modal';
 import Quote from './Quote/Quote';
+import RarityString from './RarityString';
 import Spinner from './Spinner/Spinner';
 
 import {
@@ -35,6 +36,7 @@ export {
   Input,
   Modal,
   Quote,
+  RarityString,
   Spinner,
   CorgiCard,
   CorgisShowCase,
