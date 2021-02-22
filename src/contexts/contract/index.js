@@ -60,7 +60,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
     [Contract],
   );
 
-  const getDisplayCorgis = useCallback(() => {
+  const getGlobalCorgis = useCallback(() => {
     dispatchContract({ type: ACTION_START });
     Contract.get_global_corgis()
       .then((corgis) => dispatchContract({ type: GET_DISPLAY_CORGIS_SUCCESS, payload: { corgis } }))
@@ -121,7 +121,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
     createCorgi,
     deleteCorgi,
     transferCorgi,
-    getDisplayCorgis,
+    getGlobalCorgis,
   };
 
   return <ContractContext.Provider value={value}>{children}</ContractContext.Provider>;

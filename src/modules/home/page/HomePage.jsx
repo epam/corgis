@@ -9,15 +9,15 @@ import { CorgisShowCase } from '~modules/common';
 
 const HomePage = () => {
   const { user, signIn } = useContext(NearContext);
-  const { getDisplayCorgis, displayCorgis } = useContext(ContractContext);
+  const { getGlobalCorgis, displayCorgis } = useContext(ContractContext);
 
   const requestSignIn = () => {
     signIn();
   };
 
   useEffect(() => {
-    getDisplayCorgis();
-  }, [getDisplayCorgis]);
+    getGlobalCorgis();
+  }, [getGlobalCorgis]);
 
   return (
     <div className='home'>
