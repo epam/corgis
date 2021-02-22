@@ -5,13 +5,6 @@
 .corgi-card {
   @extend .card;
 
-  // width: 100%;
-
-  // padding: 0.75rem;
-
-  // border: $border-basic-gray;
-  // border-radius: $border-radius-big;
-
   &__header {
     @extend .card-header;
 
@@ -36,54 +29,17 @@
     font-weight: 500;
   }
 
+  &__footer {
+    padding: 0.5rem 1rem;
+  }
+
   &__text {
     @extend .card-text;
 
     color: $text-color-gray-dark;
   }
 
-  &__footer {
-    padding: 0.5rem 1rem;
-  }
-
-  &__rarity {
-    font-size: 0.85rem;
-    font-weight: 500;
-
-    &--common {
-      color: $text-color-rarity-common;
-    }
-
-    &--uncommon {
-      color: $text-color-rarity-uncommon;
-    }
-
-    &--rare {
-      color: $text-color-rarity-rare;
-    }
-
-    &--very_rare {
-      color: $text-color-rarity-very-rare;
-    }
-  }
-
   &__owner {
     color: $color-main;
-  }
-}
-
-@media all and (max-width: 450px) {
-  .corgi-card {
-    &__quote {
-      max-width: 85%;
-    }
-  }
-}
-
-@media all and (max-width: 360px) {
-  .corgi-card {
-    &__quote {
-      max-width: 100%;
-    }
   }
 }
