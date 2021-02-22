@@ -5,6 +5,8 @@
 
   &__text {
     @extend .blockquote;
+
+    font-size: 1rem;
   }
 
   &__author {
