@@ -7,6 +7,5 @@ import { getRandomQuoteId } from '~helpers/quotes';
  * @param {string} id
  */
 export default function getQuoteById(id) {
-  const { quote } = quotes[id] || quotes[getRandomQuoteId()];
-  return quote;
+  return quotes[Number(id)] || quotes[getRandomQuoteId()];
 }
