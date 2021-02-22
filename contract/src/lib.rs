@@ -20,10 +20,11 @@ use pack::pack;
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
 /// The token ID type is also defined in the NEP
-pub type TokenId = u64;
-pub type AccountIdHash = Vec<u8>;
+/// Cannot be `u64`.
+/// See <https://github.com/near-examples/NFT/issues/117>
+pub type TokenId = String;
 
-pub type CorgiId = String;
+pub type CorgiId = TokenId;
 
 /// This trait provides the baseline of functions as described at:
 /// <https://github.com/nearprotocol/NEPs/blob/nep-4/specs/Standards/Tokens/NonFungibleToken.md>
@@ -148,15 +149,16 @@ impl NEP4 for Model {
 
     fn transfer(&mut self, new_owner_id: AccountId, token_id: TokenId) {
         log!("NEP4::transfer({}, {})", new_owner_id, token_id);
-        self.transfer_corgi(new_owner_id, token_id.to_string());
+        self.transfer_corgi(new_owner_id, token_id);
     }
 
     fn check_access(&self, _account_id: AccountId) -> bool {
         todo!()
     }
 
-    fn get_token_owner(&self, _token_id: TokenId) -> String {
-        todo!()
+    fn get_token_owner(&self, token_id: TokenId) -> String {
+        log!("NEP4::get_token_owner({})", token_id);
+        self.get_corgi_by_id(token_id).owner
     }
 }
 
