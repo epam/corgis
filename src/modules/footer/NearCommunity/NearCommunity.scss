@@ -24,5 +24,9 @@
 
   &__link {
     color: $text-color-blue;
+
+    &:hover {
+      color: $text-color-blue;
+    }
   }
 }
