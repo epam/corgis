@@ -12,8 +12,9 @@
   }
 
   &__image {
-    @include basic(17rem, 100%);
     @include flex-center;
+
+    min-height: 17rem;
 
     padding: 1rem;
   }

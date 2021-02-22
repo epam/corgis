@@ -34,7 +34,7 @@ const CorgiCard = ({ corgi }) => {
       </div>
 
       <div className='corgi-card__footer'>
-        <p className='corgi-card__text corgi-card__text--owner'>
+        <p className='corgi-card__text'>
           {humanizeTime(created)} ago by <span className='corgi-card__owner'>@{owner}</span>
         </p>
       </div>
