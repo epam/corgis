@@ -16,7 +16,7 @@ const CorgisShowCasePropTypes = {
 const CorgisShowCase = ({ corgis, showOwner = false, showRarity = false }) => (
   <div className='showcase'>
     {corgis.map((corgi) => (
-      <CorgiCard corgi={corgi} key={corgi.id} showOwner={showOwner} showRarity={showRarity} />
+      <CorgiCard corgi={corgi} key={corgi.id} />
     ))}
   </div>
 );
