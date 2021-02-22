@@ -107,7 +107,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
     loading: contractState.loading,
     error: contractState.error,
     corgis: contractState.corgis,
-    displayCorgis: contractState.displayCorgis,
+    globalCorgis: contractState.globalCorgis,
     creating: contractState.creating,
     created: contractState.created,
     transfering: contractState.transfering,

@@ -9,7 +9,7 @@ import { CorgisShowCase } from '~modules/common';
 
 const HomePage = () => {
   const { user, signIn } = useContext(NearContext);
-  const { getGlobalCorgis, displayCorgis } = useContext(ContractContext);
+  const { getGlobalCorgis, globalCorgis } = useContext(ContractContext);
 
   const requestSignIn = () => {
     signIn();
@@ -24,7 +24,7 @@ const HomePage = () => {
       <Poster requestSignIn={requestSignIn} user={user} />
 
       <div className='home__showcase'>
-        <CorgisShowCase corgis={displayCorgis} showRarity showOwner />
+        <CorgisShowCase corgis={globalCorgis} showRarity showOwner />
       </div>
     </div>
   );

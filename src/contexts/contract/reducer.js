@@ -23,7 +23,7 @@ export const initialContractState = {
   transfering: false,
   deleting: false,
   corgi: null,
-  displayCorgis: [],
+  globalCorgis: [],
 };
 
 export const contractReducer = (currentState = initialContractState, action) => {
@@ -64,7 +64,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
       return {
         ...currentState,
         loading: false,
-        displayCorgis: action.payload.corgis,
+        globalCorgis: action.payload.corgis,
         error: null,
       };
 
