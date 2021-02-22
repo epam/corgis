@@ -11,6 +11,8 @@ export const CorgiType = {
   rate: PropTypes.oneOf([RATES.COMMON, RATES.UNCOMMON, RATES.RARE, RATES.VERY_RARE]),
   sender: PropTypes.string,
   message: PropTypes.string,
+  created: PropTypes.number,
+  modified: PropTypes.number,
 };
 
 export const CorgiTypeShape = PropTypes.shape(CorgiType);
