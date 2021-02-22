@@ -1,53 +1,53 @@
+@import 'bootstrap';
 @import 'mixins';
 @import 'variables';
 
 .corgi-card {
-  width: 100%;
+  @extend .card;
 
-  padding: 0.75rem;
+  // width: 100%;
 
-  border: $border-basic-gray;
-  border-radius: $border-radius-big;
+  // padding: 0.75rem;
+
+  // border: $border-basic-gray;
+  // border-radius: $border-radius-big;
+
+  &__header {
+    @extend .card-header;
+
+    background-color: transparent;
+  }
 
   &__image {
-    @include dis-flex-column(flex-start, center);
+    @include basic(17rem, 100%);
+    @include flex-center;
 
     padding: 1rem;
-
-    border-radius: $border-radius-big;
   }
 
   &__body {
-    @include dis-flex-column;
-
-    margin-top: 1rem;
+    @extend .card-body;
   }
 
   &__name {
-    margin: 0;
-    margin-bottom: 0.25rem;
+    @extend .card-title;
 
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     font-weight: 500;
   }
 
   &__text {
-    @include clear-mar-pad;
+    @extend .card-text;
 
-    font-size: 1rem;
-    font-weight: 300;
+    color: $text-color-gray-dark;
+  }
 
-    &--owner {
-      margin-top: 1rem;
-
-      font-size: 0.75rem;
-
-      align-self: flex-end;
-    }
+  &__footer {
+    padding: 0.5rem 1rem;
   }
 
   &__rarity {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 500;
 
     &--common {

@@ -1,37 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import './CorgiCard.scss';
 
-import classNames from 'classnames';
+import { CorgiSVG, Quote, RarityString } from '~modules/common';
 
-import { CorgiSVG, Quote } from '~modules/common';
+import humanizeTime from '~helpers/humanizeTime';
 
 import { SAUSAGE } from '~constants/corgi';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
-import { ReactChildrenType } from '~types/ReactChildrenType';
 
-const CorgiCardPropTypes = {
-  corgi: CorgiTypeShape.isRequired,
-  description: PropTypes.string,
-  children: ReactChildrenType,
-  showOwner: PropTypes.bool,
-  showRarity: PropTypes.bool,
-};
+const CorgiCardPropTypes = { corgi: CorgiTypeShape.isRequired };
 
-const CorgiCard = ({ corgi, description, children, showOwner = false, showRarity = false }) => {
-  const { id, background_color, color, quote, name, rate, owner } = corgi;
-
-  const rateString = rate.indexOf('_') !== -1 ? rate.split('_').join(' ') : rate;
+const CorgiCard = ({ corgi }) => {
+  const { id, background_color, color, quote, name, rate, owner, created } = corgi;
 
   return (
     <div className='corgi-card'>
       <div className='corgi-card__header'>
-        {showRarity && (
-          <p className={classNames('corgi-card__rarity', `corgi-card__rarity--${rate.toLowerCase()}`)}>{rateString}</p>
-        )}
+        <RarityString rate={rate} />
       </div>
 
       <Link to={`/corgi/${id}`}>
@@ -41,21 +29,14 @@ const CorgiCard = ({ corgi, description, children, showOwner = false, showRarity
       </Link>
 
       <div className='corgi-card__body'>
-        <p className='corgi-card__name'>{name}</p>
+        <h5 className='corgi-card__name'>{name}</h5>
+        <Quote id={quote} />
+      </div>
 
-        <div className='corgi-card__quote'>
-          <Quote id={quote} />
-        </div>
-
-        {description && <p className='corgi-card__text'>{description}</p>}
-
-        {children && <p className='corgi-card__content'>{children}</p>}
-
-        {showOwner && (
-          <p className='corgi-card__text corgi-card__text--owner'>
-            Created by <span className='corgi-card__owner'>@{owner}</span>
-          </p>
-        )}
+      <div className='corgi-card__footer'>
+        <p className='corgi-card__text corgi-card__text--owner'>
+          {humanizeTime(created)} ago by <span className='corgi-card__owner'>@{owner}</span>
+        </p>
       </div>
     </div>
   );
