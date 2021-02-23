@@ -5,11 +5,15 @@
 
   &__input {
     margin: 0;
-    margin-right: 0.5rem;
+    margin-right: 0.25rem;
   }
 
   &__submit {
     margin: 0;
-    margin-left: 0.5rem;
+    margin-left: 0.25rem;
+
+    .spinner-border {
+      margin: 0 auto;
+    }
   }
 }
