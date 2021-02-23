@@ -1,9 +1,21 @@
 .showcase {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 
   width: 100%;
+}
+
+@media all and (min-width: 1440px) {
+  .showcase {
+    grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+  }
+}
+
+@media all and (max-width: 1140px) {
+  .showcase {
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  }
 }
 
 @media all and (max-width: 360px) {
