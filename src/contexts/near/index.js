@@ -58,6 +58,10 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
   };
 
   useEffect(() => {
+    setUser(currentUser);
+  }, [currentUser]);
+
+  useEffect(() => {
     if (!nearState.user) {
       loadingStart();
     } else {
@@ -66,10 +70,6 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
       }
     }
   }, [nearState]);
-
-  useEffect(() => {
-    setUser(currentUser);
-  }, [currentUser]);
 
   return (
     <NearContext.Provider
