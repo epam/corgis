@@ -1,6 +1,6 @@
 import Button from './Button/Button';
 import Colorpicker from './Colorpicker/Colorpicker';
-import Dropdown from './Dropdown/Dropdown';
+import Dropdown from './Dropdown';
 import Egg from './Egg/Egg';
 import ExternalLink from './ExternalLink/ExternalLink';
 import InfoTile from './InfoTile/InfoTile';

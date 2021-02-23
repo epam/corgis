@@ -76,6 +76,20 @@
     }
   }
 
+  &__item--divider {
+    border-top: $border-basic-main;
+
+    cursor: default;
+
+    &:hover {
+      background-color: $dropdown-item-background-color;
+    }
+
+    & > * {
+      padding: 0;
+    }
+  }
+
   &--opened {
     .dropdown__title {
       border-radius: $border-radius-dropdown-title;
