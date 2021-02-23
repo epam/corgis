@@ -3,7 +3,9 @@ import humanizeDuration from 'humanize-duration';
 /**
  * In JavaScript Date milliseconds are limited by 13 nums.
  * The only way to correctly calculate the date is to cut redundunt or add missing nums.
- * @param {string} ms
+ * @param {(string | number)} ms
+ *
+ * Returns the parsed and humanized time in string representation.
  * @returns {string}
  */
 export default function humanizeTime(ms) {
