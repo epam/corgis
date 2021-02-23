@@ -16,7 +16,7 @@ const AccountPage = () => {
     }
   }, [created, clearCreatedCorgi]);
 
-  if (corgis && corgis.length === 0) {
+  if (!loading && corgis && corgis.length === 0) {
     return <Redirect to='/generation' />;
   }
 
