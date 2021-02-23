@@ -5,13 +5,11 @@ import './Popup.scss';
 
 import classNames from 'classnames';
 
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import { PopupType } from '~types/PopupTypes';
 
 const PopupPropTypes = {
   isOpened: PropTypes.bool,
-  title: PropTypes.string,
-  position: PropTypes.string,
-  children: ReactChildrenTypeRequired,
+  ...PopupType,
 };
 
 const Popup = ({ isOpened = false, title, position = 'top', children }) => (
