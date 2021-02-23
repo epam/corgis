@@ -24,6 +24,8 @@ import {
   CorgiVeryRare,
   CorgiRate,
   SwitchCorgiPhoto,
+  Activity,
+  Owner,
 } from './corgi';
 
 export {
@@ -51,4 +53,6 @@ export {
   CorgiVeryRare,
   CorgiRate,
   SwitchCorgiPhoto,
+  Activity,
+  Owner,
 };
