@@ -90,9 +90,9 @@ export const ContractContextProvider = ({ Contract, children }) => {
   );
 
   const transferCorgi = useCallback(
-    (receiver, id, message) => {
+    (receiver, id) => {
       dispatchContract({ type: TRANSFER_CORGI_START });
-      Contract.transfer_corgi({ receiver, id, message }, BOATLOAD_OF_GAS)
+      Contract.transfer_corgi({ receiver, id }, BOATLOAD_OF_GAS)
         .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
         .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
     },

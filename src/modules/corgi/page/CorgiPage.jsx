@@ -3,7 +3,7 @@ import { Redirect, useRouteMatch } from 'react-router-dom';
 
 import './CorgiPage.scss';
 
-import { ContractContext, NearContext, TransferContextProvider } from '~contexts';
+import { ContractContext, NearContext } from '~contexts';
 
 import { CorgiCard, CorgiRate, Spinner } from '~modules/common';
 import { SendModal, ShareActions, ShareModal } from '~modules/corgi/components';
@@ -51,7 +51,6 @@ const CorgiPage = () => {
 
   return (
     <div className='corgi-page'>
-      <TransferContextProvider>
         <SendModal corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
         <ShareModal corgi={corgi} closeModal={closeModal} show={showShare} />
 
@@ -68,7 +67,6 @@ const CorgiPage = () => {
             <ShareActions openSendModal={openSendModal} openShareModal={openShareModal} />
           </div>
         </div>
-      </TransferContextProvider>
     </div>
   );
 };
