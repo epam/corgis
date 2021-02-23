@@ -4,7 +4,17 @@ import PropTypes from 'prop-types';
 
 import './CorgiCard.scss';
 
-import { Activity, CorgiSVG, Dropdown, Quote, RarityString } from '~modules/common';
+import {
+  Activity,
+  Confirmation,
+  CorgiSVG,
+  Dropdown,
+  PopupWrapper,
+  Quote,
+  RarityString,
+  Share,
+  Transfer,
+} from '~modules/common';
 
 import { SAUSAGE } from '~constants/corgi';
 
@@ -27,17 +37,27 @@ const CorgiCard = ({ corgi, showActions = false }) => {
                 <path d='M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z' />
               </svg>
             }
-            listStyles={{
-              left: 'auto',
-              right: 0,
-            }}
+            listStyles={{ left: 'auto', right: 0 }}
           >
-            {/* slug for transfer feature */}
-            <span onClick={() => console.log('Gift')}>Gift</span>
-            <span onClick={() => console.log('Trade')}>Trade</span>
-            <span onClick={() => console.log('Share')}>Share</span>
+            <PopupWrapper
+              popup={{ title: 'Gift me to your friend!', position: 'bottom-left', children: <Transfer id={id} /> }}
+            >
+              <span>Gift</span>
+            </PopupWrapper>
+
+            <PopupWrapper popup={{ title: 'Trade', position: 'bottom-left', children: <span>In development...</span> }}>
+              <span>Trade</span>
+            </PopupWrapper>
+
+            <PopupWrapper popup={{ title: 'Share', position: 'bottom-left', children: <Share id={id} /> }}>
+              <span>Share</span>
+            </PopupWrapper>
+
             <span divider='true'></span>
-            <span onClick={() => console.log('Delete')}>Delete</span>
+
+            <PopupWrapper popup={{ title: 'Are you sure?', position: 'bottom-left', children: <Confirmation /> }}>
+              <span>Delete</span>
+            </PopupWrapper>
           </Dropdown>
         )}
       </div>
