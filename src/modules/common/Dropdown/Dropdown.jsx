@@ -10,11 +10,12 @@ import { useDetectClickOutside } from '~hooks';
 import { ReactChildrenType } from '~types/ReactChildrenType';
 
 const DropdownPropTypes = {
-  dropdownTitle: PropTypes.string.isRequired,
+  title: PropTypes.oneOfType([PropTypes.string, ReactChildrenType]).isRequired,
+  wide: PropTypes.bool,
   children: ReactChildrenType,
 };
 
-const Dropdown = ({ dropdownTitle, children }) => {
+const Dropdown = ({ title = '', wide = false, children }) => {
   const [isOpened, setIsOpened] = useState(false);
 
   const handleOpen = () => {
@@ -30,9 +31,15 @@ const Dropdown = ({ dropdownTitle, children }) => {
   useDetectClickOutside(dropdownRef, handleClickOutside);
 
   return (
-    <div className={classNames('dropdown', { 'dropdown--opened': isOpened })} ref={dropdownRef}>
+    <div
+      className={classNames('dropdown', {
+        'dropdown--opened': isOpened,
+        'dropdown--wide': wide,
+      })}
+      ref={dropdownRef}
+    >
       <button className='dropdown__title' onClick={() => handleOpen()}>
-        {dropdownTitle}
+        {title}
       </button>
 
       <ul className='dropdown__list'>
