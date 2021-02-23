@@ -28,6 +28,9 @@ import {
   SwitchCorgiPhoto,
   Activity,
   Owner,
+  Confirmation,
+  Share,
+  Transfer,
 } from './corgi';
 
 export {
@@ -59,4 +62,7 @@ export {
   SwitchCorgiPhoto,
   Activity,
   Owner,
+  Confirmation,
+  Share,
+  Transfer,
 };
