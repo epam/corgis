@@ -7,6 +7,7 @@
 
   &__header {
     @extend .card-header;
+    @include dis-flex(space-between, center);
 
     background-color: transparent;
   }
@@ -14,7 +15,8 @@
   &__image {
     @include flex-center;
 
-    min-height: 17rem;
+    height: 10rem;
+    max-height: 10rem;
 
     padding: 1rem;
   }
