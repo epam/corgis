@@ -70,6 +70,8 @@
     }
 
     & > * {
+      width: 100%;
+
       padding: $padding-dropdown-item-wide;
     }
   }
