@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 
 import './CorgiCard.scss';
 
-import { CorgiSVG, Dropdown, Quote, RarityString } from '~modules/common';
-
-import humanizeTime from '~helpers/humanizeTime';
+import { Activity, CorgiSVG, Dropdown, Quote, RarityString } from '~modules/common';
 
 import { SAUSAGE } from '~constants/corgi';
 
@@ -14,21 +12,8 @@ import { CorgiTypeShape } from '~types/CorgiTypes';
 
 const CorgiCardPropTypes = { corgi: CorgiTypeShape.isRequired, showActions: PropTypes.bool };
 
-// const sample = {
-//   background_color: '#0a1eff',
-//   color: '#d2fc9f',
-//   created: 1614018415048601000,
-//   id: '9RJfzs3lE+flgHs4iYr/rVGBzqF/gbGxRKITUfx+H2s=',
-//   modified: 1614018415048601000,
-//   name: 'rambunctious reward',
-//   owner: 'hexus.testnet',
-//   quote: '59',
-//   rate: 'COMMON',
-//   sender: '',
-// };
-
 const CorgiCard = ({ corgi, showActions = false }) => {
-  const { id, background_color, color, quote, name, rate, owner, created } = corgi;
+  const { id, background_color, color, quote, name, rate, owner, sender, created, modified } = corgi;
 
   return (
     <div className='corgi-card'>
@@ -69,9 +54,7 @@ const CorgiCard = ({ corgi, showActions = false }) => {
       </div>
 
       <div className='corgi-card__footer'>
-        <p className='corgi-card__text'>
-          {humanizeTime(created)} ago by <span className='corgi-card__owner'>@{owner}</span>
-        </p>
+        <Activity created={created} modified={modified} owner={owner} sender={sender} />
       </div>
     </div>
   );

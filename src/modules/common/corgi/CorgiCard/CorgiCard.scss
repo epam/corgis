@@ -35,14 +35,4 @@
   &__footer {
     padding: 0.5rem 1rem;
   }
-
-  &__text {
-    @extend .card-text;
-
-    color: $text-color-gray-dark;
-  }
-
-  &__owner {
-    color: $color-main;
-  }
 }
