@@ -23,7 +23,7 @@
   }
 }
 
-@media all and (max-width: 1140px) {
+@media all and (max-width: 1120px) {
   .showcase {
     &__grid {
       grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
