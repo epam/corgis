@@ -6,6 +6,8 @@ import ExternalLink from './ExternalLink/ExternalLink';
 import InfoTile from './InfoTile/InfoTile';
 import Input from './Input/Input';
 import Modal from './Modal/Modal';
+import Popup from './Popup';
+import PopupWrapper from './PopupWrapper';
 import Quote from './Quote/Quote';
 import RarityString from './RarityString';
 import Spinner from './Spinner/Spinner';
@@ -37,6 +39,8 @@ export {
   InfoTile,
   Input,
   Modal,
+  Popup,
+  PopupWrapper,
   Quote,
   RarityString,
   Spinner,
