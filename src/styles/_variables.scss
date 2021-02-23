@@ -45,13 +45,16 @@ $padding-button: 0.25rem 1.5rem;
 
 $padding-infotile: $padding-button;
 
-$padding-dropdown-item: $padding-button;
+$padding-dropdown-item: 0.25rem;
+
+$padding-dropdown-item-wide: $padding-dropdown-item 1.5rem;
 
 // gaps
 
 // borders
 
-$border-basic: 1px solid;
+$border-basic-width: 1px;
+$border-basic: $border-basic-width solid;
 $border-basic-main: $border-basic $color-main;
 $border-basic-black: $border-basic $color-black;
 $border-basic-gray: $border-basic $color-gray;
