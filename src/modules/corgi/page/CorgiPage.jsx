@@ -3,13 +3,12 @@ import { Redirect, useRouteMatch } from 'react-router-dom';
 
 import './CorgiPage.scss';
 
-import { ContractContext, NearContext } from '~contexts';
+import { ContractContext } from '~contexts';
 
 import { CorgiCard, CorgiRate, CorgiSpinner } from '~modules/common';
 import { SendModal, ShareActions, ShareModal } from '~modules/corgi/components';
 
 const CorgiPage = () => {
-  const { user } = useContext(NearContext);
   const { corgi, loading, getCorgi, transfering } = useContext(ContractContext);
 
   const [showSend, setSend] = useState(false);
