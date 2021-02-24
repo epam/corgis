@@ -54,7 +54,7 @@ const Transfer = ({ id }) => {
         <Input
           value={receiver}
           onChange={(event) => handleReceiverInput(event)}
-          placeholder='owner.testnet'
+          placeholder='account.testnet'
           type='text'
           required
         />
