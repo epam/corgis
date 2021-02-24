@@ -82,7 +82,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const deleteCorgi = useCallback(
     (id) => {
       dispatchContract({ type: DELETE_CORGI_START });
-      Contract.delete_corgi({ id }, BOATLOAD_OF_GAS)
+      Contract.delete_corgi({ id })
         .then(() => dispatchContract({ type: DELETE_CORGI_SUCCESS }))
         .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
     },
