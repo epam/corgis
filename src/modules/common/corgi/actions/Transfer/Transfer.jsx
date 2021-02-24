@@ -49,15 +49,11 @@ const Transfer = ({ id }) => {
     setReceiver(event.target.value);
   };
 
-  const sendCorgi = () => {
-    transferCorgi(receiver, id);
-  };
-
   const onSubmit = async (event) => {
     event.preventDefault();
 
     if (await checkAccountLegit(receiver)) {
-      sendCorgi();
+      transferCorgi(receiver, id);
     }
   };
 
