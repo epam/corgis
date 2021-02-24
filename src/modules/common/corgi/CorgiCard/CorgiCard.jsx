@@ -4,17 +4,7 @@ import PropTypes from 'prop-types';
 
 import './CorgiCard.scss';
 
-import {
-  Activity,
-  Confirmation,
-  CorgiSVG,
-  Dropdown,
-  PopupWrapper,
-  Quote,
-  RarityString,
-  Share,
-  Transfer,
-} from '~modules/common';
+import { ActionsDropdown, Activity, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
 
 import { SAUSAGE } from '~constants/corgi';
 
@@ -30,36 +20,7 @@ const CorgiCard = ({ corgi, showActions = false }) => {
       <div className='corgi-card__header'>
         <RarityString rate={rate} />
 
-        {showActions && (
-          <Dropdown
-            title={
-              <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'>
-                <path d='M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z' />
-              </svg>
-            }
-            listStyles={{ left: 'auto', right: 0 }}
-          >
-            <PopupWrapper
-              popup={{ title: 'Gift me to your friend!', position: 'bottom-left', children: <Transfer id={id} /> }}
-            >
-              <span>Gift</span>
-            </PopupWrapper>
-
-            <PopupWrapper popup={{ title: 'Trade', position: 'bottom-left', children: <span>In development...</span> }}>
-              <span>Trade</span>
-            </PopupWrapper>
-
-            <PopupWrapper popup={{ title: 'Share', position: 'bottom-left', children: <Share id={id} /> }}>
-              <span>Share</span>
-            </PopupWrapper>
-
-            <span divider='true'></span>
-
-            <PopupWrapper popup={{ title: 'Are you sure?', position: 'bottom-left', children: <Confirmation /> }}>
-              <span>Delete</span>
-            </PopupWrapper>
-          </Dropdown>
-        )}
+        {showActions && <ActionsDropdown id={id} />}
       </div>
 
       <Link to={`/corgi/${id}`}>
