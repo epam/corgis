@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useImperativeHandle } from 'react';
 
 import './PopupWrapper.scss';
 
@@ -14,8 +14,14 @@ const PopupWrapperPropTypes = {
   children: ReactChildrenTypeRequired,
 };
 
-const PopupWrapper = ({ popup = { title: '', position: 'top', children: <></> }, children }) => {
+const PopupWrapper = React.forwardRef(({ popup = { title: '', position: 'top', children: <></> }, children }, ref) => {
   const [isPopupOpened, setIsPopupOpened] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    hidePopup() {
+      setIsPopupOpened(false);
+    },
+  }));
 
   const togglePopup = () => {
     if (isPopupOpened) {
@@ -44,7 +50,7 @@ const PopupWrapper = ({ popup = { title: '', position: 'top', children: <></> },
       </div>
     </div>
   );
-};
+});
 
 PopupWrapper.propTypes = PopupWrapperPropTypes;
 
