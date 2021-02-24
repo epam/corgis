@@ -17,7 +17,7 @@ const Share = ({ id }) => (
         enabled: true,
         labels: 'cta',
         language: 'en',
-        networks: ['telegram', 'linkedin', 'facebook', 'twitter', 'pinterest'],
+        networks: ['telegram', 'linkedin', 'facebook', 'twitter', 'pinterest', 'whatsapp', 'vk', 'wechat'],
 
         // url examples:
         // window.location.origin = https://epam.github.io
