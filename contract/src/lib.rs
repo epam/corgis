@@ -5,7 +5,7 @@ pub mod pack;
 
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
-    collections::UnorderedMap,
+    collections::{UnorderedMap, UnorderedSet},
     env, near_bindgen,
     serde::Serialize,
     wee_alloc::WeeAlloc,
@@ -62,6 +62,7 @@ pub trait NEP4 {
 pub struct Model {
     corgis: Dict<CorgiId, Corgi>,
     corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiId, ()>>,
+    escrows_by_owner: UnorderedMap<AccountId, UnorderedSet<AccountId>>,
 }
 
 /// Represents a `Corgi`.
@@ -124,27 +125,49 @@ impl Default for Model {
         Self {
             corgis: Dict::new("C".as_bytes().to_vec()),
             corgis_by_owner: UnorderedMap::new("O".as_bytes().to_vec()),
+            escrows_by_owner: UnorderedMap::new(vec![b'c']),
         }
     }
 }
 
 #[near_bindgen]
 impl NEP4 for Model {
-    fn grant_access(&mut self, _escrow_account_id: AccountId) {
-        todo!()
+    fn grant_access(&mut self, escrow_account_id: AccountId) {
+        let owner = env::predecessor_account_id();
+
+        let mut escrows = self
+            .escrows_by_owner
+            .get(&owner)
+            .unwrap_or_else(|| UnorderedSet::new(vec![b'd']));
+        escrows.insert(&escrow_account_id);
+        self.escrows_by_owner.insert(&owner, &escrows);
     }
 
-    fn revoke_access(&mut self, _escrow_account_id: AccountId) {
-        todo!()
+    fn revoke_access(&mut self, escrow_account_id: AccountId) {
+        let owner = env::predecessor_account_id();
+        let mut escrows = self
+            .escrows_by_owner
+            .get(&owner)
+            .expect("Access does not exist");
+        let escrow_was_removed = escrows.remove(&escrow_account_id);
+        assert!(escrow_was_removed, "Did not find access for escrow ID");
+        self.escrows_by_owner.insert(&owner, &escrows);
     }
 
-    fn transfer_from(
-        &mut self,
-        _owner_id: AccountId,
-        _new_owner_id: AccountId,
-        _token_id: TokenId,
-    ) {
-        todo!()
+    fn transfer_from(&mut self, owner_id: AccountId, new_owner_id: AccountId, token_id: TokenId) {
+        let token_owner = self.get_token_owner(token_id.clone());
+
+        assert_eq!(
+            owner_id, token_owner,
+            "Attempt to transfer a token from a different owner"
+        );
+
+        assert!(
+            self.check_access(token_owner),
+            "Attempt to transfer a token with no access",
+        );
+
+        self.transfer(new_owner_id, token_id);
     }
 
     fn transfer(&mut self, new_owner_id: AccountId, token_id: TokenId) {
@@ -152,8 +175,8 @@ impl NEP4 for Model {
         self.transfer_corgi(new_owner_id, token_id);
     }
 
-    fn check_access(&self, _account_id: AccountId) -> bool {
-        todo!()
+    fn check_access(&self, account_id: AccountId) -> bool {
+        self.can_transfer_on_behalf(account_id)
     }
 
     fn get_token_owner(&self, token_id: TokenId) -> String {
@@ -271,9 +294,14 @@ impl Model {
     /// Delete the `Corgi` by `id`.
     /// Only the owner of the `Corgi` can delete it.
     pub fn delete_corgi(&mut self, id: String) {
+        let owner = env::predecessor_account_id();
+        self.delete_corgi_from(owner, id);
+    }
+
+    fn delete_corgi_from(&mut self, owner: AccountId, id: String) {
         log!("::delete_corgi({})", id);
 
-        let owner = env::predecessor_account_id();
+        assert!(self.can_transfer_on_behalf(owner.clone()));
 
         self.corgis.remove(&id);
 
@@ -341,16 +369,27 @@ impl Model {
             .expect("The Corgi with the given id does not exist");
 
         assert_eq!(corgi.id, id);
-        assert_eq!(
-            corgi.owner, owner,
-            "The specified Corgi does not belong to sender"
+        assert!(
+            self.can_transfer_on_behalf(corgi.owner.clone()),
+            "The specified Corgi does not belong to sender",
         );
+
+        self.delete_corgi_from(corgi.owner.clone(), id);
+
         corgi.owner = receiver;
         corgi.sender = owner;
         corgi.modified = env::block_timestamp();
 
-        self.delete_corgi(id);
         self.push_corgi(corgi);
+    }
+
+    pub fn can_transfer_on_behalf(&self, account_id: AccountId) -> bool {
+        let initiator = env::predecessor_account_id();
+        initiator == account_id
+            || self
+                .escrows_by_owner
+                .get(&account_id)
+                .map_or(false, |escrows| escrows.contains(&initiator))
     }
 
     fn push_corgi(&mut self, corgi: Corgi) -> Corgi {
