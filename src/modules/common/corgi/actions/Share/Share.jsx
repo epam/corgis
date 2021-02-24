@@ -12,7 +12,6 @@ const Share = ({ id }) => (
   <div className='share'>
     <InlineShareButtons
       config={{
-        display: 'block',
         alignment: 'center',
         color: 'social',
         enabled: true,
@@ -20,7 +19,10 @@ const Share = ({ id }) => (
         language: 'en',
         networks: ['telegram', 'linkedin', 'facebook', 'twitter', 'pinterest'],
 
-        url: `${window.location.origin}/corgi/${id}`,
+        // url examples:
+        // window.location.origin = https://epam.github.io
+        // window.location.pathname = /corgis/
+        url: `${window.location.origin}${window.location.pathname}#corgi/${id}`,
       }}
     />
   </div>
