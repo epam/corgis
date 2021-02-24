@@ -8,9 +8,8 @@ import Input from './Input';
 import Modal from './Modal/Modal';
 import Popup from './Popup';
 import PopupWrapper from './PopupWrapper';
-import Quote from './Quote/Quote';
-import RarityString from './RarityString';
-import Spinner from './Spinner/Spinner';
+
+import { BasicSpinner, CorgiSpinner } from './spinners';
 
 import {
   CorgiCard,
@@ -26,11 +25,6 @@ import {
   CorgiVeryRare,
   CorgiRate,
   SwitchCorgiPhoto,
-  Activity,
-  Owner,
-  Confirmation,
-  Share,
-  Transfer,
 } from './corgi';
 
 export {
@@ -44,9 +38,8 @@ export {
   Modal,
   Popup,
   PopupWrapper,
-  Quote,
-  RarityString,
-  Spinner,
+  BasicSpinner,
+  CorgiSpinner,
   CorgiCard,
   CorgisShowCase,
   CorgiSVG,
@@ -60,9 +53,4 @@ export {
   CorgiVeryRare,
   CorgiRate,
   SwitchCorgiPhoto,
-  Activity,
-  Owner,
-  Confirmation,
-  Share,
-  Transfer,
 };
