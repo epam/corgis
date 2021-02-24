@@ -30,12 +30,12 @@ pub trait NEP4 {
     // Grant the access to the given `accountId` for the given `tokenId`.
     // Requirements:
     // * The caller of the function (`predecessor_id`) should have access to the token.
-    fn grant_access(&mut self, escrow_id: AccountId);
+    fn grant_access(&mut self, escrow_account_id: AccountId);
 
     // Revoke the access to the given `accountId` for the given `tokenId`.
     // Requirements:
     // * The caller of the function (`predecessor_id`) should have access to the token.
-    fn revoke_access(&mut self, escrow_id: AccountId);
+    fn revoke_access(&mut self, escrow_account_id: AccountId);
 
     // Transfer the given `tokenId` to the given `accountId`. Account `accountId` becomes the new owner.
     // Requirements:
@@ -49,7 +49,7 @@ pub trait NEP4 {
     fn transfer(&mut self, new_owner_id: AccountId, token_id: TokenId);
 
     // Returns `true` or `false` based on caller of the function (`predecessor_id) having access to the token
-    fn check_access(&self, account_id: AccountId) -> bool;
+    fn check_access(&mut self, account_id: AccountId) -> bool;
 
     // Get an individual owner by given `tokenId`.
     fn get_token_owner(&self, token_id: TokenId) -> String;
@@ -141,14 +141,14 @@ impl NEP4 for Model {
         self.escrows_by_owner.insert(&owner, &escrows);
     }
 
-    fn revoke_access(&mut self, escrow_id: AccountId) {
+    fn revoke_access(&mut self, escrow_account_id: AccountId) {
         let owner = env::predecessor_account_id();
         let mut escrows = match self.escrows_by_owner.get(&owner) {
             None => panic!("Account `{}` does not have any escrow", owner),
             Some(escrows) => escrows,
         };
-        if !escrows.remove(&escrow_id) {
-            panic!("Escrow `{}` does not have access to `{}`", escrow_id, owner);
+        if !escrows.remove(&escrow_account_id) {
+            panic!("Escrow `{}` does not have access to `{}`", escrow_account_id, owner);
         }
 
         self.escrows_by_owner.insert(&owner, &escrows);
@@ -173,7 +173,7 @@ impl NEP4 for Model {
         self.transfer_corgi(new_owner_id, token_id);
     }
 
-    fn check_access(&self, account_id: AccountId) -> bool {
+    fn check_access(&mut self, account_id: AccountId) -> bool {
         let initiator = env::predecessor_account_id();
         initiator == account_id
             || self
