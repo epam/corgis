@@ -16,14 +16,12 @@ impl<T> Deref for MockedContext<T> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
-        println!("*");
         &self.contract
     }
 }
 
 impl<T> DerefMut for MockedContext<T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        println!("*mut");
         self.update_context();
         &mut self.contract
     }

@@ -149,8 +149,9 @@ impl NEP4 for Model {
             .escrows_by_owner
             .get(&owner)
             .expect("Access does not exist");
-        let escrow_was_removed = escrows.remove(&escrow_account_id);
-        assert!(escrow_was_removed, "Did not find access for escrow ID");
+        if !escrows.remove(&escrow_account_id) {
+            panic!("Did not find access for escrow ID `{}`", escrow_account_id);
+        }
         self.escrows_by_owner.insert(&owner, &escrows);
     }
 
@@ -263,9 +264,13 @@ impl Model {
     pub fn get_corgi_by_id(&self, id: CorgiId) -> Corgi {
         log!("::get_corgi_by_id({})", id);
 
-        let corgi = self.corgis.get(&id).expect("Corgi not found");
-        assert!(corgi.id == id);
-        corgi
+        match self.corgis.get(&id) {
+            None => panic!("The given corgi id `{}` was not found", id),
+            Some(corgi) => {
+                assert!(corgi.id == id);
+                corgi
+            }
+        }
     }
 
     /// Gets the `Corgi`s owned by the `owner` account id.
@@ -282,9 +287,13 @@ impl Model {
             Some(list) => list
                 .into_iter()
                 .map(|(id,_)| {
-                    let corgi = self.corgis.get(&id).expect("Could not find Corgi by id");
+                    let maybe_corgi = self.corgis.get(&id);
+                    assert!(maybe_corgi.is_some(), "Could not find Corgi by id `{}`", id);
+
+                    let corgi = maybe_corgi.unwrap();
                     assert!(corgi.id == id);
                     assert!(corgi.owner == owner, "The corgi with id `{}` owned by `{}` was found while fetching `{}`'s corgis", id, corgi.owner, owner);
+
                     corgi
                 })
                 .collect(),
@@ -303,15 +312,19 @@ impl Model {
 
         assert!(self.can_transfer_on_behalf(owner.clone()));
 
-        self.corgis.remove(&id);
+        match self.corgis_by_owner.get(&owner) {
+            None => panic!("Account `{}` does not have corgis to delete from", owner),
+            Some(mut list) => {
+                if !list.remove(&id) {
+                    panic!("Corgi id `{}` does not belong to account `{}`", id, owner);
+                }
+                self.corgis_by_owner.insert(&owner, &list);
+            }
+        }
 
-        let mut list = self
-            .corgis_by_owner
-            .get(&owner)
-            .expect("The account does not have any corgis to delete from");
-        list.remove(&id);
-
-        self.corgis_by_owner.insert(&owner, &list);
+        if !self.corgis.remove(&id) {
+            panic!("Attempt to remove a nonexistent Corgi id `{}`", id);
+        }
     }
 
     /// Get all `Corgi`s from all users.
@@ -356,23 +369,26 @@ impl Model {
     pub fn transfer_corgi(&mut self, receiver: AccountId, id: String) {
         log!("::transfer_corgi({}, {})", receiver, id);
 
-        let receiver_is_valid_id = env::is_valid_account_id(receiver.as_bytes());
-        assert!(receiver_is_valid_id, "Receiver account is not a valid id");
+        if !env::is_valid_account_id(receiver.as_bytes()) {
+            panic!("Receiver account `{}` is not a valid account id", receiver);
+        }
 
         let owner = env::predecessor_account_id();
 
-        assert_ne!(receiver, owner, "Self transfers are not accepted");
+        if owner == receiver {
+            panic!("Account `{}` attempted to make a self transfer", receiver);
+        }
 
-        let mut corgi = self
-            .corgis
-            .get(&id)
-            .expect("The Corgi with the given id does not exist");
+        let mut corgi = match self.corgis.get(&id) {
+            None => panic!("Attempt to transfer a nonexistent Corgi id `{}`", id),
+            Some(corgi) => corgi,
+        };
 
         assert_eq!(corgi.id, id);
-        assert!(
-            self.can_transfer_on_behalf(corgi.owner.clone()),
-            "The specified Corgi does not belong to sender",
-        );
+
+        if !self.can_transfer_on_behalf(corgi.owner.clone()) {
+            panic!("The specified Corgi `{}` does not belong to sender", id);
+        }
 
         self.delete_corgi_from(corgi.owner.clone(), id);
 
