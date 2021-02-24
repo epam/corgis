@@ -339,10 +339,12 @@ impl Model {
     pub fn get_global_corgis(&self) -> Vec<Corgi> {
         log!("::get_global_corgis()");
 
+        let page_limit = self.get_corgis_page_limit() as usize;
+
         let mut result = Vec::new();
         let mut id = self.corgis.first.clone();
         while id != "" {
-            if result.len() >= self.get_corgis_page_limit() as usize {
+            if result.len() >= page_limit as usize {
                 break;
             }
 
