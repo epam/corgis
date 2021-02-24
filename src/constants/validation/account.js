@@ -6,6 +6,6 @@ export const USER_VALIDATION_MESSAGES = {
 };
 
 export const NETWORK_POSTFIX = {
-  DEFAULT: '.testnet',
-  MAINNET: '.near',
+  DEFAULT: 'testnet',
+  MAINNET: 'near',
 };
