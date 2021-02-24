@@ -18,6 +18,7 @@
 
   &__content {
     @extend .popover-body;
+    @include dis-flex-column(flex-start, center);
 
     word-break: break-all;
   }
