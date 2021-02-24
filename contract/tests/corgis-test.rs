@@ -1,25 +1,31 @@
 use std::{
     cmp::min,
     collections::HashSet,
-    ops::Deref,
+    ops::{Deref, DerefMut},
     panic::{self, AssertUnwindSafe},
-    time::{SystemTime, UNIX_EPOCH},
 };
 
-use corgis_nft::{pack::pack, Corgi, Model};
-use near_sdk::{testing_env, MockedBlockchain, VMConfig, VMContext};
-use near_vm_logic::VMLimitConfig;
+mod context;
 
-struct ModelMock {
+use context::MockedContext;
+
+use corgis_nft::{Corgi, Model, NEP4};
+
+struct ContractChecker {
     contract: Model,
-    context: VMContext,
     ids: Vec<(String, String)>,
 }
 
-impl Deref for ModelMock {
+impl Deref for ContractChecker {
     type Target = Model;
     fn deref(&self) -> &Self::Target {
         &self.contract
+    }
+}
+
+impl DerefMut for ContractChecker {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.contract
     }
 }
 
@@ -35,27 +41,33 @@ fn charlie() -> String {
     "charlie.mock".to_string()
 }
 
-impl ModelMock {
+fn ted() -> String {
+    "ted.mock".to_string()
+}
+
+impl ContractChecker {
     fn new() -> Self {
-        let context = Self::test_context(vec![], false, &[0; 16]);
         Self {
             contract: Model::new(),
-            context,
             ids: Vec::new(),
         }
     }
+}
 
+impl MockedContext<ContractChecker> {
     fn predecessor_account_id(&self) -> String {
         self.context.predecessor_account_id.clone()
     }
 
-    fn create_corgi(&mut self, i: usize) -> Corgi {
+    fn create_test_corgi(&mut self, i: usize) -> Corgi {
         let name = format!("doggy dog {}", i);
         let quote = "To err is human — to forgive, canine";
         let color = "green";
         let background_color = "blue";
 
-        let corgis_by_owner_count = self.get_corgis_by_owner(self.predecessor_account_id()).len();
+        let corgis_by_owner_count = self
+            .get_corgis_by_owner(self.predecessor_account_id())
+            .len();
 
         let new_corgi = self.contract.create_corgi(
             name.to_string(),
@@ -63,8 +75,6 @@ impl ModelMock {
             color.to_string(),
             background_color.to_string(),
         );
-        self.ids
-            .push((new_corgi.id.clone(), self.predecessor_account_id()));
 
         println!("Created corgi id: {}", new_corgi.id);
 
@@ -76,6 +86,9 @@ impl ModelMock {
         assert_eq!(new_corgi.owner, self.predecessor_account_id());
         assert_eq!(new_corgi.created, self.context.block_timestamp);
         assert_eq!(new_corgi.modified, self.context.block_timestamp);
+
+        let account = self.predecessor_account_id();
+        self.ids.push((new_corgi.id.clone(), account));
 
         let corgi_by_id = self.get_corgi_by_id(new_corgi.id.clone());
         assert_eq!(corgi_by_id, new_corgi);
@@ -92,13 +105,11 @@ impl ModelMock {
         );
         self.check_global_corgis(global_corgis);
 
+
         let corgis_by_owner = self.get_corgis_by_owner(self.predecessor_account_id());
         assert_eq!(corgis_by_owner.len(), corgis_by_owner_count + 1);
         assert_eq!(&new_corgi, corgis_by_owner.get(0).unwrap());
         self.check_corgis_by_owner();
-
-        let new_seed = (pack(self.context.random_seed.as_slice()) + 1).to_ne_bytes();
-        self.context = Self::test_context(vec![], false, &new_seed);
 
         new_corgi
     }
@@ -136,7 +147,9 @@ impl ModelMock {
     }
 
     fn delete_corgi(&mut self, id: String) {
-        let corgis_by_owner_count = self.get_corgis_by_owner(self.predecessor_account_id()).len();
+        let corgis_by_owner_count = self
+            .get_corgis_by_owner(self.predecessor_account_id())
+            .len();
 
         self.contract.delete_corgi(id.clone());
 
@@ -152,11 +165,15 @@ impl ModelMock {
         self.check_corgis_by_owner();
 
         assert_eq!(
-            self.get_corgis_by_owner(self.predecessor_account_id()).len(),
+            self.get_corgis_by_owner(self.predecessor_account_id())
+                .len(),
             corgis_by_owner_count - 1
         );
         assert!(panic::catch_unwind(|| self.get_corgi_by_id(id.clone())).is_err());
-        assert!(panic::catch_unwind(AssertUnwindSafe(|| self.delete_corgi(id.clone()))).is_err());
+        assert!(
+            panic::catch_unwind(AssertUnwindSafe(|| self.contract.delete_corgi(id.clone())))
+                .is_err()
+        );
     }
 
     fn check_global_corgis(&self, global_corgis: Vec<Corgi>) {
@@ -198,196 +215,238 @@ impl ModelMock {
             assert_eq!(ids_by_owner, ids);
         }
     }
-
-    fn test_context(input: Vec<u8>, is_view: bool, random_seed: &[u8]) -> VMContext {
-        let context = VMContext {
-            current_account_id: "contract.mock".to_string(),
-            signer_account_id: bob(),
-            signer_account_pk: vec![0, 1, 2],
-            predecessor_account_id: alice(),
-            input,
-            block_index: 0,
-            block_timestamp: SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .unwrap()
-                .as_secs(),
-            account_balance: 0,
-            account_locked_balance: 0,
-            // Important to increase storage usage is several items are going to be created.
-            // https://github.com/near/near-sdk-rs/issues/159#issuecomment-631847439
-            storage_usage: 100_000,
-            attached_deposit: 0,
-            prepaid_gas: 10u64.pow(18),
-            random_seed: random_seed.to_vec(),
-            is_view,
-            output_data_receivers: vec![],
-            epoch_height: 19,
-        };
-        testing_env!(
-            context.clone(),
-            VMConfig {
-                limit_config: VMLimitConfig {
-                    max_number_logs: 200,
-                    ..Default::default()
-                },
-                ..Default::default()
-            },
-            Default::default()
-        );
-        context
-    }
 }
 
 #[test]
-fn get_empty_corgis() {
-    let contract = ModelMock::new();
-    assert!(contract.get_corgis_page_limit() > 0);
-    assert_eq!(contract.get_global_corgis().len(), 0);
-    assert_eq!(contract.get_corgis_by_owner("?".to_string()).len(), 0);
+fn initial_state() {
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        assert!(contract.get_corgis_page_limit() > 0);
+        assert_eq!(contract.get_global_corgis().len(), 0);
+        assert_eq!(contract.get_corgis_by_owner(alice()).len(), 0);
+    });
 }
 
 #[test]
 #[should_panic]
 fn should_panic_when_corgi_id_does_not_exist() {
-    ModelMock::new().get_corgi_by_id("?".to_string());
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        contract.get_corgi_by_id("?".to_string());
+    });
 }
 
 #[test]
 #[should_panic]
 fn should_panic_when_name_is_too_large() {
-    ModelMock::new().contract.create_corgi(
-        ['?'; 32 + 1].iter().collect(),
-        "Q".into(),
-        "C".into(),
-        "B".into(),
-    );
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        contract.create_corgi(
+            ['?'; 32 + 1].iter().collect(),
+            "Q".into(),
+            "C".into(),
+            "B".into(),
+        );
+    });
 }
 
 #[test]
 #[should_panic]
 fn should_panic_when_quote_is_too_large() {
-    ModelMock::new().contract.create_corgi(
-        "N".into(),
-        ['?'; 256 + 1].iter().collect(),
-        "C".into(),
-        "B".into(),
-    );
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        contract.create_corgi(
+            "N".into(),
+            ['?'; 256 + 1].iter().collect(),
+            "C".into(),
+            "B".into(),
+        );
+    });
 }
 
 #[test]
 #[should_panic]
 fn should_panic_when_color_is_too_large() {
-    ModelMock::new().contract.create_corgi(
-        "N".into(),
-        "Q".into(),
-        ['?'; 64 + 1].iter().collect(),
-        "B".into(),
-    );
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        contract.create_corgi(
+            "N".into(),
+            "Q".into(),
+            ['?'; 64 + 1].iter().collect(),
+            "B".into(),
+        );
+    });
 }
 
 #[test]
 #[should_panic]
 fn should_panic_when_background_color_is_too_large() {
-    ModelMock::new().contract.create_corgi(
-        "N".into(),
-        "Q".into(),
-        "C".into(),
-        ['?'; 64 + 1].iter().collect(),
-    );
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        contract.create_corgi(
+            "N".into(),
+            "Q".into(),
+            "C".into(),
+            ['?'; 64 + 1].iter().collect(),
+        );
+    });
 }
 
 #[test]
 fn create_a_corgi() {
-    ModelMock::new().create_corgi(42);
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        contract.create_test_corgi(42);
+    });
 }
 
 #[test]
 fn create_a_few_corgis() {
-    let mut contract = ModelMock::new();
-    for i in 1..=20 {
-        contract.create_corgi(i as usize);
-    }
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        for i in 1..=20 {
+            contract.create_test_corgi(i as usize);
+        }
+    });
 }
 
 #[test]
 fn create_and_delete_corgi() {
-    let mut contract = ModelMock::new();
-    for i in 1..=20 {
-        let id = contract.create_corgi(i as usize).id;
-        contract.delete_corgi(id);
-    }
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        for i in 1..=20 {
+            let id = contract.create_test_corgi(i as usize).id;
+            contract.delete_corgi(id);
+        }
+    });
 }
 
 #[test]
 #[should_panic]
 fn should_panic_when_there_are_no_corgis_to_delete() {
-    ModelMock::new().delete_corgi("?".to_string());
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        contract.delete_corgi("?".to_string());
+    });
 }
 
 #[test]
 #[should_panic]
 fn should_panic_when_corgi_to_delete_does_not_exist() {
-    let mut contract = ModelMock::new();
-    contract.create_corgi(42);
-    contract.delete_corgi("?".to_string());
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        contract.create_test_corgi(42);
+        contract.delete_corgi("?".to_string());
+    });
 }
 
 #[test]
 fn create_and_delete_a_few_corgis() {
-    let mut contract = ModelMock::new();
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        for i in 1..=15 {
+            contract.create_test_corgi(i);
+        }
 
-    for i in 1..=15 {
-        contract.create_corgi(i);
-    }
-
-    contract.delete_corgi_by_index(2);
-    contract.delete_corgi_by_index(3);
-    contract.delete_corgi_by_index(0);
+        contract.delete_corgi_by_index(2);
+        contract.delete_corgi_by_index(3);
+        contract.delete_corgi_by_index(0);
+    });
 }
 
 #[test]
 fn transfer_a_corgi() {
-    let mut contract = ModelMock::new();
-    let id = contract.create_corgi(42).id;
-    contract.transfer_corgi(charlie(), id);
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        let id = contract.create_test_corgi(42).id;
+        contract.transfer_corgi(charlie(), id);
+    });
 }
 
 #[test]
 fn transfer_a_few_corgis() {
-    let mut contract = ModelMock::new();
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        for i in 1..=20 {
+            contract.create_test_corgi(i);
+        }
 
-    for i in 1..=20 {
-        contract.create_corgi(i);
-    }
-
-    contract.transfer_corgi(charlie(), contract.ids[2].clone().0);
-    contract.transfer_corgi(charlie(), contract.ids[9].clone().0);
-    contract.transfer_corgi(charlie(), contract.ids[0].clone().0);
-    contract.transfer_corgi(charlie(), contract.ids[3].clone().0);
-    contract.transfer_corgi(charlie(), contract.ids[7].clone().0);
+        let ids = contract.ids.clone();
+        contract.transfer_corgi(charlie(), ids[2].clone().0);
+        contract.transfer_corgi(charlie(), ids[9].clone().0);
+        contract.transfer_corgi(charlie(), ids[0].clone().0);
+        contract.transfer_corgi(charlie(), ids[3].clone().0);
+        contract.transfer_corgi(charlie(), ids[7].clone().0);
+    });
 }
 
 #[test]
 #[should_panic]
 fn should_panic_when_self_transfer() {
-    let mut contract = ModelMock::new();
-    let id = contract.create_corgi(42).id;
-    contract.transfer_corgi(contract.predecessor_account_id(), id);
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        let id = contract.create_test_corgi(42).id;
+        contract.transfer_corgi(alice(), id);
+    });
 }
 
 #[test]
 #[should_panic]
 fn should_panic_when_sender_is_not_owner() {
-    let mut contract = ModelMock::new();
-    let id = contract.create_corgi(42).id;
-    contract.transfer_corgi(charlie(), id.clone());
-    contract.transfer_corgi(charlie(), id.clone());
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        let id = contract.create_test_corgi(42).id;
+        contract.transfer_corgi(charlie(), id.clone());
+        contract.transfer_corgi(charlie(), id.clone());
+    });
 }
 
 #[test]
 #[should_panic]
 fn should_panic_when_transfer_receiver_is_invalid() {
-    let mut contract = ModelMock::new();
-    let id = contract.create_corgi(42).id;
-    contract.transfer_corgi("invalid.mock.".to_string(), id);
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        let id = contract.create_test_corgi(42).id;
+        contract.transfer_corgi("invalid.mock.".to_string(), id);
+    });
+}
+
+#[test]
+fn nep4_transfer_a_corgi() {
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        let id = contract.create_test_corgi(42).id;
+        contract.transfer(charlie(), id);
+    });
+}
+
+#[test]
+fn nep4_check_empty_access() {
+    MockedContext::new(|| ContractChecker::new()).run_as(ted(), |contract| {
+        assert!(!contract.check_access(alice()));
+    });
+}
+
+#[test]
+fn nep4_check_self_access() {
+    MockedContext::new(|| ContractChecker::new()).run_as(alice(), |contract| {
+        assert!(contract.check_access(alice()));
+    });
+}
+
+#[test]
+fn nep4_grant_access() {
+    MockedContext::new(|| ContractChecker::new())
+        .run_as(alice(), |contract| {
+            contract.grant_access(ted());
+        })
+        .run_as(ted(), |contract| {
+            assert!(contract.check_access(alice()));
+            assert!(!contract.check_access(charlie()));
+        })
+        .run_as(alice(), |contract| {
+            contract.revoke_access(ted());
+        })
+        .run_as(ted(), |contract| {
+            assert!(!contract.check_access(alice()));
+        });
+}
+
+#[test]
+fn nep4_transfer_from() {
+    MockedContext::new(|| ContractChecker::new())
+        .run_as(alice(), |contract| {
+            contract.create_test_corgi(42);
+            contract.contract.grant_access(ted());
+        })
+        .run_as(ted(), |contract| {
+            let id = contract.ids[0].0.clone();
+            contract.contract.transfer_from(alice(), bob(), id);
+        })
+        .run_as(bob(), |contract| {
+            let corgis = contract.contract.get_corgis_by_owner(bob());
+            assert_eq!(corgis.len(), 1);
+        });
 }
