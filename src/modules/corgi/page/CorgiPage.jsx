@@ -45,10 +45,6 @@ const CorgiPage = () => {
     return <Spinner />;
   }
 
-  if (corgi.owner !== user.accountId) {
-    return <Redirect to='/account' />;
-  }
-
   return (
     <div className='corgi-page'>
         <SendModal corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
