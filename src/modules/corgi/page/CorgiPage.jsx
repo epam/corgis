@@ -5,7 +5,7 @@ import './CorgiPage.scss';
 
 import { ContractContext, NearContext } from '~contexts';
 
-import { CorgiCard, CorgiRate, Spinner } from '~modules/common';
+import { CorgiCard, CorgiRate, CorgiSpinner } from '~modules/common';
 import { SendModal, ShareActions, ShareModal } from '~modules/corgi/components';
 
 const CorgiPage = () => {
@@ -42,27 +42,27 @@ const CorgiPage = () => {
   }
 
   if (!corgi || loading) {
-    return <Spinner />;
+    return <CorgiSpinner />;
   }
 
   return (
     <div className='corgi-page'>
-        <SendModal corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
-        <ShareModal corgi={corgi} closeModal={closeModal} show={showShare} />
+      <SendModal corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
+      <ShareModal corgi={corgi} closeModal={closeModal} show={showShare} />
 
-        <h1 className='corgi-page__title'>Meet {corgi.name}!</h1>
+      <h1 className='corgi-page__title'>Meet {corgi.name}!</h1>
 
-        <div className='corgi-page__card'>
-          <CorgiCard corgi={corgi} size='big' />
+      <div className='corgi-page__card'>
+        <CorgiCard corgi={corgi} size='big' />
+      </div>
+
+      <div className='corgi-page__content'>
+        <CorgiRate rate={corgi.rate} />
+
+        <div className='corgi-page__actions'>
+          <ShareActions openSendModal={openSendModal} openShareModal={openShareModal} />
         </div>
-
-        <div className='corgi-page__content'>
-          <CorgiRate rate={corgi.rate} />
-
-          <div className='corgi-page__actions'>
-            <ShareActions openSendModal={openSendModal} openShareModal={openShareModal} />
-          </div>
-        </div>
+      </div>
     </div>
   );
 };
