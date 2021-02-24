@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import './Transfer.scss';
 
@@ -9,6 +9,10 @@ import { ContractContext, NearContext } from '~contexts';
 import { Button, Input, BasicSpinner } from '~modules/common';
 
 import { CorgiType } from '~types/CorgiTypes';
+import { USER_VALIDATION_MESSAGES } from '~constants/validation/account';
+
+// USER_VALIDATION_MESSAGES;
+// NETWORK_POSTFIX;
 
 const TransferPropTypes = { id: CorgiType.id };
 
@@ -18,17 +22,53 @@ const Transfer = ({ id }) => {
 
   const [receiver, setReceiver] = useState('');
 
-  const handleReceiverInput = (event) => {
-    setReceiver(event.target.value);
+  const [timeoutId, setTimeoutId] = useState(null);
+
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isErrorShown, setIsErrorShown] = useState(false);
+
+  const clearTimeoutId = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      setTimeoutId(null);
+    }
+  };
+
+  const showError = (error) => {
+    setErrorMessage(error);
+    setIsErrorShown(true);
+  };
+
+  const hideError = () => {
+    setIsErrorShown(false);
+    clearTimeoutId();
   };
 
   const checkAccountLegit = async (newReceiver) => {
-    try {
-      return !!(await new nearlib.Account(nearContent.connection, newReceiver).state());
-    } catch (error) {
-      console.error(error);
+    if (newReceiver === user.accountId) {
+      showError(USER_VALIDATION_MESSAGES.OWN_ACCOUNT);
       return false;
     }
+
+    try {
+      const isAccountExist = !!(await new nearlib.Account(nearContent.connection, newReceiver).state());
+
+      if (isAccountExist) {
+        return true;
+      } else {
+        showError(USER_VALIDATION_MESSAGES.NOT_EXIST);
+      }
+    } catch (error) {
+      console.error(error);
+
+      showError(USER_VALIDATION_MESSAGES.NOT_EXIST);
+    }
+
+    return false;
+  };
+
+  const handleReceiverInput = (event) => {
+    setReceiver(event.target.value);
   };
 
   const sendCorgi = () => {
@@ -48,6 +88,38 @@ const Transfer = ({ id }) => {
     }
   };
 
+  useEffect(() => {
+    if (!timeoutId && isErrorShown) {
+      setTimeoutId(
+        setTimeout(() => {
+          hideError();
+        }, 5000),
+      );
+    }
+
+    return () => {
+      clearTimeoutId();
+    };
+  }, [timeoutId, isErrorShown, setTimeoutId, setIsErrorShown]);
+
+  useEffect(() => {
+    if (!timeoutId && !isErrorShown && errorMessage && errorMessage.length) {
+      setTimeoutId(
+        setTimeout(() => {
+          setErrorMessage('');
+
+          clearTimeoutId();
+        }, 1000),
+      );
+    }
+
+    return () => {
+      clearTimeoutId();
+    };
+  }, [timeoutId, isErrorShown, errorMessage, setTimeoutId, setErrorMessage]);
+
+  console.log(nearContent);
+
   return (
     <form className='transfer' onSubmit={(event) => onSubmit(event)}>
       <div className='transfer__input'>
@@ -56,6 +128,8 @@ const Transfer = ({ id }) => {
           onChange={(event) => handleReceiverInput(event)}
           placeholder='account.testnet'
           type='text'
+          error={errorMessage}
+          showError={isErrorShown}
           required
         />
       </div>
