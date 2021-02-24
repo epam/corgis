@@ -8,11 +8,9 @@ import { ContractContext, NearContext } from '~contexts';
 
 import { Button, Input, BasicSpinner } from '~modules/common';
 
-import { CorgiType } from '~types/CorgiTypes';
 import { USER_VALIDATION_MESSAGES } from '~constants/validation/account';
 
-// USER_VALIDATION_MESSAGES;
-// NETWORK_POSTFIX;
+import { CorgiType } from '~types/CorgiTypes';
 
 const TransferPropTypes = { id: CorgiType.id };
 
@@ -59,9 +57,9 @@ const Transfer = ({ id }) => {
         showError(USER_VALIDATION_MESSAGES.NOT_EXIST);
       }
     } catch (error) {
-      console.error(error);
-
       showError(USER_VALIDATION_MESSAGES.NOT_EXIST);
+
+      console.error(error);
     }
 
     return false;
@@ -77,11 +75,6 @@ const Transfer = ({ id }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-
-    if (receiver === user.accountId) {
-      console.error("you can't specify your own account");
-      return;
-    }
 
     if (await checkAccountLegit(receiver)) {
       sendCorgi();
@@ -117,8 +110,6 @@ const Transfer = ({ id }) => {
       clearTimeoutId();
     };
   }, [timeoutId, isErrorShown, errorMessage, setTimeoutId, setErrorMessage]);
-
-  console.log(nearContent);
 
   return (
     <form className='transfer' onSubmit={(event) => onSubmit(event)}>
