@@ -6,7 +6,7 @@ import * as nearlib from 'near-api-js';
 
 import { ContractContext, NearContext } from '~contexts';
 
-import { Button, Input } from '~modules/common';
+import { Button, Input, BasicSpinner } from '~modules/common';
 
 import { CorgiType } from '~types/CorgiTypes';
 
@@ -54,15 +54,13 @@ const Transfer = ({ id }) => {
         <Input
           value={receiver}
           onChange={(event) => handleReceiverInput(event)}
-          placeholder='new-owner.testnet'
+          placeholder='owner.testnet'
           type='text'
           required
         />
       </div>
 
-      <div className='transfer__submit'>
-        {!transfering ? <Button description='submit' /> : <div className='spinner-border'></div>}
-      </div>
+      <div className='transfer__submit'>{!transfering ? <Button description='submit' /> : <BasicSpinner />}</div>
     </form>
   );
 };
