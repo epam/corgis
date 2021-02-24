@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import './GenerationForm.scss';
 
@@ -23,8 +23,13 @@ const GenerationForm = () => {
 
   const [errorMessage, setErrorMessage] = useState('');
 
+  const clearError = () => {
+    setErrorMessage('');
+  };
+
   const handleName = (event) => {
     setName(event.target.value);
+    clearError();
   };
 
   const generateRandomName = () => {
@@ -51,12 +56,14 @@ const GenerationForm = () => {
 
     if (validationMessage === CORGI_VALIDATION_MESSAGES.SUCCESS) {
       createCorgi(name, color, backgroundColor, quote);
-
-      setErrorMessage('');
     } else {
       setErrorMessage(validationMessage);
     }
   };
+
+  useEffect(() => {
+    clearError();
+  }, [errorMessage]);
 
   return (
     <form className='generation-form' onSubmit={(event) => onSubmit(event)}>

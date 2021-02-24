@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import './Transfer.scss';
 
@@ -65,8 +65,13 @@ const Transfer = ({ id }) => {
     return false;
   };
 
+  const clearError = () => {
+    setErrorMessage('');
+  };
+
   const handleReceiverInput = (event) => {
     setReceiver(event.target.value);
+    clearError();
   };
 
   const onSubmit = async (event) => {
@@ -75,6 +80,8 @@ const Transfer = ({ id }) => {
     if (await checkAccountLegit(receiver)) {
       transferCorgi(receiver, id);
     }
+
+    clearError();
   };
 
   return (

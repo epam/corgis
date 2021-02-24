@@ -43,11 +43,12 @@ const Input = ({ error = '', onChange = () => {}, placeholder = '', type = 'text
   }, [value, prevValue]);
 
   useEffect(() => {
+    setIsErrorShown(true);
+
     if (error && error.length) {
       setErrorMessage(error);
-      setIsErrorShown(true);
     } else {
-      hideError();
+      clearTimeoutId();
     }
   }, [error]);
 
@@ -82,7 +83,7 @@ const Input = ({ error = '', onChange = () => {}, placeholder = '', type = 'text
   }, [timeoutId, isErrorShown, errorMessage, setTimeoutId, setErrorMessage]);
 
   return (
-    <div className='input' className={classNames('input', { 'input--show-error': isErrorShown && error.length })}>
+    <div className='input' className={classNames('input', { 'input--show-error': isErrorShown && errorMessage })}>
       <input
         className='input__field'
         type={type}
@@ -91,7 +92,7 @@ const Input = ({ error = '', onChange = () => {}, placeholder = '', type = 'text
         placeholder={placeholder}
         required={required}
       />
-      <p className='input__error'>{error}</p>
+      <p className='input__error'>{errorMessage}</p>
     </div>
   );
 };
