@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import './Transfer.scss';
 
@@ -8,7 +8,7 @@ import { ContractContext, NearContext } from '~contexts';
 
 import { Button, Input, BasicSpinner } from '~modules/common';
 
-import { USER_VALIDATION_MESSAGES } from '~constants/validation/account';
+import { USER_VALIDATION_MESSAGES, NETWORK_POSTFIX } from '~constants/validation/account';
 
 import { CorgiType } from '~types/CorgiTypes';
 
@@ -22,9 +22,29 @@ const Transfer = ({ id }) => {
 
   const [errorMessage, setErrorMessage] = useState('');
 
+  const checkPostfix = (accountName) => {
+    if (accountName.indexOf('.') === -1) {
+      setErrorMessage(USER_VALIDATION_MESSAGES.NO_POSTFIX);
+      return false;
+    }
+
+    const postfix = accountName.split('.').pop();
+
+    if (postfix === NETWORK_POSTFIX[nearContent.config.networkId]) {
+      return true;
+    } else {
+      setErrorMessage(USER_VALIDATION_MESSAGES.WRONG_POSTFIX);
+      return false;
+    }
+  };
+
   const checkAccountLegit = async (newReceiver) => {
     if (newReceiver === user.accountId) {
       setErrorMessage(USER_VALIDATION_MESSAGES.OWN_ACCOUNT);
+      return false;
+    }
+
+    if (!checkPostfix(newReceiver)) {
       return false;
     }
 
