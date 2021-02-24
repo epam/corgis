@@ -1,7 +1,6 @@
 #![deny(warnings)]
 
 pub mod dict;
-pub mod pack;
 
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
@@ -11,10 +10,9 @@ use near_sdk::{
     wee_alloc::WeeAlloc,
     AccountId,
 };
-use std::usize;
+use std::{convert::TryInto, usize};
 
 use dict::Dict;
-use pack::pack;
 
 #[global_allocator]
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
@@ -248,7 +246,7 @@ impl Model {
             color,
             background_color,
             rate: {
-                let rate = pack(env::random_seed().get(..16).unwrap()) % 100;
+                let rate = u128::from_le_bytes(env::random_seed()[..16].try_into().unwrap()) % 100;
                 if rate > 10 {
                     Rarity::COMMON
                 } else if rate > 5 {
