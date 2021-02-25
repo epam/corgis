@@ -20,7 +20,9 @@ const Poster = ({ requestSignIn, user }) => (
 
       <p className='poster__text poster__text--small'>Mint, collect, gift and trade Corgis on Blockchain</p>
 
-      {user ? <GenerationLink /> : <Button description='Get Started ' action={requestSignIn} />}
+      <div className='poster__action'>
+        {user ? <GenerationLink /> : <Button description='Get Started ' action={requestSignIn} />}
+      </div>
     </div>
 
     <div className='poster__image'>
