@@ -35,7 +35,7 @@ const Button = ({
     onClick={action}
     disabled={disabled}
   >
-    <span className='button__description'>{children || description}</span>{' '}
+    {children || description}{' '}
     {(badge || badge === 0) && !disabled && <span className='button__badge badge'>{badge}</span>}
   </button>
 );
