@@ -5,9 +5,7 @@ import './Nav.scss';
 
 import { ContractContext, NearContext } from '~contexts';
 
-import { Button, Dropdown, ExternalLink } from '~modules/common';
-
-import GenerationLink from '../GenerationLink/GenerationLink';
+import { Button, Dropdown, ExternalLink, GenerationLink } from '~modules/common';
 
 const Nav = () => {
   const { nearContent, user, signIn, signOut } = useContext(NearContext);
