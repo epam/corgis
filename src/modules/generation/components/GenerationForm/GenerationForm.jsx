@@ -94,9 +94,10 @@ const GenerationForm = () => {
       </div>
 
       <div className='generation-form__area'>
+        {/* // Feature not yet approved  
         <div className='generation-form__donation'>
           <Donation />
-        </div>
+        </div> */}
 
         <Button description='Generate Corgi' />
       </div>
