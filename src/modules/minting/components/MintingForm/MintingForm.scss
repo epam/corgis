@@ -1,7 +1,7 @@
 @import 'mixins';
 @import 'variables';
 
-.generation-form {
+.minting-form {
   @include dis-flex-column(space-between, stretch);
   @include fill-parent;
 

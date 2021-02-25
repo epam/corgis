@@ -1,4 +1,4 @@
-import { Button, CheckMarkButton, GenerationLink } from './buttons';
+import { Button, CheckMarkButton, MintingLink } from './buttons';
 import { BasicSpinner, CorgiSpinner } from './spinners';
 
 import Colorpicker from './Colorpicker';
@@ -31,7 +31,7 @@ import {
 export {
   Button,
   CheckMarkButton,
-  GenerationLink,
+  MintingLink,
   Colorpicker,
   Dropdown,
   Egg,

@@ -1,7 +1,7 @@
 @import 'classes';
 @import 'mixins';
 
-.generation {
+.minting {
   @include dis-flex-column(flex-start, center);
 
   width: 100%;
@@ -21,7 +21,7 @@
 }
 
 @media all and (max-width: 1120px) {
-  .generation {
+  .minting {
     &__field {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -34,7 +34,7 @@
 }
 
 @media all and (max-width: 700px) {
-  .generation {
+  .minting {
     &__field {
       grid-template-columns: 1fr;
     }

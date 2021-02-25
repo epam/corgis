@@ -1,23 +1,23 @@
 import React, { useContext } from 'react';
 
-import './GenerationScreen.scss';
-
-import { Egg } from '~modules/common';
+import './MintingScreen.scss';
 
 import { CharacterContext } from '~contexts';
 
+import { Egg } from '~modules/common';
+
 import tinycolor from 'tinycolor2';
 
-const GenerationScreen = () => {
+const MintingScreen = () => {
   const { color, backgroundColor } = useContext(CharacterContext);
 
   const textColor = tinycolor.mostReadable(backgroundColor, [color, '#fff', '#000']).toHexString();
 
   return (
-    <div className='generation-screen' style={{ backgroundColor, color: textColor }}>
+    <div className='minting-screen' style={{ backgroundColor, color: textColor }}>
       <Egg color={color} showShadow={true} />
     </div>
   );
 };
 
-export default GenerationScreen;
+export default MintingScreen;

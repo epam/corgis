@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import './GenerationForm.scss';
+import './MintingForm.scss';
 
 import { FaRandom } from 'react-icons/fa';
 
@@ -9,7 +9,7 @@ import randomColor from 'randomcolor';
 import { CharacterContext, ContractContext } from '~contexts';
 
 import { Button, Colorpicker, Input } from '~modules/common';
-import { Donation } from '~modules/generation/components';
+// import { Donation } from '~modules/minting/components';
 
 import { genRandomName } from '~helpers/generators';
 
@@ -17,7 +17,7 @@ import { CORGI_VALIDATION_MESSAGES } from '~constants/validation/corgi';
 
 import { validateCorgiName } from '~validators';
 
-const GenerationForm = () => {
+const MintingForm = () => {
   const { createCorgi } = useContext(ContractContext);
   const { name, quote, color, backgroundColor, setName, setColor, setBackgroundColor } = useContext(CharacterContext);
 
@@ -66,36 +66,36 @@ const GenerationForm = () => {
   }, [errorMessage]);
 
   return (
-    <form className='generation-form' onSubmit={(event) => onSubmit(event)}>
-      <div className='generation-form__area'>
-        <div className='generation-form__header'>
-          <h3 className='generation-form__title'>My Corgi is called</h3>
-          <FaRandom onClick={() => generateRandomName()} className='generation-form__icon' />
+    <form className='minting-form' onSubmit={(event) => onSubmit(event)}>
+      <div className='minting-form__area'>
+        <div className='minting-form__header'>
+          <h3 className='minting-form__title'>My Corgi is called</h3>
+          <FaRandom onClick={() => generateRandomName()} className='minting-form__icon' />
         </div>
 
         <Input type='text' value={name} onChange={handleName} placeholder='Sweet Corgi' error={errorMessage} required />
       </div>
 
-      <div className='generation-form__area'>
-        <div className='generation-form__header'>
-          <h3 className='generation-form__title'>Colors</h3>
-          <FaRandom onClick={() => generateRandomColor()} className='generation-form__icon' />
+      <div className='minting-form__area'>
+        <div className='minting-form__header'>
+          <h3 className='minting-form__title'>Colors</h3>
+          <FaRandom onClick={() => generateRandomColor()} className='minting-form__icon' />
         </div>
 
-        <div className='generation-form__colorpickers'>
-          <div className='generation-form__colorpicker'>
+        <div className='minting-form__colorpickers'>
+          <div className='minting-form__colorpicker'>
             <Colorpicker title={'Corgi'} color={color} pickColor={handleColor} />
           </div>
 
-          <div className='generation-form__colorpicker'>
+          <div className='minting-form__colorpicker'>
             <Colorpicker title={'Background'} color={backgroundColor} pickColor={handleBackgroundColor} />
           </div>
         </div>
       </div>
 
-      <div className='generation-form__area'>
+      <div className='minting-form__area'>
         {/* // Feature not yet approved  
-        <div className='generation-form__donation'>
+        <div className='minting-form__donation'>
           <Donation />
         </div> */}
 
@@ -105,4 +105,4 @@ const GenerationForm = () => {
   );
 };
 
-export default GenerationForm;
+export default MintingForm;
