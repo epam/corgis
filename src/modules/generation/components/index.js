@@ -1,5 +1,6 @@
-import GenerationAnimation from './GenerationAnimation/GenerationAnimation';
-import GenerationForm from './GenerationForm/GenerationForm';
-import GenerationScreen from './GenerationScreen/GenerationScreen';
+import GenerationAnimation from './GenerationAnimation';
+import GenerationDescription from './GenerationDescription';
+import GenerationForm from './GenerationForm';
+import GenerationScreen from './GenerationScreen';
 
-export { GenerationAnimation, GenerationForm, GenerationScreen };
+export { GenerationAnimation, GenerationDescription, GenerationForm, GenerationScreen };
