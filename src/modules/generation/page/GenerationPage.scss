@@ -1,68 +1,57 @@
+@import 'classes';
 @import 'mixins';
 
 .generation {
-  max-width: 1100px;
-  width: 96%;
-  text-align: center;
-  margin: auto;
+  @include dis-flex-column(flex-start, center);
 
-  &__title {
-    font-weight: 600;
+  width: 100%;
+
+  &__header {
+    @extend .page-header;
+    @extend .page-title;
   }
 
   &__field {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-  }
-
-  &__area {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    margin: 1rem 0;
-
-    &:first-child {
-      width: 40%;
-
-      padding-right: 0.5rem;
-    }
-
-    &:last-child {
-      width: 60%;
-
-      padding-left: 0.5rem;
-    }
-  }
-
-  &__footer {
-    @include flex-center;
-
-    width: 100%;
-  }
-
-  &__description {
-    font-size: 0.7rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
   }
 }
 
-@media all and (max-width: 900px) {
+@media all and (max-width: 1120px) {
+  .generation {
+    &__field {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &__description {
+      grid-column-start: 1;
+      grid-column-end: 3;
+    }
+  }
 }
 
-@media all and (max-width: 765px) {
-  .generation__field {
-    flex-direction: column;
-  }
+@media all and (max-width: 700px) {
+  .generation {
+    &__field {
+      grid-template-columns: 1fr;
+    }
 
-  .generation__footer {
-    flex-direction: column-reverse;
-  }
+    &__form {
+      order: 2;
+    }
 
-  .generation__area {
-    &:first-child,
-    &:last-child {
-      width: 100%;
+    &__screen {
+      order: 1;
+    }
+
+    &__description {
+      order: 3;
+
+      grid-column-start: 1;
+      grid-column-end: 1;
     }
   }
 }
