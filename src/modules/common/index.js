@@ -1,7 +1,7 @@
 import { Button, CheckMarkButton, GenerationLink } from './buttons';
 import { BasicSpinner, CorgiSpinner } from './spinners';
 
-import Colorpicker from './Colorpicker/Colorpicker';
+import Colorpicker from './Colorpicker';
 import Dropdown from './Dropdown';
 import Egg from './Egg/Egg';
 import ExternalLink from './ExternalLink/ExternalLink';
