@@ -15,11 +15,6 @@ const GenerationScreen = () => {
 
   return (
     <div className='generation-screen' style={{ backgroundColor, color: textColor }}>
-      <p className='generation-screen__description'>
-        All corgis come equipped with built-in cuteness and an unlimited capacity to love.
-      </p>
-      <p className='generation-screen__description'>Just choose a name and a few colors and we’ll do the rest.</p>
-
       <Egg color={color} showShadow={true} />
     </div>
   );
