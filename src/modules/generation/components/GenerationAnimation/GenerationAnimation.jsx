@@ -2,8 +2,6 @@ import React, { useContext } from 'react';
 
 import './GenerationAnimation.scss';
 
-import classNames from 'classnames';
-
 import shadow from '~assets/images/shadow.svg';
 
 import { CorgiAnimFour } from '~modules/common';
@@ -15,14 +13,14 @@ const GenerationAnimation = () => {
 
   return (
     <div className='generation-animation'>
-      <h3 className='generation-animation__title'>Generating...</h3>
+      <h3 className='generation-animation__header'>Generating...</h3>
 
       <div className='generation-animation__background' style={{ backgroundColor }}>
-        <div className={classNames('generation-animation__box', 'generation-animation__box--bounce-7')}>
+        <div className='generation-animation__corgi'>
           <CorgiAnimFour color={color} />
         </div>
 
-        <div className={classNames('generation-animation__shadow', 'generation-animation__shadow--shadow-7')}>
+        <div className='generation-animation__shadow'>
           <img src={shadow} alt='' />
         </div>
       </div>
