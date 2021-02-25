@@ -13,11 +13,7 @@ const GenerationLinkPropTypes = { big: PropTypes.bool };
 const GenerationLink = ({ big = false }) => (
   <Link to='/generation'>
     <div className={classNames('generation-link', { 'generation-link--big': big })}>
-      <img
-        className={classNames('generation-link__icon', { 'generation-link__icon--big': big })}
-        src={IconNav}
-        alt=''
-      />
+      <img className='generation-link__icon' src={IconNav} alt='' />
     </div>
   </Link>
 );
