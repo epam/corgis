@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { CorgiType } from '~types/CorgiTypes';
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
-const CorgiLinkPropTypes = { corgi: CorgiType.id, children: ReactChildrenTypeRequired };
+const CorgiLinkPropTypes = { id: CorgiType.id.isRequired, children: ReactChildrenTypeRequired };
 
-const CorgiLink = ({ id }) => {
+const CorgiLink = ({ id, children }) => {
   return <Link to={`/corgi/${id}`}>{children}</Link>;
 };
 
