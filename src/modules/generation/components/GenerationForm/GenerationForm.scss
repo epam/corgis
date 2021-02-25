@@ -44,4 +44,8 @@
   &__colorpicker {
     @include margin-between(0.5rem, column);
   }
+
+  &__donation {
+    margin-bottom: 0.75rem;
+  }
 }

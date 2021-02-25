@@ -4,12 +4,12 @@ import './GenerationForm.scss';
 
 import { FaRandom } from 'react-icons/fa';
 
-import classNames from 'classnames';
 import randomColor from 'randomcolor';
 
 import { CharacterContext, ContractContext } from '~contexts';
 
 import { Button, Colorpicker, Input } from '~modules/common';
+import { Donation } from '~modules/generation/components';
 
 import { genRandomName } from '~helpers/generators';
 
@@ -94,6 +94,10 @@ const GenerationForm = () => {
       </div>
 
       <div className='generation-form__area'>
+        <div className='generation-form__donation'>
+          <Donation />
+        </div>
+
         <Button description='Generate Corgi' />
       </div>
     </form>
