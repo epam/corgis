@@ -6,7 +6,7 @@ import * as nearlib from 'near-api-js';
 
 import { ContractContext, NearContext } from '~contexts';
 
-import { Button, Input, BasicSpinner } from '~modules/common';
+import { CheckMarkButton, Input, BasicSpinner } from '~modules/common';
 
 import { USER_VALIDATION_MESSAGES } from '~constants/validation/account';
 
@@ -77,7 +77,7 @@ const Transfer = ({ id }) => {
         />
       </div>
 
-      <div className='transfer__submit'>{!transfering ? <Button description='submit' /> : <BasicSpinner />}</div>
+      <div className='transfer__submit'>{!transfering ? <CheckMarkButton /> : <BasicSpinner />}</div>
     </form>
   );
 };
