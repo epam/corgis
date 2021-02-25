@@ -3,4 +3,12 @@
 
 .generation-link {
   @include basicRound($generation-link-size);
+
+  &__icon {
+    @include basicSquare(100%);
+  }
+
+  &--big {
+    @include basicRound($generation-link-size-big);
+  }
 }
