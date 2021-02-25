@@ -85,3 +85,11 @@
     }
   }
 }
+
+@media all and (max-width: 500px) {
+  .dropdown__title {
+    @include flex-center;
+
+    padding: $padding-dropdown-item-semi-tight;
+  }
+}
