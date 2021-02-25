@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
     collections::UnorderedMap,
@@ -27,7 +25,7 @@ pub struct DictIntoIterator<'a, K, V> {
 }
 
 impl<
-        K: Default + PartialEq + Clone + BorshDeserialize + BorshSerialize + Display,
+        K: Default + Copy + PartialEq + BorshDeserialize + BorshSerialize,
         V: BorshDeserialize + BorshSerialize,
     > Dict<K, V>
 {
@@ -38,37 +36,39 @@ impl<
         }
     }
 
-    pub fn get(&self, key: &K) -> Option<V> {
-        self.heap.0.get(key).map(|n| n.value)
+    pub fn get(&self, key: K) -> Option<V> {
+        self.heap.0.get(&key).map(|n| n.value)
     }
 
-    pub fn push_front(&mut self, key: &K, value: V) -> V {
+    pub fn push_front(&mut self, key: K, value: V) -> V {
+        assert!(key != K::default(), "Attempt to push `default` into heap");
+
         if self.first != K::default() {
-            let mut node = self.heap.get_node(&self.first);
-            node.prev = key.clone();
+            let mut node = self.heap.get_node(self.first);
+            node.prev = key;
             self.heap.0.insert(&self.first, &node);
         }
 
         let node = Node {
-            next: self.first.clone(),
+            next: self.first,
             prev: K::default(),
             value,
         };
 
-        self.first = key.clone();
+        self.first = key;
         self.heap.0.insert(&key, &node);
 
         node.value
     }
 
-    pub fn remove(&mut self, key: &K) -> bool {
+    pub fn remove(&mut self, key: K) -> bool {
         match self.heap.0.remove(&key) {
             None => false,
             Some(removed_node) => {
                 if removed_node.prev == K::default() {
                     self.first = removed_node.next;
                 } else {
-                    let mut node = self.heap.get_node(&removed_node.prev);
+                    let mut node = self.heap.get_node(removed_node.prev);
                     node.next = removed_node.next;
                     self.heap.0.insert(&removed_node.prev, &node);
                 }
@@ -78,19 +78,17 @@ impl<
     }
 }
 
-impl<K: BorshDeserialize + BorshSerialize + Display, V: BorshDeserialize + BorshSerialize>
-    Heap<K, V>
-{
-    fn get_node(&self, key: &K) -> Node<K, V> {
-        let node = self.0.get(key);
-        assert!(node.is_some(), "Element `{}` not found in heap map", key);
+impl<K: BorshDeserialize + BorshSerialize, V: BorshDeserialize + BorshSerialize> Heap<K, V> {
+    fn get_node(&self, key: K) -> Node<K, V> {
+        let node = self.0.get(&key);
+        assert!(node.is_some(), "Element was not found in heap map");
         node.unwrap()
     }
 }
 
 impl<
         'a,
-        K: Default + PartialEq + Clone + BorshDeserialize + BorshSerialize + Display,
+        K: Default + Copy + PartialEq + BorshDeserialize + BorshSerialize,
         V: BorshDeserialize + BorshSerialize,
     > IntoIterator for &'a Dict<K, V>
 {
@@ -101,13 +99,13 @@ impl<
     fn into_iter(self) -> Self::IntoIter {
         Self::IntoIter {
             heap: &self.heap,
-            curr: self.first.clone(),
+            curr: self.first,
         }
     }
 }
 
 impl<
-        K: Default + PartialEq + Clone + BorshDeserialize + BorshSerialize + Display,
+        K: Default + Copy + PartialEq + BorshDeserialize + BorshSerialize,
         V: BorshDeserialize + BorshSerialize,
     > Iterator for DictIntoIterator<'_, K, V>
 {
@@ -117,8 +115,8 @@ impl<
         if self.curr == K::default() {
             None
         } else {
-            let node = self.heap.get_node(&self.curr);
-            let result = Some((self.curr.clone(), node.value));
+            let node = self.heap.get_node(self.curr);
+            let result = Some((self.curr, node.value));
             self.curr = node.next;
             result
         }
