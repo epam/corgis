@@ -5,7 +5,7 @@ import './Poster.scss';
 
 import corgiFull from '~assets/images/corgi-full.png';
 
-import { Button } from '~modules/common';
+import { Button, GenerationLink } from '~modules/common';
 
 const PosterPropTypes = {
   requestSignIn: PropTypes.func.isRequired,
@@ -20,7 +20,7 @@ const Poster = ({ requestSignIn, user }) => (
 
       <p className='poster__text poster__text--small'>Mint, collect, gift and trade Corgis on Blockchain</p>
 
-      {!user && <Button description='Get Started ' action={requestSignIn} />}
+      {user ? <GenerationLink /> : <Button description='Get Started ' action={requestSignIn} />}
     </div>
 
     <div className='poster__image'>
