@@ -99,7 +99,7 @@ const GenerationForm = () => {
           <Donation />
         </div> */}
 
-        <Button description='Generate Corgi' />
+        <Button description='Mint Corgi' />
       </div>
     </form>
   );
