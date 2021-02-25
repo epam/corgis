@@ -1,60 +1,47 @@
+@import 'mixins';
+@import 'variables';
+
 .generation-form {
+  @include dis-flex-column(space-between, stretch);
+  @include fill-parent;
+
   padding: 0.5rem;
 
-  border-radius: 10px;
+  border-radius: $border-radius-big;
 
-  background-color: #f8f8f8;
-
-  text-align: left;
+  background-color: $color-gray-light;
 
   &__area {
-    display: flex;
-    justify-content: space-between;
+    @include dis-flex-column(flex-start, stretch);
+    @include margin-between(1rem, column);
+  }
 
-    width: 100%;
+  &__header {
+    @include dis-flex(flex-start, center);
+
+    margin-bottom: 0.75rem;
   }
 
   &__title {
-    display: block;
-
-    margin: 10px 0;
-
     font-weight: 600;
     font-size: 1.5em;
   }
 
   &__icon {
-    margin: 10px;
+    margin-left: 0.5rem;
+    padding: 0.25rem;
 
     border-radius: 50%;
 
-    color: #a51cea;
-    background-color: #f5ebff;
+    background-color: $color-black;
+    color: $color-white;
 
-    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 0 5px 2px #ffffff;
-
-    font-size: 1.5rem;
+    font-size: 1rem;
 
     cursor: pointer;
   }
 
-  &__input {
-    width: 80%;
-
-    align-self: center;
-  }
-
   &__colorpicker {
-    margin: 0.5rem 0;
-
-    &:last-child {
-      margin-bottom: 1rem;
-    }
-  }
-}
-
-@media all and (max-width: 765px) {
-  .generation-form {
-    width: 100%;
+    @include margin-between(0.5rem, column);
   }
 }

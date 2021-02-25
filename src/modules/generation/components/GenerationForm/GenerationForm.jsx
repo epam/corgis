@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import './GenerationForm.scss';
 
-import { GiGreekSphinx, GiBeachBall } from 'react-icons/gi';
+import { FaRandom } from 'react-icons/fa';
 
 import classNames from 'classnames';
 import randomColor from 'randomcolor';
@@ -67,26 +67,21 @@ const GenerationForm = () => {
 
   return (
     <form className='generation-form' onSubmit={(event) => onSubmit(event)}>
-      <p className='generation-form__title'>My Corgi is called</p>
-
-      <div className={classNames('generation-form__area', 'generation-form__name')}>
-        <div className='generation-form__input'>
-          <Input
-            type='text'
-            value={name}
-            onChange={handleName}
-            placeholder='Sweet Corgi'
-            error={errorMessage}
-            required
-          />
+      <div className='generation-form__area'>
+        <div className='generation-form__header'>
+          <h3 className='generation-form__title'>My Corgi is called</h3>
+          <FaRandom onClick={() => generateRandomName()} className='generation-form__icon' />
         </div>
 
-        <GiGreekSphinx onClick={() => generateRandomName()} className='generation-form__icon' />
+        <Input type='text' value={name} onChange={handleName} placeholder='Sweet Corgi' error={errorMessage} required />
       </div>
 
-      <p className='generation-form__title'>Colors</p>
+      <div className='generation-form__area'>
+        <div className='generation-form__header'>
+          <h3 className='generation-form__title'>Colors</h3>
+          <FaRandom onClick={() => generateRandomColor()} className='generation-form__icon' />
+        </div>
 
-      <div className={classNames('generation-form__area', 'generation-form__colors')}>
         <div className='generation-form__colorpickers'>
           <div className='generation-form__colorpicker'>
             <Colorpicker title={'Corgi'} color={color} pickColor={handleColor} />
@@ -96,10 +91,11 @@ const GenerationForm = () => {
             <Colorpicker title={'Background'} color={backgroundColor} pickColor={handleBackgroundColor} />
           </div>
         </div>
-
-        <GiBeachBall onClick={() => generateRandomColor()} className='generation-form__icon' />
       </div>
-      <Button description='Generate Corgi' />
+
+      <div className='generation-form__area'>
+        <Button description='Generate Corgi' />
+      </div>
     </form>
   );
 };
