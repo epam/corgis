@@ -47,9 +47,8 @@ $padding-button: $padding-button-square 1.5rem;
 
 $padding-infotile: $padding-button;
 
-$padding-dropdown-item: 0.25rem;
-
-$padding-dropdown-item-wide: $padding-dropdown-item 1.5rem;
+$padding-dropdown-item-tight: 0.25rem;
+$padding-dropdown-item: $padding-dropdown-item-tight 1.5rem;
 
 // gaps
 

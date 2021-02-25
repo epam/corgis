@@ -79,9 +79,9 @@
     }
   }
 
-  &--wide {
+  &--tight {
     .dropdown__title {
-      padding: $padding-dropdown-item-wide;
+      padding: $padding-dropdown-item-tight;
     }
   }
 }
