@@ -1,7 +1,3 @@
-import SendModal from './SendModal/SendModal';
-import ShareActions from './ShareActions/ShareActions';
-import ShareCard from './ShareCard/ShareCard';
-import ShareCopyLink from './ShareCopyLink/ShareCopyLink';
-import ShareModal from './ShareModal/ShareModal';
+import CorgiActions from './CorgiActions';
 
-export { SendModal, ShareActions, ShareCard, ShareCopyLink, ShareModal };
+export { CorgiActions };
