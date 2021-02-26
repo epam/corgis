@@ -1,26 +1,39 @@
 @import 'mixins';
 
 .corgi-page {
-  @include dis-flex-column(flex-start, center);
+  @include dis-flex(center, stretch);
 
   width: 100%;
   max-width: 100%;
 
   padding: 0 1rem;
 
-  &__card {
-    max-width: 950px;
+  & > * {
+    @include margin-between(2rem, row);
+  }
 
-    margin: 0 auto;
+  &__field {
+    @include dis-flex(center, stretch);
+
+    width: 100%;
+
+    & > * {
+      @include margin-between(1rem, row);
+    }
+  }
+
+  &__card {
+    max-width: 30rem;
   }
 
   &__content {
-    display: flex;
-    justify-content: space-evenly;
+    @include dis-flex-column(space-between, stretch);
   }
 
   &__actions {
-    width: 30%;
+    & > * {
+      @include margin-between(0.5rem, column);
+    }
   }
 }
 
