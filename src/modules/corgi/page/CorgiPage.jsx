@@ -9,7 +9,7 @@ import { CorgiCard, CorgiRate, CorgiSpinner } from '~modules/common';
 import { CorgiActions } from '~modules/corgi/components';
 
 const CorgiPage = () => {
-  const { corgi, loading, getCorgi, deleted } = useContext(ContractContext);
+  const { corgi, loading, getCorgi, deleted, transfered } = useContext(ContractContext);
 
   const {
     params: { id },
@@ -19,7 +19,7 @@ const CorgiPage = () => {
     if (id) {
       getCorgi(id);
     }
-  }, [id]);
+  }, [id, transfered]);
 
   if (deleted || !id) {
     return <Redirect to='/account' />;
