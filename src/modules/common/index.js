@@ -8,8 +8,7 @@ import ExternalLink from './ExternalLink/ExternalLink';
 import InfoTile from './InfoTile/InfoTile';
 import Input from './Input';
 import Modal from './Modal/Modal';
-import Popup from './Popup';
-import PopupWrapper from './PopupWrapper';
+import { Popup, PopupWrapper } from './popups';
 
 import {
   CorgiCard,
