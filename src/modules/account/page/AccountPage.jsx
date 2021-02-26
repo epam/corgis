@@ -16,10 +16,7 @@ const AccountPage = () => {
 
   return (
     <div className='account'>
-      <div className='account__header'>
-        <h1 className='account__title'>Your Pack</h1>
-        <p className='account__description'>Create, collect, send or trade</p>
-      </div>
+      <h1 className='account__title'>Your Pack</h1>
 
       <div className='account__corgis'>
         {!loading ? <CorgisShowCase corgis={corgis} showActions /> : <CorgiSpinner />}

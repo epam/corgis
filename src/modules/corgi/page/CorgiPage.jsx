@@ -38,7 +38,9 @@ const CorgiPage = () => {
       <div className='corgi-page__content'>
         <CorgiRate rate={corgi.rate} />
 
-        <CorgiActions id={id} />
+        <div className='corgi-page__actions'>
+          <CorgiActions id={id} />
+        </div>
       </div>
     </div>
   );

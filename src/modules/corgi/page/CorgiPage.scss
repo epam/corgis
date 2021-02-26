@@ -12,56 +12,41 @@
     @include margin-between(2rem, row);
   }
 
-  &__field {
-    @include dis-flex(center, stretch);
-
-    width: 100%;
-
-    & > * {
-      @include margin-between(1rem, row);
-    }
-  }
-
   &__card {
     max-width: 30rem;
   }
 
   &__content {
     @include dis-flex-column(space-between, stretch);
+
+    & > * {
+      @include margin-between(1rem, column);
+    }
   }
 
   &__actions {
+    margin-top: 1rem;
+  }
+}
+
+@media all and (max-width: 685px) {
+  .corgi-page {
+    flex-direction: column;
+    justify-content: flex-start;
+
     & > * {
       @include margin-between(0.5rem, column);
     }
-  }
-}
 
-@media all and (max-width: 900px) {
-  .corgi-page {
-    &__actions {
-      width: 35%;
+    &__card {
+      max-width: 100%;
     }
-  }
-}
 
-@media all and (max-width: 700px) {
-  .corgi-page {
-    &__actions {
-      width: 45%;
-    }
-  }
-}
-
-@media all and (max-width: 525px) {
-  .corgi-page {
     &__content {
-      flex-direction: column;
-      align-items: center;
-    }
+      flex-direction: row;
+      justify-content: space-evenly;
 
-    &__actions {
-      width: 100%;
+      margin: 0;
     }
   }
 }

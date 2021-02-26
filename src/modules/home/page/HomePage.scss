@@ -1,7 +1,9 @@
+@import 'classes';
+
 .home {
-  width: 100%;
+  @extend .page;
 
   &__showcase {
-    margin: 1rem 0;
+    margin-top: 1rem;
   }
 }

@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './CorgiRate.scss';
+
+import classNames from 'classnames';
 
 import { CorgiCommon, CorgiUncommon, CorgiRare, CorgiVeryRare, RarityString } from '~modules/common/corgi';
 
@@ -11,11 +14,15 @@ import { CorgiType } from '~types/CorgiTypes';
 const gray = '#E6E6E6';
 const orange = '#FBB040';
 
-const CorgiRatePropTypes = { rate: CorgiType.rate };
+const CorgiRatePropTypes = {
+  rate: CorgiType.rate,
+  row: PropTypes.bool,
+  hideTitle: PropTypes.bool,
+};
 
-const CorgiRate = ({ rate }) => (
-  <div className='corgi-rate'>
-    <h3 className='corgi-rate__title'>This Corgi is:</h3>
+const CorgiRate = ({ rate, row = false, hideTitle = false }) => (
+  <div className={classNames('corgi-rate', { 'corgi-rate--row': row })}>
+    {!hideTitle && <h3 className='corgi-rate__title'>This Corgi is:</h3>}
 
     <ul className='corgi-rate__list'>
       <li className='corgi-rate__item'>

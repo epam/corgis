@@ -2,6 +2,8 @@
 @import 'classes';
 
 .corgi-rate {
+  position: relative;
+
   max-width: 15rem;
 
   &__title {
@@ -16,5 +18,17 @@
 
   &__item {
     @include margin-between(0.5rem, column);
+  }
+
+  &--row {
+    max-width: inherit;
+
+    .corgi-rate__list {
+      flex-direction: row;
+    }
+
+    .corgi-rate__item {
+      @include margin-between(0.5rem, row);
+    }
   }
 }
