@@ -7,6 +7,8 @@ import { ContractContext } from '~contexts/';
 import { BasicSpinner, Button, PopupWrapper } from '~modules/common';
 import { Confirmation, Share, Transfer } from '~modules/common/corgi';
 
+import { ACTION_MESSAGES } from '~constants/corgi';
+
 import { CorgiType } from '~types/CorgiTypes';
 
 const CorgiActionsPropTypes = {
@@ -36,27 +38,31 @@ const CorgiActions = ({ id }) => {
 
   return (
     <div className='corgi-actions'>
-      <PopupWrapper popup={{ title: 'Gift me to your friend!', position: 'top', children: <Transfer id={id} /> }}>
-        <Button description='Gift' />
+      <PopupWrapper
+        popup={{ title: ACTION_MESSAGES.GIFT.POPUP_TITLE, position: 'top', children: <Transfer id={id} /> }}
+      >
+        <Button description={ACTION_MESSAGES.GIFT.BUTTON_DESCRIPTION} />
       </PopupWrapper>
 
-      <PopupWrapper popup={{ title: 'Trade', position: 'top', children: <span>In development...</span> }}>
-        <Button description='Trade' />
+      <PopupWrapper
+        popup={{ title: ACTION_MESSAGES.TRADE.POPUP_TITLE, position: 'top', children: <span>In development...</span> }}
+      >
+        <Button description={ACTION_MESSAGES.TRADE.BUTTON_DESCRIPTION} />
       </PopupWrapper>
 
-      <PopupWrapper popup={{ title: 'Share', position: 'top', children: <Share id={id} /> }}>
-        <Button description='Share' />
+      <PopupWrapper popup={{ title: ACTION_MESSAGES.SHARE.POPUP_TITLE, position: 'top', children: <Share id={id} /> }}>
+        <Button description={ACTION_MESSAGES.SHARE.BUTTON_DESCRIPTION} />
       </PopupWrapper>
 
       <PopupWrapper
         ref={confirmationPopupRef}
         popup={{
-          title: !deleting ? 'Are you sure?' : 'Deleting...',
+          title: !deleting ? ACTION_MESSAGES.DELETE.POPUP_TITLE : ACTION_MESSAGES.DELETE.POPUP_TITLE_ACTION_CONFIRMED,
           position: 'top',
           children: !deleting ? <Confirmation onConfirm={onConfirm} onReject={onReject} /> : <BasicSpinner />,
         }}
       >
-        <Button description='Delete' danger />
+        <Button description={ACTION_MESSAGES.DELETE.BUTTON_DESCRIPTION} danger />
       </PopupWrapper>
     </div>
   );
