@@ -119,7 +119,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
     creating: contractState.creating,
     created: contractState.created,
     transfering: contractState.transfering,
-    trasfered: contractState.trasfered,
+    transfered: contractState.transfered,
     deleting: contractState.deleting,
     deleted: contractState.deleted,
     corgi: contractState.corgi,
