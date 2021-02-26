@@ -39,4 +39,11 @@
   &__footer {
     padding: 0.5rem 1rem;
   }
+
+  &--big {
+    .corgi-card__image {
+      height: 20rem;
+      max-height: 20rem;
+    }
+  }
 }
