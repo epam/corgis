@@ -19,6 +19,17 @@ use dict::Dict;
 #[global_allocator]
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
+const CORGIS: &[u8] = b"a";
+const CORGIS_BY_OWNER: &[u8] = b"b";
+const CORGIS_BY_OWNER_PREFIX: &str = "B";
+const ESCROWS_BY_OWNER: &[u8] = b"c";
+const ESCROWS_BY_OWNER_PREFIX: &str = "C";
+
+fn get_collection_key(prefix: &str, mut key: String) -> Vec<u8> {
+    key.insert_str(0, prefix);
+    key.as_bytes().to_vec()
+}
+
 pub type CorgiKey = [u8; size_of::<u128>()];
 
 pub type CorgiId = String;
@@ -125,9 +136,9 @@ impl Default for Model {
     fn default() -> Self {
         log!("Default::default() contract v{}", env!("CARGO_PKG_VERSION"));
         Self {
-            corgis: Dict::new("C".as_bytes().to_vec()),
-            corgis_by_owner: UnorderedMap::new("O".as_bytes().to_vec()),
-            escrows_by_owner: UnorderedMap::new(vec![b'c']),
+            corgis: Dict::new(CORGIS.to_vec()),
+            corgis_by_owner: UnorderedMap::new(CORGIS_BY_OWNER.to_vec()),
+            escrows_by_owner: UnorderedMap::new(ESCROWS_BY_OWNER.to_vec()),
         }
     }
 }
@@ -140,7 +151,7 @@ impl NEP4 for Model {
         let mut escrows = self
             .escrows_by_owner
             .get(&owner)
-            .unwrap_or_else(|| UnorderedSet::new(vec![b'd']));
+            .unwrap_or_else(|| UnorderedSet::new(get_collection_key(ESCROWS_BY_OWNER_PREFIX, owner.clone())));
         escrows.insert(&escrow_account_id);
         self.escrows_by_owner.insert(&owner, &escrows);
     }
@@ -396,7 +407,7 @@ impl Model {
         let mut ids = self
             .corgis_by_owner
             .get(&corgi.owner)
-            .unwrap_or_else(|| Dict::new(corgi.owner.as_bytes().to_vec()));
+            .unwrap_or_else(|| Dict::new(get_collection_key(CORGIS_BY_OWNER_PREFIX, corgi.owner.clone()) ));
         ids.push_front(key, ());
 
         self.corgis_by_owner.insert(&corgi.owner, &ids);

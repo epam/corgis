@@ -473,6 +473,25 @@ fn nep4_grant_access() {
 }
 
 #[test]
+fn nep4_grant_access_does_not_collide() {
+    init_test()
+        .run_as(alice(), |contract| {
+            contract.grant_access(ted());
+        })
+        .run_as(bob(), |contract| {
+            contract.grant_access(trent());
+        })
+        .run_as(ted(), |contract| {
+            assert!(contract.check_access(alice()));
+            assert!(!contract.check_access(bob()));
+        })
+        .run_as(trent(), |contract| {
+            assert!(!contract.check_access(alice()));
+            assert!(contract.check_access(bob()));
+        });
+}
+
+#[test]
 #[should_panic(expected = "Account `alice.mock` does not have any escrow")]
 fn neap4_should_panic_when_access_is_empty() {
     init_test().run_as(alice(), |contract| {
