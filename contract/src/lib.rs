@@ -2,10 +2,10 @@
 
 pub mod dict;
 
-use base64::STANDARD;
 use core::panic;
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
+    bs58,
     collections::{UnorderedMap, UnorderedSet},
     env, near_bindgen,
     serde::Serialize,
@@ -33,6 +33,19 @@ fn get_collection_key(prefix: &str, mut key: String) -> Vec<u8> {
 pub type CorgiKey = [u8; size_of::<u128>()];
 
 pub type CorgiId = String;
+
+fn encode(key: CorgiKey) -> CorgiId {
+    bs58::encode(key).into_string()
+}
+
+fn decode(id: &CorgiId) -> CorgiKey {
+    let mut key: CorgiKey = [0; size_of::<CorgiKey>()];
+    match bs58::decode(id).into(&mut key) {
+        Err(error) => panic!("Could not decode `{}`: {}", id, error),
+        Ok(_size) => (),
+    }
+    key
+}
 
 /// The token ID type is also defined in the NEP
 /// Cannot be `u64`.
@@ -148,10 +161,9 @@ impl NEP4 for Model {
     fn grant_access(&mut self, escrow_account_id: AccountId) {
         let owner = env::predecessor_account_id();
 
-        let mut escrows = self
-            .escrows_by_owner
-            .get(&owner)
-            .unwrap_or_else(|| UnorderedSet::new(get_collection_key(ESCROWS_BY_OWNER_PREFIX, owner.clone())));
+        let mut escrows = self.escrows_by_owner.get(&owner).unwrap_or_else(|| {
+            UnorderedSet::new(get_collection_key(ESCROWS_BY_OWNER_PREFIX, owner.clone()))
+        });
         escrows.insert(&escrow_account_id);
         self.escrows_by_owner.insert(&owner, &escrows);
     }
@@ -216,7 +228,7 @@ impl Model {
 
     /// Creates a `Corgi` under the `predecessor_account_id`.
     ///
-    /// Returns the `id` of the generated `Corgi` encoded using base64.
+    /// Returns the `id` of the generated `Corgi` encoded using base58.
     pub fn create_corgi(
         &mut self,
         name: String,
@@ -245,13 +257,11 @@ impl Model {
         check(&background_color, 64, "Back color exceeds 64 chars");
 
         let now = env::block_timestamp();
-        let key = {
-            let seed = env::random_seed();
-            let data = env::sha256(&seed);
-            data[..size_of::<CorgiKey>()].try_into().unwrap()
-        };
+        let key = env::random_seed()[..size_of::<CorgiKey>()]
+            .try_into()
+            .unwrap();
         let corgi = Corgi {
-            id: { base64::encode(&key) },
+            id: encode(key),
             name,
             quote,
             color,
@@ -308,7 +318,7 @@ impl Model {
                     assert!(maybe_corgi.is_some(), "Could not find Corgi by key `{:?}` in heap", key);
 
                     let corgi = maybe_corgi.unwrap();
-                    assert!(corgi.id == base64::encode( key    ));
+                    assert!(corgi.id == encode(key));
                     assert!(corgi.owner == owner, "The corgi with key `{:?}` owned by `{}` was found while fetching `{}`'s corgis", key, corgi.owner, owner);
 
                     corgi
@@ -404,10 +414,12 @@ impl Model {
     fn push_corgi(&mut self, key: CorgiKey, corgi: Corgi) -> Corgi {
         let corgi = self.corgis.push_front(key, corgi);
 
-        let mut ids = self
-            .corgis_by_owner
-            .get(&corgi.owner)
-            .unwrap_or_else(|| Dict::new(get_collection_key(CORGIS_BY_OWNER_PREFIX, corgi.owner.clone()) ));
+        let mut ids = self.corgis_by_owner.get(&corgi.owner).unwrap_or_else(|| {
+            Dict::new(get_collection_key(
+                CORGIS_BY_OWNER_PREFIX,
+                corgi.owner.clone(),
+            ))
+        });
         ids.push_front(key, ());
 
         self.corgis_by_owner.insert(&corgi.owner, &ids);
@@ -432,13 +444,4 @@ impl Model {
             }
         }
     }
-}
-
-fn decode(id: &CorgiId) -> CorgiKey {
-    let mut key: CorgiKey = Default::default();
-    match base64::decode_config_slice(id, STANDARD, &mut key) {
-        Err(error) => panic!("Could not decode `{}`: {}", id, error),
-        Ok(_size) => (),
-    }
-    key
 }

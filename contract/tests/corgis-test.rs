@@ -1,16 +1,11 @@
-use std::{
-    cmp::min,
-    collections::HashSet,
-    ops::{Deref, DerefMut},
-    panic::{self, catch_unwind, AssertUnwindSafe},
-};
+use std::{cmp::min, collections::HashSet, ops::{Deref, DerefMut}, panic::{self, catch_unwind, AssertUnwindSafe}};
 
 mod context;
 
 use context::MockedContext;
 
 use corgis_nft::{Corgi, CorgiId, Model, NEP4};
-use near_sdk::AccountId;
+use near_sdk::{AccountId, bs58};
 
 fn alice() -> AccountId {
     "alice.mock".to_string()
@@ -33,7 +28,7 @@ fn trent() -> AccountId {
 }
 
 fn any_corgi_id() -> CorgiId {
-    base64::encode(vec![0, 1])
+    bs58::encode(vec![0, 1, 2]).into_string()
 }
 
 struct ContractChecker {
@@ -235,14 +230,14 @@ fn initial_state() {
 
 #[test]
 #[should_panic(expected = "Could not decode `012`:")]
-fn corgi_by_id_should_panic_when_id_is_not_base64() {
+fn corgi_by_id_should_panic_when_id_is_not_base58() {
     init_test().run_as(alice(), |contract| {
         contract.get_corgi_by_id("012".to_string());
     });
 }
 
 #[test]
-#[should_panic(expected = "The given corgi id `AAE=` was not found")]
+#[should_panic(expected = "The given corgi id `15T` was not found")]
 fn should_panic_when_corgi_id_does_not_exist() {
     init_test().run_as(alice(), |contract| {
         contract.get_corgi_by_id(any_corgi_id());
@@ -336,7 +331,7 @@ fn delete_should_panic_when_there_are_no_corgis() {
 }
 
 #[test]
-#[should_panic(expected = "Corgi id `AAE=` does not belong to account `alice.mock`")]
+#[should_panic(expected = "Corgi id `15T` does not belong to account `alice.mock`")]
 fn delete_should_panic_when_corgi_does_not_exist() {
     init_test().run_as(alice(), |contract| {
         contract.create_test_corgi(42);
@@ -406,7 +401,7 @@ fn should_panic_when_self_transfer() {
 }
 
 #[test]
-#[should_panic(expected = "Attempt to transfer a nonexistent Corgi id `AAE=`")]
+#[should_panic(expected = "Attempt to transfer a nonexistent Corgi id `15T`")]
 fn should_panic_when_transfer_corgi_does_not_exist() {
     init_test().run_as(alice(), |contract| {
         contract.transfer_corgi(charlie(), any_corgi_id());
@@ -414,7 +409,7 @@ fn should_panic_when_transfer_corgi_does_not_exist() {
 }
 
 #[test]
-#[should_panic(expected = "Sender does not own `sVNcd4PqiCm2sM9ncEU5eQ==`")]
+#[should_panic(expected = "Sender does not own `FKoXLpmDjH4AtzasQaUoq`")]
 fn should_panic_when_sender_is_not_owner() {
     init_test().run_as(alice(), |contract| {
         let id = contract.create_test_corgi(42).id;
@@ -509,7 +504,7 @@ fn neap4_should_panic_when_revoking_invalid_access() {
 }
 
 #[test]
-#[should_panic(expected = "The given corgi id `AAE=` was not found")]
+#[should_panic(expected = "The given corgi id `15T` was not found")]
 fn nep4_transfer_should_panic_when_id_does_not_exist() {
     init_test().run_as(ted(), |contract| {
         contract.transfer_from(alice(), bob(), any_corgi_id());
