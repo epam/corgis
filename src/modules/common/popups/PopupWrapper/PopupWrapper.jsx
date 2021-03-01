@@ -72,7 +72,7 @@ const PopupWrapper = React.forwardRef(({ popup = { title: '', position: 'top', c
   }, [isPopupOpened]);
 
   useEffect(() => {
-    if (!isPopupOpenedAnimate && !timeoutId) {
+    if (isPopupOpened && !isPopupOpenedAnimate && !timeoutId) {
       setTimeoutId(
         setTimeout(() => {
           setIsPopupOpened(false);
@@ -84,7 +84,7 @@ const PopupWrapper = React.forwardRef(({ popup = { title: '', position: 'top', c
     return () => {
       clearTimeoutId();
     };
-  }, [isPopupOpenedAnimate, timeoutId]);
+  }, [isPopupOpened, isPopupOpenedAnimate, timeoutId]);
 
   useEffect(() => {
     if (isPopupOpened && isPopupOpenedAnimate && timeoutId) {
