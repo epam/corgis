@@ -77,7 +77,7 @@ const PopupWrapper = React.forwardRef(({ popup = { title: '', position: 'top', c
         setTimeout(() => {
           setIsPopupOpened(false);
           clearTimeoutId();
-        }, 300),
+        }, 150),
       );
     }
 
