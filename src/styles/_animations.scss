@@ -86,10 +86,10 @@
 // Shake tail
 @keyframes shake-tail {
   0% {
-    transform: rotate(1deg);
+    transform: rotate(0deg);
   }
   100% {
-    transform: rotate(-1deg);
+    transform: rotate(-2deg);
   }
 }
 
