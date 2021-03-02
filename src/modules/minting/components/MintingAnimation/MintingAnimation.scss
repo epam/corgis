@@ -70,9 +70,10 @@
 
   &__shadow {
     @include flex-center;
+    @include animateStretchShadow;
 
     margin-top: 7rem;
 
-    @include animateStretchShadow;
+    filter: $minting-animation-shadow-filter;
   }
 }
