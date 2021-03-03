@@ -112,6 +112,7 @@ version = "0.0.5"
 dependencies = [
  "near-sdk",
  "near-vm-logic",
+ "serde",
 ]
 
 [[package]]
