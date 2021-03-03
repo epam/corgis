@@ -32,7 +32,7 @@ impl<T> MockedContext<T> {
     where
         F: FnOnce() -> T,
     {
-        let context = Self::create_context("".to_string(), &[0; 16]);
+        let context = Self::create_context("".to_string(), 0, &[0; 16]);
         Self {
             contract: init(),
             context,
@@ -54,11 +54,14 @@ impl<T> MockedContext<T> {
             + 1)
         .to_ne_bytes()
         .to_vec();
-        self.context =
-            Self::create_context(self.context.predecessor_account_id.clone(), &random_seed);
+        self.context = Self::create_context(
+            self.context.predecessor_account_id.clone(),
+            self.context.attached_deposit,
+            &random_seed,
+        );
     }
 
-    fn create_context(account_id: String, random_seed: &[u8]) -> VMContext {
+    fn create_context(account_id: String, attached_deposit: u128, random_seed: &[u8]) -> VMContext {
         let now = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()
@@ -72,12 +75,12 @@ impl<T> MockedContext<T> {
             input: vec![],
             block_index: 0,
             block_timestamp: now,
-            account_balance: 0,
-            account_locked_balance: 0,
+            account_balance: 100_000,
+            account_locked_balance: 100_000,
             // Important to increase storage usage is several items are going to be created.
             // https://github.com/near/near-sdk-rs/issues/159#issuecomment-631847439
             storage_usage: 100_000,
-            attached_deposit: 0,
+            attached_deposit,
             prepaid_gas: 10u64.pow(18),
             random_seed: random_seed.to_vec(),
             is_view: false,
