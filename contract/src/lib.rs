@@ -9,7 +9,7 @@ use near_sdk::{
     bs58,
     collections::{UnorderedMap, UnorderedSet},
     env,
-    json_types::U128,
+    json_types::{U128, U64},
     near_bindgen,
     serde::Serialize,
     wee_alloc::WeeAlloc,
@@ -61,7 +61,7 @@ pub struct Model {
     corgis: Dict<CorgiKey, Corgi>,
     corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiKey, ()>>,
     escrows_by_owner: UnorderedMap<AccountId, UnorderedSet<AccountId>>,
-    items: UnorderedMap<CorgiKey, Dict<AccountId, Balance>>,
+    items: UnorderedMap<CorgiKey, Dict<AccountId, (Balance, u64)>>,
 }
 
 /// Represents a `Corgi`.
@@ -71,13 +71,6 @@ pub struct Model {
 /// See, for example, [`get_corgis_by_owner`](Model::get_corgis_by_owner).
 /// Every struct that is part of the public interface needs to be serializable
 /// to JSON as well.
-/// The following attributes allows JSON serialization with no need to import
-/// `serde` directly.
-///
-/// ```example
-/// #[derive(Serialize)]
-/// #[serde(crate = "near_sdk::serde")]
-/// ```
 ///
 /// In addition, we use the following attributes
 ///
@@ -100,11 +93,6 @@ pub struct Corgi {
     pub modified: u64,
     pub sender: AccountId,
     pub locked: bool,
-}
-
-#[derive(Serialize, PartialEq, Debug)]
-pub struct Item {
-    pub corgi: Corgi,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, PartialEq, Debug)]
@@ -381,7 +369,7 @@ impl Model {
         }
     }
 
-    pub fn get_items_for_sale(&self) -> Vec<(Corgi, Vec<(AccountId, U128)>)> {
+    pub fn get_items_for_sale(&self) -> Vec<(Corgi, Vec<(AccountId, U128, U64)>)> {
         let mut result = Vec::new();
         for (key, bids) in self.items.iter() {
             let corgi = self.corgis.get(&key);
@@ -391,20 +379,22 @@ impl Model {
 
             let bids = bids
                 .into_iter()
-                .map(|(bidder, price)| (bidder, U128::from(price)))
-                .collect::<Vec<(AccountId, U128)>>();
+                .map(|(bidder, (price, timestamp))| {
+                    (bidder, U128::from(price), U64::from(timestamp))
+                })
+                .collect::<Vec<(AccountId, U128, U64)>>();
             result.push((corgi, bids));
         }
         result
     }
 
-    pub fn add_item_for_sale(&mut self, token_id: CorgiId, _price: U128, _duration: u32) {
+    pub fn add_item_for_sale(&mut self, token_id: CorgiId, _min_price: U128, _duration: U64) {
         let key = decode(&token_id);
         match self.corgis.get(&key) {
             None => panic!("Token `{}` does not exist", token_id),
             Some(mut corgi) => {
                 if corgi.owner != env::predecessor_account_id() {
-                    panic!("Only owner can add item for sale")
+                    panic!("Only token owner can add item for sale")
                 }
 
                 match self.items.get(&key) {
@@ -438,9 +428,14 @@ impl Model {
                     panic!("You cannot bid for your own Corgi `{}`", token_id)
                 }
 
-                let price = env::attached_deposit() + bids.get(&bidder).unwrap_or_default();
+                let price =
+                    env::attached_deposit() + bids.get(&bidder).map(|(p, _)| p).unwrap_or_default();
 
-                let top_price = bids.into_iter().next().map(|(_, p)| p).unwrap_or_default();
+                let top_price = bids
+                    .into_iter()
+                    .next()
+                    .map(|(_, (p, _))| p)
+                    .unwrap_or_default();
                 if price <= top_price {
                     panic!(
                         "Your bid Ⓝ `{}` is not enough to top current bid Ⓝ `{}`",
@@ -449,7 +444,7 @@ impl Model {
                 }
 
                 bids.remove(&bidder);
-                bids.push_front(&bidder, price);
+                bids.push_front(&bidder, (price, env::block_timestamp()));
                 self.items.insert(&key, &bids);
             }
         }
@@ -476,7 +471,7 @@ impl Model {
                 } else {
                     match bids.remove(&signer) {
                         None => panic!("You cannot clear an item if you are not bidding for it"),
-                        Some(price) => Promise::new(signer).transfer(price),
+                        Some((price, _)) => Promise::new(signer).transfer(price),
                     };
                 }
             }

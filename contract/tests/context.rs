@@ -1,7 +1,6 @@
 use std::{
     convert::TryInto,
     ops::{Deref, DerefMut},
-    time::{SystemTime, UNIX_EPOCH},
 };
 
 use near_sdk::{testing_env, MockedBlockchain, VMConfig, VMContext};
@@ -32,7 +31,7 @@ impl<T> MockedContext<T> {
     where
         F: FnOnce() -> T,
     {
-        let context = Self::create_context("".to_string(), 0, &[0; 16]);
+        let context = Self::create_context("".to_string(), 0, &[0; 16], 1);
         Self {
             contract: init(),
             context,
@@ -58,15 +57,16 @@ impl<T> MockedContext<T> {
             self.context.predecessor_account_id.clone(),
             self.context.attached_deposit,
             &random_seed,
+            self.context.block_timestamp + 1,
         );
     }
 
-    fn create_context(account_id: String, attached_deposit: u128, random_seed: &[u8]) -> VMContext {
-        let now = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
-
+    fn create_context(
+        account_id: String,
+        attached_deposit: u128,
+        random_seed: &[u8],
+        now: u64,
+    ) -> VMContext {
         let context = VMContext {
             current_account_id: "contract.mock".to_string(),
             signer_account_id: "signer.mock".to_string(),
