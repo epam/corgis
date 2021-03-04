@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Button, PopupWrapper } from '~modules/common';
+import { Trade } from '~modules/common/corgi';
 
 import { ACTION_MESSAGES } from '~constants/corgi';
 
@@ -16,7 +17,7 @@ const TradePopup = ({ asButton = false }) => (
     popup={{
       title: POPUP_TITLE,
       position: asButton ? 'top' : 'bottom-left',
-      children: <span>In development...</span>,
+      children: <Trade />,
     }}
   >
     {asButton ? <Button description={BUTTON_DESCRIPTION} /> : <span>{BUTTON_DESCRIPTION}</span>}

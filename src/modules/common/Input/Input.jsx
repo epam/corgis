@@ -12,6 +12,8 @@ const InputPropTypes = {
   autoFocus: PropTypes.bool,
   error: PropTypes.string,
   label: PropTypes.string,
+  min: PropTypes.number,
+  max: PropTypes.number,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
@@ -23,6 +25,8 @@ const Input = ({
   autoFocus = false,
   error = '',
   label = '',
+  min = '',
+  max = '',
   onChange = () => {},
   placeholder = '',
   type = 'text',
@@ -125,6 +129,8 @@ const Input = ({
         type={type}
         value={value}
         onChange={(event) => onChange(event)}
+        min={min}
+        max={max}
         placeholder={placeholder}
         required={required}
       />

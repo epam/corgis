@@ -2,7 +2,17 @@ import { CorgiAnimOne, CorgiAnimTwo, CorgiAnimThree, CorgiAnimFour } from './Cor
 
 import { CorgiCommon, CorgiUncommon, CorgiRare, CorgiVeryRare, SwitchCorgiPhoto } from './CorgiPhotos';
 
-import { CorgiActions, Confirmation, Share, Transfer, DeletePopup, GiftPopup, SharePopup, TradePopup } from './actions';
+import {
+  CorgiActions,
+  Confirmation,
+  Share,
+  Trade,
+  Transfer,
+  DeletePopup,
+  GiftPopup,
+  SharePopup,
+  TradePopup,
+} from './actions';
 
 import CorgiCard from './CorgiCard';
 import CorgiLink from './CorgiLink';
@@ -40,6 +50,7 @@ export {
   CorgiActions,
   Confirmation,
   Share,
+  Trade,
   Transfer,
   DeletePopup,
   GiftPopup,
