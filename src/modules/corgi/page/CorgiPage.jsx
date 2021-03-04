@@ -3,11 +3,12 @@ import { Redirect, useRouteMatch } from 'react-router-dom';
 
 import './CorgiPage.scss';
 
-import { ContractContext } from '~contexts';
+import { ContractContext, NearContext } from '~contexts';
 
 import { CorgiActions, CorgiCard, CorgiRate, CorgiSpinner } from '~modules/common';
 
 const CorgiPage = () => {
+  const { user } = useContext(NearContext);
   const { corgi, loading, getCorgi, deleted, transfered } = useContext(ContractContext);
 
   const {
@@ -21,7 +22,7 @@ const CorgiPage = () => {
   }, [id, transfered]);
 
   if (deleted || !id) {
-    return <Redirect to='/account' />;
+    return <Redirect to={user ? `/user/${user.accountId}` : '/'} />;
   }
 
   if (!corgi || loading) {
@@ -38,7 +39,7 @@ const CorgiPage = () => {
         <CorgiRate rate={corgi.rate} />
 
         <div className='corgi-page__actions'>
-          <CorgiActions id={id} owner={corgi.owner} />
+          <CorgiActions corgi={corgi} />
         </div>
       </div>
     </div>
