@@ -1,8 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import { SAUSAGE } from '~constants/corgi';
+
 import { ContractContext } from '~contexts/';
+
 import { CorgiSVG } from '~modules/common';
+
+import { SAUSAGE } from '~constants/corgi';
 
 const CorgiPNG = () => {
   const { getCorgi } = useContext(ContractContext);
