@@ -388,7 +388,7 @@ impl Model {
         result
     }
 
-    pub fn add_item_for_sale(&mut self, token_id: CorgiId, _min_price: U128, _duration: U64) {
+    pub fn add_item_for_sale(&mut self, token_id: CorgiId) {
         let key = decode(&token_id);
         match self.corgis.get(&key) {
             None => panic!("Token `{}` does not exist", token_id),

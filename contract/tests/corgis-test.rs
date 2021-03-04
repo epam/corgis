@@ -583,7 +583,7 @@ fn market_starts_empty() {
 #[should_panic(expected = "Token `15T` does not exist")]
 fn add_non_existent_item_for_sale_should_panic() {
     init_test().run_as(alice(), |contract| {
-        contract.add_item_for_sale(any_corgi_id(), U128::from(0), U64::from(0));
+        contract.add_item_for_sale(any_corgi_id());
     });
 }
 
@@ -596,7 +596,7 @@ fn add_item_for_sale_from_non_owner_should_panic() {
         })
         .run_as(bob(), |contract| {
             let id = contract.ids[0].0.clone();
-            contract.add_item_for_sale(id, U128::from(0), U64::from(0));
+            contract.add_item_for_sale(id);
         });
 }
 
@@ -605,8 +605,8 @@ fn add_item_for_sale_from_non_owner_should_panic() {
 fn add_item_for_sale_twice_should_panic() {
     init_test().run_as(alice(), |contract| {
         let id = contract.create_test_corgi(42).id;
-        contract.add_item_for_sale(id.clone(), U128::from(0), U64::from(0));
-        contract.add_item_for_sale(id.clone(), U128::from(0), U64::from(0));
+        contract.add_item_for_sale(id.clone());
+        contract.add_item_for_sale(id.clone());
     });
 }
 
@@ -623,7 +623,7 @@ fn bid_for_non_existent_item_should_panic() {
 fn bid_for_my_own_corgi_should_panic() {
     init_test().run_as(alice(), |contract| {
         let id = contract.create_test_corgi(42).id;
-        contract.add_item_for_sale(id.clone(), U128::from(0), U64::from(0));
+        contract.add_item_for_sale(id.clone());
         contract.bid_for_item(id.clone());
     });
 }
@@ -635,7 +635,7 @@ fn zero_bid_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id;
-            contract.add_item_for_sale(id.clone(), U128::from(0), U64::from(0));
+            contract.add_item_for_sale(id.clone());
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 0;
@@ -650,7 +650,7 @@ fn equal_bid_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id;
-            contract.add_item_for_sale(id.clone(), U128::from(0), U64::from(0));
+            contract.add_item_for_sale(id.clone());
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 1000;
@@ -669,7 +669,7 @@ fn smaller_bid_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id;
-            contract.add_item_for_sale(id.clone(), U128::from(0), U64::from(0));
+            contract.add_item_for_sale(id.clone());
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 1000;
@@ -688,7 +688,7 @@ fn smaller_2nd_bid_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id;
-            contract.add_item_for_sale(id.clone(), U128::from(0), U64::from(0));
+            contract.add_item_for_sale(id.clone());
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 500;
@@ -719,7 +719,7 @@ fn clearance_for_non_bidder_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             token_id = contract.create_test_corgi(42).id;
-            contract.add_item_for_sale(token_id.clone(), U128::from(0), U64::from(0));
+            contract.add_item_for_sale(token_id.clone());
         })
         .run_as(bob(), |contract| {
             contract.clearance_for_item(token_id.clone());
@@ -734,7 +734,7 @@ fn bigger_2nd_bid_tops_bidding() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id;
-            contract.add_item_for_sale(id.clone(), U128::from(0), U64::from(0));
+            contract.add_item_for_sale(id.clone());
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 400;
@@ -776,7 +776,7 @@ fn market_auction_item() {
         .run_as(alice(), |contract| {
             let mut corgi = contract.create_test_corgi(42);
             token_id = corgi.id.clone();
-            contract.add_item_for_sale(token_id.clone(), U128::from(0), U64::from(0));
+            contract.add_item_for_sale(token_id.clone());
 
             corgi.locked = true;
             assert_eq!(contract.get_items_for_sale(), vec!((corgi, vec!())));
