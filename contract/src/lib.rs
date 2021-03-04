@@ -61,7 +61,7 @@ pub struct Model {
     corgis: Dict<CorgiKey, Corgi>,
     corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiKey, ()>>,
     escrows_by_owner: UnorderedMap<AccountId, UnorderedSet<AccountId>>,
-    items: UnorderedMap<CorgiKey, Dict<AccountId, (Balance, u64)>>,
+    items: UnorderedMap<CorgiKey, (Dict<AccountId, (Balance, u64)>, u64)>,
 }
 
 /// Represents a `Corgi`.
@@ -371,7 +371,7 @@ impl Model {
 
     pub fn get_items_for_sale(&self) -> Vec<(Corgi, Vec<(AccountId, U128, U64)>)> {
         let mut result = Vec::new();
-        for (key, bids) in self.items.iter() {
+        for (key, (bids, _auction_ends)) in self.items.iter() {
             let corgi = self.corgis.get(&key);
             assert!(corgi.is_some());
             let corgi = corgi.unwrap();
@@ -400,7 +400,8 @@ impl Model {
                 match self.items.get(&key) {
                     None => {
                         let bids = Dict::new(get_collection_key(ITEMS_PREFIX, token_id));
-                        self.items.insert(&key, &bids);
+                        let auction_ends = env::block_timestamp() + 60 * 60 * 24;
+                        self.items.insert(&key, &(bids, auction_ends));
 
                         assert!(!corgi.locked);
                         corgi.locked = true;
@@ -421,7 +422,7 @@ impl Model {
         let key = decode(&token_id);
         match self.items.get(&key) {
             None => panic!("Item `{}` is not available for sale", token_id),
-            Some(mut bids) => {
+            Some((mut bids, auction_ends)) => {
                 let bidder = env::predecessor_account_id();
 
                 if bidder == self.corgis.get(&key).expect("Corgi not found").owner {
@@ -445,7 +446,7 @@ impl Model {
 
                 bids.remove(&bidder);
                 bids.push_front(&bidder, (price, env::block_timestamp()));
-                self.items.insert(&key, &bids);
+                self.items.insert(&key, &(bids, auction_ends));
             }
         }
     }
@@ -454,7 +455,7 @@ impl Model {
         let key = decode(&token_id);
         match self.items.get(&key) {
             None => panic!("Item `{}` not found for sale", token_id),
-            Some(mut bids) => {
+            Some((mut bids, _auction_ends)) => {
                 let corgi = {
                     let corgi = self.corgis.get(&key);
                     assert!(corgi.is_some());
