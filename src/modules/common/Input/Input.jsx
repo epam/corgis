@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import './Input.scss';
 
+import { v4 as uuidv4 } from 'uuid';
 import classNames from 'classnames';
 
 import { usePrevious } from '~hooks/';
@@ -10,6 +11,7 @@ import { usePrevious } from '~hooks/';
 const InputPropTypes = {
   autoFocus: PropTypes.bool,
   error: PropTypes.string,
+  label: PropTypes.string,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
@@ -20,12 +22,15 @@ const InputPropTypes = {
 const Input = ({
   autoFocus = false,
   error = '',
+  label = '',
   onChange = () => {},
   placeholder = '',
   type = 'text',
   value = '',
   required = false,
 }) => {
+  const inputId = `input-${uuidv4()}`;
+
   const inputRef = useRef(null);
 
   const prevValue = usePrevious(value);
@@ -107,8 +112,15 @@ const Input = ({
 
   return (
     <div className='input' className={classNames('input', { 'input--show-error': isErrorShown && errorMessage })}>
+      {label && label.length && (
+        <label className='input__label' htmlFor={inputId}>
+          {label}
+        </label>
+      )}
+
       <input
         className='input__field'
+        id={inputId}
         ref={inputRef}
         type={type}
         value={value}
