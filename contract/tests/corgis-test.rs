@@ -9,7 +9,7 @@ mod context;
 
 use context::MockedContext;
 
-use corgis_nft::{nep4::NEP4, Corgi, CorgiId, Model, MINT_FEE};
+use corgis_nft::{Corgi, CorgiId, Model, MINT_FEE};
 use near_sdk::{
     bs58,
     json_types::{U128, U64},
@@ -30,14 +30,6 @@ fn charlie() -> AccountId {
 
 fn diana() -> AccountId {
     "diana.mock".to_string()
-}
-
-fn ted() -> AccountId {
-    "ted.mock".to_string()
-}
-
-fn trent() -> AccountId {
-    "trent.mock".to_string()
 }
 
 fn any_corgi_id() -> CorgiId {
@@ -443,133 +435,6 @@ fn should_panic_when_transfer_receiver_is_invalid() {
         let id = contract.create_test_corgi(42).id;
         contract.transfer_corgi("invalid.mock.".to_string(), id);
     });
-}
-
-#[test]
-fn nep4_transfer_a_corgi() {
-    init_test().run_as(alice(), |contract| {
-        let id = contract.create_test_corgi(42).id;
-        contract.transfer(charlie(), id);
-    });
-}
-
-#[test]
-fn nep4_check_empty_access() {
-    init_test().run_as(ted(), |contract| {
-        assert!(!contract.check_access(alice()));
-    });
-}
-
-#[test]
-fn nep4_check_self_access() {
-    init_test().run_as(alice(), |contract| {
-        assert!(contract.check_access(alice()));
-    });
-}
-
-#[test]
-fn nep4_grant_access() {
-    init_test()
-        .run_as(alice(), |contract| {
-            contract.grant_access(ted());
-        })
-        .run_as(ted(), |contract| {
-            assert!(contract.check_access(alice()));
-            assert!(!contract.check_access(charlie()));
-        })
-        .run_as(alice(), |contract| {
-            contract.revoke_access(ted());
-        })
-        .run_as(ted(), |contract| {
-            assert!(!contract.check_access(alice()));
-        });
-}
-
-#[test]
-fn nep4_grant_access_does_not_collide() {
-    init_test()
-        .run_as(alice(), |contract| {
-            contract.grant_access(ted());
-        })
-        .run_as(bob(), |contract| {
-            contract.grant_access(trent());
-        })
-        .run_as(ted(), |contract| {
-            assert!(contract.check_access(alice()));
-            assert!(!contract.check_access(bob()));
-        })
-        .run_as(trent(), |contract| {
-            assert!(!contract.check_access(alice()));
-            assert!(contract.check_access(bob()));
-        });
-}
-
-#[test]
-#[should_panic(expected = "Account `alice.mock` does not have any escrow")]
-fn neap4_should_panic_when_access_is_empty() {
-    init_test().run_as(alice(), |contract| {
-        contract.revoke_access(ted());
-    });
-}
-
-#[test]
-#[should_panic(expected = "Escrow `ted.mock` cannot access `alice.mock`")]
-fn neap4_should_panic_when_revoking_invalid_access() {
-    init_test().run_as(alice(), |contract| {
-        contract.grant_access(trent());
-        contract.revoke_access(ted());
-    });
-}
-
-#[test]
-#[should_panic(expected = "The given corgi id `15T` was not found")]
-fn nep4_transfer_should_panic_when_id_does_not_exist() {
-    init_test().run_as(ted(), |contract| {
-        contract.transfer_from(alice(), bob(), any_corgi_id());
-    });
-}
-
-#[test]
-#[should_panic(expected = "Attempt to transfer token from `alice.mock`")]
-fn nep4_transfer_should_panic_when_not_owner() {
-    init_test()
-        .run_as(alice(), |contract| {
-            contract.create_test_corgi(42);
-        })
-        .run_as(charlie(), |contract| {
-            let token_id = contract.ids[0].0.clone();
-            contract.transfer_from(bob(), charlie(), token_id);
-        });
-}
-
-#[test]
-#[should_panic(expected = "Attempt to transfer a token with no access")]
-fn nep4_transfer_should_panic_when_not_allowed() {
-    init_test()
-        .run_as(alice(), |contract| {
-            contract.create_test_corgi(42);
-        })
-        .run_as(charlie(), |contract| {
-            let token_id = contract.ids[0].0.clone();
-            contract.transfer_from(alice(), bob(), token_id);
-        });
-}
-
-#[test]
-fn nep4_transfer_from() {
-    init_test()
-        .run_as(alice(), |contract| {
-            contract.create_test_corgi(42);
-            contract.contract.grant_access(ted());
-        })
-        .run_as(ted(), |contract| {
-            let id = contract.ids[0].0.clone();
-            contract.contract.transfer_from(alice(), bob(), id);
-        })
-        .run_as(bob(), |contract| {
-            let corgis = contract.contract.get_corgis_by_owner(bob());
-            assert_eq!(corgis.len(), 1);
-        });
 }
 
 #[test]
