@@ -1,17 +1,20 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { ContractContext, CorgiActionsContext, NearContext } from '~contexts';
+import { ContractContext, CorgiActionsContextProvider, NearContext } from '~contexts';
 
 import { Dropdown } from '~modules/common';
 import { DeletePopup, GiftPopup, SharePopup, TradePopup } from '~modules/common/corgi';
 
-const CorgiActionsPropTypes = { isDropdown: PropTypes.bool };
+import { CorgiTypeShape } from '~types/CorgiTypes';
 
-const CorgiActions = ({ isDropdown = false }) => {
-  const { owner } = useContext(CorgiActionsContext);
+const CorgiActionsPropTypes = { corgi: CorgiTypeShape.isRequired, isDropdown: PropTypes.bool };
+
+const CorgiActions = ({ corgi, isDropdown = false }) => {
   const { user } = useContext(NearContext);
   const { deleted, transfered } = useContext(ContractContext);
+
+  const { owner } = corgi;
 
   const [showOnlyShare, setShowOnlyShare] = useState(false);
 
@@ -30,7 +33,7 @@ const CorgiActions = ({ isDropdown = false }) => {
   }, [deleted, transfered, dropdownRef]);
 
   return (
-    <>
+    <CorgiActionsContextProvider corgi={corgi}>
       {isDropdown ? (
         <Dropdown
           ref={dropdownRef}
@@ -65,7 +68,7 @@ const CorgiActions = ({ isDropdown = false }) => {
           {!showOnlyShare && <DeletePopup asButton />}
         </>
       )}
-    </>
+    </CorgiActionsContextProvider>
   );
 };
 
