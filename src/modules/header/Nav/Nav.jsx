@@ -23,24 +23,24 @@ const Nav = () => {
     <nav className='nav'>
       {user ? (
         <>
-          <div className='nav__item'>
+          <div className='nav__item nav__item--minting'>
             <MintingLink />
           </div>
 
-          <div className='nav__item'>
+          <div className='nav__item nav__item--corgis'>
             <Link to={`/user/${user.accountId}`}>
-              <Button description='My Corgis' badge={corgis ? corgis.length : 0} reducible />
+              <Button description='My Corgis' badge={corgis ? corgis.length : 0} stretchable />
             </Link>
           </div>
 
-          <div className='nav__item'>
+          <div className='nav__item nav__item--marketplace'>
             <Link to='/marketplace'>
-              <Button description='Marketplace' />
+              <Button description='Marketplace' stretchable />
             </Link>
           </div>
 
-          <div className='nav__item'>
-            <Dropdown title={`@${user.accountId}`}>
+          <div className='nav__item nav__item--dropdown'>
+            <Dropdown title={`@${user.accountId}`} stretchable>
               <ExternalLink
                 customClasses='nav__link'
                 description='Wallet'
