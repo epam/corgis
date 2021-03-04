@@ -285,7 +285,7 @@ impl Model {
     pub fn get_corgis_page_limit(&self) -> u64 {
         log!("::get_corgis_page_limit()");
 
-        10
+        12
     }
 
     /// Transfer the given corgi to `receiver`.
