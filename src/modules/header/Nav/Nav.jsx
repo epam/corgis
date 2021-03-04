@@ -34,6 +34,12 @@ const Nav = () => {
           </div>
 
           <div className='nav__item'>
+            <Link to='/marketplace'>
+              <Button description='Marketplace' />
+            </Link>
+          </div>
+
+          <div className='nav__item'>
             <Dropdown title={`@${user.accountId}`}>
               <ExternalLink
                 customClasses='nav__link'
