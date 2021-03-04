@@ -40,7 +40,8 @@
         "react-scripts": "4.0.1",
         "regenerator-runtime": "^0.13.5",
         "sharethis-reactjs": "^1.6.0",
-        "tinycolor2": "^1.4.1"
+        "tinycolor2": "^1.4.1",
+        "uuid": "^8.3.2"
     },
     "devDependencies": {
         "@babel/core": "^7.0.0-0",
