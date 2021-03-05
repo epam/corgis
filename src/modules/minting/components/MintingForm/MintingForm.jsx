@@ -20,6 +20,7 @@ const MintingForm = () => {
   const { name, quote, color, backgroundColor, setName, setColor, setBackgroundColor } = useContext(CharacterContext);
 
   const [errorMessage, setErrorMessage] = useState('');
+  const [donationNears, setDonationNears] = useState(1);
 
   const clearError = () => {
     setErrorMessage('');
@@ -53,10 +54,16 @@ const MintingForm = () => {
     const validationMessage = validateCorgiName(name);
 
     if (validationMessage === CORGI_VALIDATION_MESSAGES.SUCCESS) {
-      createCorgi(name, color, backgroundColor, quote);
+      // TODO: Donate more than 1 Ⓝ
+      // donationNears
+      createCorgi({ name, color, background_color: backgroundColor, quote }, 1);
     } else {
       setErrorMessage(validationMessage);
     }
+  };
+
+  const handleNears = (amount) => {
+    setDonationNears(amount);
   };
 
   useEffect(() => {
@@ -101,7 +108,7 @@ const MintingForm = () => {
 
       <div className='minting-form__area'>
         <div className='minting-form__donation'>
-          <Donation label='Donate' afterword='for food' />
+          <Donation label='Donate' afterword='for food' handleNears={handleNears} />
         </div>
 
         <Button description='Mint Corgi' />
