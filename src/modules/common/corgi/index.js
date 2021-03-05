@@ -24,7 +24,6 @@ import CorgiPNG from './CorgiPNG';
 import Egg from './Egg';
 
 import Activity from './Activity';
-import Owner from './Owner';
 import RarityString from './RarityString';
 import Quote from './Quote';
 
@@ -46,7 +45,6 @@ export {
   SwitchCorgiPhoto,
   Egg,
   Activity,
-  Owner,
   RarityString,
   Quote,
   CorgiActions,

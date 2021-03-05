@@ -6,12 +6,12 @@ import { CorgiType } from '~types/CorgiTypes';
 import { Link } from 'react-router-dom';
 
 const OwnerPropTypes = {
-  owner: CorgiType.owner,
+  name: CorgiType.owner,
 };
 
-const Owner = ({ owner }) => (
-  <Link to={`/user/${owner}`}>
-    <span className='owner'>@{owner}</span>
+const Owner = ({ name }) => (
+  <Link to={`/user/${name}`}>
+    <span className='owner'>@{name}</span>
   </Link>
 );
 

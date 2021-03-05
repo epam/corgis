@@ -7,6 +7,7 @@ import Donation from './Donation';
 import Dropdown from './Dropdown';
 import ExternalLink from './ExternalLink';
 import Input from './Input';
+import Owner from './Owner';
 
 import {
   CorgiCard,
@@ -24,7 +25,6 @@ import {
   CorgiRate,
   SwitchCorgiPhoto,
   Egg,
-  Owner,
   RarityString,
   Quote,
   CorgiActions,
@@ -38,12 +38,12 @@ export {
   Donation,
   Dropdown,
   Egg,
-  Owner,
   RarityString,
   Quote,
   CorgiActions,
   ExternalLink,
   Input,
+  Owner,
   Popup,
   PopupWrapper,
   BasicSpinner,
