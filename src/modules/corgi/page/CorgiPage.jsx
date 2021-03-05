@@ -9,7 +9,7 @@ import { CorgiActions, CorgiCard, CorgiRate, CorgiSpinner } from '~modules/commo
 
 const CorgiPage = () => {
   const { user } = useContext(NearContext);
-  const { corgi, loading, getCorgi, deleted, transfered } = useContext(ContractContext);
+  const { corgi, error, loading, getActiveCorgi, deleted, transfered } = useContext(ContractContext);
 
   const {
     params: { id },
@@ -17,7 +17,7 @@ const CorgiPage = () => {
 
   useEffect(() => {
     if (id) {
-      getCorgi(id);
+      getActiveCorgi(id);
     }
   }, [id, transfered]);
 
@@ -25,23 +25,29 @@ const CorgiPage = () => {
     return <Redirect to={user ? `/user/${user.accountId}` : '/'} />;
   }
 
-  if (!corgi || loading) {
+  if (loading && !corgi) {
     return <CorgiSpinner />;
   }
 
   return (
     <div className='corgi-page'>
-      <div className='corgi-page__card'>
-        <CorgiCard corgi={corgi} big hideActions />
-      </div>
+      {!error && corgi ? (
+        <>
+          <div className='corgi-page__card'>
+            <CorgiCard corgi={corgi} big hideActions />
+          </div>
 
-      <div className='corgi-page__content'>
-        <CorgiRate rate={corgi.rate} />
+          <div className='corgi-page__content'>
+            <CorgiRate rate={corgi.rate} />
 
-        <div className='corgi-page__actions'>
-          <CorgiActions corgi={corgi} />
-        </div>
-      </div>
+            <div className='corgi-page__actions'>
+              <CorgiActions corgi={corgi} />
+            </div>
+          </div>
+        </>
+      ) : (
+        <h1 className='corgi-page__error'>Such Corgi not exist</h1>
+      )}
     </div>
   );
 };

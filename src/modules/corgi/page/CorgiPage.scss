@@ -1,3 +1,4 @@
+@import 'classes';
 @import 'mixins';
 
 .corgi-page {
@@ -30,6 +31,10 @@
     & > * {
       @include margin-between(1rem, column);
     }
+  }
+
+  &__error {
+    @extend .page-title;
   }
 }
 
