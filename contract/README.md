@@ -18,7 +18,7 @@ cargo build --target wasm32-unknown-unknown --release
 
 The contract is compiled down to a WASM binary.
 You can find this binary in
-`contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm`.
+`target/wasm32-unknown-unknown/release/corgis_nft.wasm`.
 
 ### Deploying our Corgis contract
 
@@ -28,7 +28,7 @@ The `near-cli` tool allows us to deploy and interact with contracts on the NEAR 
 We can deploy our contract with:
 
 ```sh
-near deploy --wasmFile contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
+near deploy --wasmFile target/wasm32-unknown-unknown/release/corgis_nft.wasm
 ```
 
 Alternatively, we can invoke an initialization function when deploying our contract:
