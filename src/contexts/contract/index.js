@@ -85,13 +85,9 @@ export const ContractContextProvider = ({ Contract, children }) => {
   }, [Contract]);
 
   const createCorgi = useCallback(
-    (name, color, background_color, quote) => {
+    (corgi, amount) => {
       dispatchContract({ type: CREATE_CORGI_START });
-      Contract.create_corgi(
-        { name, color, background_color, quote },
-        BOATLOAD_OF_GAS,
-        nearAPI.utils.format.parseNearAmount('1'),
-      )
+      Contract.create_corgi(corgi, BOATLOAD_OF_GAS, nearAPI.utils.format.parseNearAmount(`${amount}`))
         .then(() => {
           dispatchContract({ type: CREATE_CORGI_SUCCESS });
         })
