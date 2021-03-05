@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import * as nearAPI from 'near-api-js';
 
+import { contractReducer, initialContractState } from './reducer';
 import {
   ACTION_START,
   ACTION_ERROR,
@@ -18,14 +19,13 @@ import {
   CLEAR_STATE,
 } from './types';
 
-import { contractReducer, initialContractState } from './reducer';
+import { NearContext } from '~contexts/';
+
+import { BOATLOAD_OF_GAS } from '~constants/corgi';
 
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
-import BOATLOAD_OF_GAS, { AUCTION_DURATION } from '~constants/corgi';
-import { NearContext } from '~contexts/';
-
-export const ContractContext = React.createContext();
+export const ContractContext = React.createContext(initialContractState);
 
 const ContractContextProviderPropTypes = {
   Contract: PropTypes.shape({
@@ -112,46 +112,6 @@ export const ContractContextProvider = ({ Contract, children }) => {
       Contract.transfer_corgi({ receiver, id }, BOATLOAD_OF_GAS)
         .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
         .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
-    },
-    [Contract],
-  );
-
-  const getItemsForSale = useCallback(
-    (id) => {
-      // dispatchContract({ type: TRANSFER_CORGI_START });
-      Contract.get_items_for_sale();
-      // .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
-      // .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
-    },
-    [Contract],
-  );
-
-  const addItemForSale = useCallback(
-    (id) => {
-      // dispatchContract({ type: TRANSFER_CORGI_START });
-      Contract.add_item_for_sale(id, AUCTION_DURATION);
-      // .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
-      // .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
-    },
-    [Contract],
-  );
-
-  const bidForItem = useCallback(
-    (id) => {
-      // dispatchContract({ type: TRANSFER_CORGI_START });
-      Contract.bid_for_item(id);
-      // .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
-      // .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
-    },
-    [Contract],
-  );
-
-  const clearanceForItem = useCallback(
-    (id) => {
-      // dispatchContract({ type: TRANSFER_CORGI_START });
-      Contract.clearance_for_item(id);
-      // .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
-      // .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
     },
     [Contract],
   );
