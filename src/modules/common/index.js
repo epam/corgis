@@ -3,6 +3,7 @@ import { Popup, PopupWrapper } from './popups';
 import { BasicSpinner, CorgiSpinner } from './spinners';
 
 import Colorpicker from './Colorpicker';
+import Donation from './Donation';
 import Dropdown from './Dropdown';
 import ExternalLink from './ExternalLink';
 import Input from './Input';
@@ -34,6 +35,7 @@ export {
   CheckMarkButton,
   MintingLink,
   Colorpicker,
+  Donation,
   Dropdown,
   Egg,
   Owner,

@@ -7,8 +7,7 @@ import { faRandom } from '@fortawesome/free-solid-svg-icons';
 
 import { CharacterContext, ContractContext } from '~contexts';
 
-import { Button, Colorpicker, Input } from '~modules/common';
-// import { Donation } from '~modules/minting/components';
+import { Button, Colorpicker, Donation, Input } from '~modules/common';
 
 import { genRandomColor, genRandomName } from '~helpers/generators';
 
@@ -101,10 +100,9 @@ const MintingForm = () => {
       </div>
 
       <div className='minting-form__area'>
-        {/* // Feature not yet approved  
         <div className='minting-form__donation'>
-          <Donation />
-        </div> */}
+          <Donation label='Donate' afterword='for food' />
+        </div>
 
         <Button description='Mint Corgi' />
       </div>
