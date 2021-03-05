@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
     collections::UnorderedMap,
@@ -18,7 +16,7 @@ pub struct Dict<K, V> {
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Heap<K, V>(UnorderedMap<K, Node<K, V>>);
 
-#[derive(BorshDeserialize, BorshSerialize, Debug)]
+#[derive(BorshDeserialize, BorshSerialize)]
 struct Node<K, V> {
     next: K,
     prev: K,
@@ -31,7 +29,7 @@ pub struct DictIntoIterator<'a, K, V> {
 }
 
 impl<
-        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize + Debug,
+        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize,
         V: BorshDeserialize + BorshSerialize,
     > Dict<K, V>
 {
@@ -54,7 +52,7 @@ impl<
     /// as it is used to signal the end of the linked list.
     /// Moreover, the `Dict` does not accept duplicated keys.
     pub fn push_front(&mut self, key: &K, value: V) -> V {
-        assert!(key != &K::default(), "Attempt to push `default` into heap");
+        assert!(key != &K::default());
 
         if self.first != K::default() {
             let mut node = self.heap.get_node(&self.first);
@@ -100,19 +98,17 @@ impl<
     }
 }
 
-impl<K: BorshDeserialize + BorshSerialize + Debug, V: BorshDeserialize + BorshSerialize>
-    Heap<K, V>
-{
+impl<K: BorshDeserialize + BorshSerialize, V: BorshDeserialize + BorshSerialize> Heap<K, V> {
     fn get_node(&self, key: &K) -> Node<K, V> {
         let node = self.0.get(&key);
-        assert!(node.is_some(), "Key `{:?}` was not found in heap map", key);
+        assert!(node.is_some());
         node.unwrap()
     }
 }
 
 impl<
         'a,
-        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize + Debug,
+        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize,
         V: BorshDeserialize + BorshSerialize,
     > IntoIterator for &'a Dict<K, V>
 {
@@ -129,7 +125,7 @@ impl<
 }
 
 impl<
-        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize + Debug,
+        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize,
         V: BorshDeserialize + BorshSerialize,
     > Iterator for DictIntoIterator<'_, K, V>
 {
