@@ -9,7 +9,10 @@ mod context;
 
 use context::MockedContext;
 
-use corgis_nft::{Bid, CorgiDTO, CorgiId, ForSale, Model, MINT_FEE};
+use corgis_nft::{
+    corgi::{Bid, CorgiDTO, CorgiId, ForSale},
+    Model, MINT_FEE,
+};
 use near_sdk::{bs58, json_types::U64, AccountId};
 
 fn alice() -> AccountId {
@@ -243,6 +246,15 @@ fn corgi_by_id_should_panic_when_id_is_not_base58() {
 fn should_panic_when_corgi_id_does_not_exist() {
     init_test().run_as(alice(), |contract| {
         contract.get_corgi_by_id(any_corgi_id());
+    });
+}
+
+#[test]
+#[should_panic(expected = "Deposit must be MINT_FEE but was 0")]
+fn create_free_corgi_should_panic() {
+    init_test().run_as(alice(), |contract| {
+        contract.context.attached_deposit = 0;
+        contract.create_corgi("N".into(), "Q".into(), "C".into(), "B".into());
     });
 }
 
@@ -507,7 +519,7 @@ fn expired_bid_should_panic() {
 }
 
 #[test]
-#[should_panic(expected = "Your bid Ⓝ `0` is not enough to top current bid Ⓝ `0`")]
+#[should_panic(expected = "The bid Ⓝ 0 does not cover top bid Ⓝ 0")]
 fn zero_bid_should_panic() {
     let mut id = String::new();
     init_test()
@@ -522,7 +534,7 @@ fn zero_bid_should_panic() {
 }
 
 #[test]
-#[should_panic(expected = "Your bid Ⓝ `1000` is not enough to top current bid Ⓝ `1000`")]
+#[should_panic(expected = "The bid Ⓝ 1000 does not cover top bid Ⓝ 1000")]
 fn equal_bid_should_panic() {
     let mut id = String::new();
     init_test()
@@ -541,7 +553,7 @@ fn equal_bid_should_panic() {
 }
 
 #[test]
-#[should_panic(expected = "Your bid Ⓝ `900` is not enough to top current bid Ⓝ `1000`")]
+#[should_panic(expected = "The bid Ⓝ 900 does not cover top bid Ⓝ 1000")]
 fn smaller_bid_should_panic() {
     let mut id = String::new();
     init_test()
@@ -560,7 +572,7 @@ fn smaller_bid_should_panic() {
 }
 
 #[test]
-#[should_panic(expected = "Your bid Ⓝ `900` is not enough to top current bid Ⓝ `1000`")]
+#[should_panic(expected = "The bid Ⓝ 900 does not cover top bid Ⓝ 1000")]
 fn smaller_2nd_bid_should_panic() {
     let mut id = String::new();
     init_test()
@@ -605,7 +617,7 @@ fn clearance_for_non_bidder_should_panic() {
 }
 
 #[test]
-#[should_panic(expected = "You cannot withdraw your bid Ⓝ `100` because is the highest")]
+#[should_panic(expected = "Your bid Ⓝ 100 is the highest and cannot be cleared")]
 fn highest_bid_withdraw_should_panic() {
     let mut token_id = String::new();
     init_test()
