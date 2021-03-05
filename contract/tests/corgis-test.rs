@@ -794,5 +794,26 @@ fn market_auction_item() {
 
             assert_eq!(contract.get_items_for_sale(), vec!());
             assert_eq!(contract.get_corgi_by_id(token_id.clone()).owner, bob());
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).for_sale, None);
         });
+}
+
+#[test]
+#[should_panic(expected = "Corgi `FKoXLpmDjH4AtzasQaUoq` is currently locked until 86400000000005")]
+fn transfer_an_item_for_sale_should_panic() {
+    init_test().run_as(alice(), |contract| {
+        let token_id = contract.create_test_corgi(42).id.clone();
+        contract.add_item_for_sale(token_id.clone(), DURATION);
+        contract.transfer_corgi(bob(), token_id);
+    });
+}
+
+#[test]
+#[should_panic(expected = "Corgi `FKoXLpmDjH4AtzasQaUoq` is currently locked until 86400000000005")]
+fn delete_an_item_for_sale_should_panic() {
+    init_test().run_as(alice(), |contract| {
+        let token_id = contract.create_test_corgi(42).id.clone();
+        contract.add_item_for_sale(token_id.clone(), DURATION);
+        contract.delete_corgi(token_id);
+    });
 }

@@ -20,6 +20,7 @@ use std::{convert::TryInto, mem::size_of, usize};
 #[global_allocator]
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
+/// Fee to pay in (yocto Ⓝ) to allow the user to store Corgis in our contract.
 pub const MINT_FEE: u128 = 1_000_000_000_000_000_000_000_000;
 
 const CORGIS: &[u8] = b"a";
@@ -27,11 +28,6 @@ const CORGIS_BY_OWNER: &[u8] = b"b";
 const CORGIS_BY_OWNER_PREFIX: &str = "B";
 const ITEMS: &[u8] = b"d";
 const ITEMS_PREFIX: &str = "D";
-
-fn get_collection_key(prefix: &str, mut key: String) -> Vec<u8> {
-    key.insert_str(0, prefix);
-    key.as_bytes().to_vec()
-}
 
 macro_rules! log {
     ($($arg:tt)*) => {{
@@ -199,7 +195,6 @@ impl Model {
         }
 
         let sender = env::predecessor_account_id();
-
         if sender == receiver {
             panic!("Account `{}` attempted to make a self transfer", receiver);
         }
@@ -214,6 +209,10 @@ impl Model {
 
         if sender != corgi.owner {
             panic!("Sender does not own `{}`", id);
+        }
+
+        if let Some((_bids, expires)) = self.items.get(&key) {
+            panic!("Corgi `{}` is currently locked until {}", id, expires);
         }
 
         self.delete_corgi_from(&corgi.owner, &id);
@@ -323,13 +322,16 @@ impl Model {
                             panic!("Auction for token `{}` has not yet expired", token_id)
                         }
 
+                        self.items.remove(&key);
+
                         self.transfer_corgi(bidder, token_id);
                         Promise::new(signer).transfer(price);
                         for (bidder, (price, _timestamp)) in it {
                             Promise::new(bidder).transfer(price);
                         }
+                    } else {
+                        self.items.remove(&key);
                     }
-                    self.items.remove(&key);
                 } else {
                     if let Some((bidder, (price, _timestamp))) = bids.into_iter().next() {
                         if bidder == signer {
@@ -375,6 +377,11 @@ impl Model {
             None => panic!("Account `{}` does not have corgis to delete from", owner),
             Some(mut list) => {
                 let key = decode(id);
+
+                if let Some((_bids, expires)) = self.items.get(&key) {
+                    panic!("Corgi `{}` is currently locked until {}", id, expires);
+                }
+
                 if list.remove(&key).is_none() {
                     panic!("Corgi id `{}` does not belong to account `{}`", id, owner);
                 }
@@ -385,4 +392,9 @@ impl Model {
             }
         }
     }
+}
+
+fn get_collection_key(prefix: &str, mut key: String) -> Vec<u8> {
+    key.insert_str(0, prefix);
+    key.as_bytes().to_vec()
 }
