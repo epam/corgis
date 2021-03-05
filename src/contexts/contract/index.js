@@ -22,7 +22,7 @@ import { contractReducer, initialContractState } from './reducer';
 
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
-import BOATLOAD_OF_GAS from '~constants/corgi';
+import BOATLOAD_OF_GAS, { AUCTION_DURATION } from '~constants/corgi';
 import { NearContext } from '~contexts/';
 
 export const ContractContext = React.createContext();
@@ -116,6 +116,46 @@ export const ContractContextProvider = ({ Contract, children }) => {
     [Contract],
   );
 
+  const getItemsForSale = useCallback(
+    (id) => {
+      // dispatchContract({ type: TRANSFER_CORGI_START });
+      Contract.get_items_for_sale();
+      // .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
+      // .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
+    },
+    [Contract],
+  );
+
+  const addItemForSale = useCallback(
+    (id) => {
+      // dispatchContract({ type: TRANSFER_CORGI_START });
+      Contract.add_item_for_sale(id, AUCTION_DURATION);
+      // .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
+      // .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
+    },
+    [Contract],
+  );
+
+  const bidForItem = useCallback(
+    (id) => {
+      // dispatchContract({ type: TRANSFER_CORGI_START });
+      Contract.bid_for_item(id);
+      // .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
+      // .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
+    },
+    [Contract],
+  );
+
+  const clearanceForItem = useCallback(
+    (id) => {
+      // dispatchContract({ type: TRANSFER_CORGI_START });
+      Contract.clearance_for_item(id);
+      // .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
+      // .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
+    },
+    [Contract],
+  );
+
   const clearState = () => dispatchContract({ type: CLEAR_STATE });
 
   useEffect(() => {
@@ -151,6 +191,10 @@ export const ContractContextProvider = ({ Contract, children }) => {
     deleteCorgi,
     transferCorgi,
     getGlobalCorgis,
+    getItemsForSale,
+    addItemForSale,
+    bidForItem,
+    clearanceForItem,
   };
 
   return <ContractContext.Provider value={value}>{children}</ContractContext.Provider>;

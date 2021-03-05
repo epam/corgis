@@ -34,12 +34,13 @@ async function InitContract() {
   // Initializing our contract APIs by contract name and configuration.
   const contract = new nearAPI.Contract(walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis'],
+    viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis', 'get_items_for_sale'],
     // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi'],
+    changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi', 'add_item_for_sale', 'bid_for_item', 'clearance_for_item'],
     // Sender is the account ID to initialize transactions.
     sender: walletConnection.getAccountId(),
   });
+
   return {
     contract,
     currentUser,
