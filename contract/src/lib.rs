@@ -188,7 +188,7 @@ impl Model {
     ///
     #[init]
     pub fn new() -> Self {
-        log!("::new()");
+        log!("new()");
         Self::default()
     }
 
@@ -211,7 +211,7 @@ impl Model {
         background_color: String,
     ) -> CorgiDTO {
         log!(
-            "::create_corgi({}, {}, {}, {})",
+            "create_corgi({}, {}, {}, {})",
             name,
             quote,
             color,
@@ -269,7 +269,7 @@ impl Model {
 
     /// Gets the `Corgi` by the given `id`.
     pub fn get_corgi_by_id(&self, id: CorgiId) -> CorgiDTO {
-        log!("::get_corgi_by_id({})", id);
+        log!("get_corgi_by_id({})", id);
 
         let key = decode(&id);
         match self.corgis.get(&key) {
@@ -288,7 +288,7 @@ impl Model {
     /// meaning it doesn't modify state.
     /// In the frontend (`/src/index.js`) this is added to the `"viewMethods"` array.
     pub fn get_corgis_by_owner(&self, owner: AccountId) -> Vec<CorgiDTO> {
-        log!("::get_corgis_by_owner({})", owner);
+        log!("get_corgis_by_owner({})", owner);
 
         match self.corgis_by_owner.get(&owner) {
             None => Vec::new(),
@@ -311,7 +311,7 @@ impl Model {
     /// Delete the `Corgi` by `id`.
     /// Only the owner of the `Corgi` can delete it.
     pub fn delete_corgi(&mut self, id: CorgiId) {
-        log!("::delete_corgi({})", id);
+        log!("delete_corgi({})", id);
 
         let owner = env::predecessor_account_id();
         self.delete_corgi_from(&owner, &id);
@@ -327,7 +327,7 @@ impl Model {
     ///
     /// Returns a list of all `Corgi`s.
     pub fn get_global_corgis(&self) -> Vec<CorgiDTO> {
-        log!("::get_global_corgis()");
+        log!("get_global_corgis()");
 
         let page_limit = self.get_corgis_page_limit() as usize;
 
@@ -344,14 +344,14 @@ impl Model {
 
     /// Returns the max amount of `Corgi`s returned by `get_global_corgis`.
     pub fn get_corgis_page_limit(&self) -> u64 {
-        log!("::get_corgis_page_limit()");
+        log!("get_corgis_page_limit()");
 
         12
     }
 
     /// Transfer the given corgi to `receiver`.
     pub fn transfer_corgi(&mut self, receiver: AccountId, id: CorgiId) {
-        log!("::transfer_corgi({}, {})", receiver, id);
+        log!("transfer_corgi({}, {})", receiver, id);
 
         if !env::is_valid_account_id(receiver.as_bytes()) {
             panic!("Receiver account `{}` is not a valid account id", receiver);
@@ -423,6 +423,8 @@ impl Model {
     }
 
     pub fn get_items_for_sale(&self) -> Vec<CorgiDTO> {
+        log!("get_items_for_sale()");
+
         let mut result = Vec::new();
         for (key, item) in self.items.iter() {
             let corgi = self.corgis.get(&key);
@@ -435,6 +437,8 @@ impl Model {
     }
 
     pub fn add_item_for_sale(&mut self, token_id: CorgiId, duration: u32) -> U64 {
+        log!("add_item_for_sale({}, {})", token_id, duration);
+
         let key = decode(&token_id);
         match self.corgis.get(&key) {
             None => panic!("Token `{}` does not exist", token_id),
@@ -461,6 +465,8 @@ impl Model {
 
     #[payable]
     pub fn bid_for_item(&mut self, token_id: CorgiId) {
+        log!("bid_for_item({})", token_id);
+
         let key = decode(&token_id);
         match self.items.get(&key) {
             None => panic!("Item `{}` is not available for sale", token_id),
@@ -498,6 +504,8 @@ impl Model {
     }
 
     pub fn clearance_for_item(&mut self, token_id: CorgiId) {
+        log!("clearance_for_item({})", token_id);
+
         let key = decode(&token_id);
         match self.items.get(&key) {
             None => panic!("Item `{}` not found for sale", token_id),
