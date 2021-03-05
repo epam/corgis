@@ -5,6 +5,10 @@ use near_sdk::{
     collections::UnorderedMap,
 };
 
+/// Keeps a mapping from `K` keys to `V` values.
+/// It combines `UnorderedMap` to store elements and implements a linked list
+/// to allow the user to maintain the insertion order.
+/// Any key/value pair is added to the beginning of the list.
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Dict<K, V> {
     heap: Heap<K, V>,
