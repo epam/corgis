@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import './MarketplacePage.scss';
 
+import { MarketplaceContext } from '~contexts';
+
+import { CorgisShowCase } from '~modules/common';
+
 const MarketplacePage = () => {
+  const { corgisForSale, getCorgisForSale } = useContext(MarketplaceContext);
+
+  useEffect(() => {
+    getCorgisForSale();
+  }, []);
+
   return (
     <div className='marketplace'>
-      <h1>MarketplacePage works!</h1>
+      <CorgisShowCase corgis={corgisForSale} title='For Sale' />
     </div>
   );
 };
