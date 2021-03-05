@@ -434,7 +434,7 @@ impl Model {
         result
     }
 
-    pub fn add_item_for_sale(&mut self, token_id: CorgiId) -> U64 {
+    pub fn add_item_for_sale(&mut self, token_id: CorgiId, duration: u32) -> U64 {
         let key = decode(&token_id);
         match self.corgis.get(&key) {
             None => panic!("Token `{}` does not exist", token_id),
@@ -446,7 +446,7 @@ impl Model {
                 match self.items.get(&key) {
                     None => {
                         let bids = Dict::new(get_collection_key(ITEMS_PREFIX, token_id));
-                        let expires = env::block_timestamp() + 60 * 60 * 24;
+                        let expires = env::block_timestamp() + duration as u64 * 1_000_000_000;
                         self.items.insert(&key, &(bids, expires));
 
                         U64(expires)

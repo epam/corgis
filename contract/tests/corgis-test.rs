@@ -440,11 +440,13 @@ fn market_starts_empty() {
     });
 }
 
+const DURATION: u32 = 60 * 60 * 24;
+
 #[test]
 #[should_panic(expected = "Token `15T` does not exist")]
 fn add_non_existent_item_for_sale_should_panic() {
     init_test().run_as(alice(), |contract| {
-        contract.add_item_for_sale(any_corgi_id());
+        contract.add_item_for_sale(any_corgi_id(), DURATION);
     });
 }
 
@@ -457,7 +459,7 @@ fn add_item_for_sale_from_non_owner_should_panic() {
         })
         .run_as(bob(), |contract| {
             let id = contract.ids[0].0.clone();
-            contract.add_item_for_sale(id);
+            contract.add_item_for_sale(id, DURATION);
         });
 }
 
@@ -466,8 +468,8 @@ fn add_item_for_sale_from_non_owner_should_panic() {
 fn add_item_for_sale_twice_should_panic() {
     init_test().run_as(alice(), |contract| {
         let id = contract.create_test_corgi(42).id.clone();
-        contract.add_item_for_sale(id.clone());
-        contract.add_item_for_sale(id.clone());
+        contract.add_item_for_sale(id.clone(), DURATION);
+        contract.add_item_for_sale(id.clone(), DURATION);
     });
 }
 
@@ -484,7 +486,7 @@ fn bid_for_non_existent_item_should_panic() {
 fn bid_for_my_own_corgi_should_panic() {
     init_test().run_as(alice(), |contract| {
         let id = contract.create_test_corgi(42).id.clone();
-        contract.add_item_for_sale(id.clone());
+        contract.add_item_for_sale(id.clone(), DURATION);
         contract.bid_for_item(id.clone());
     });
 }
@@ -496,10 +498,10 @@ fn expired_bid_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id.clone();
-            contract.add_item_for_sale(id.clone());
+            contract.add_item_for_sale(id.clone(), DURATION);
         })
         .run_as(bob(), |contract| {
-            contract.context.block_timestamp += 60 * 60 * 24 + 60;
+            contract.context.block_timestamp += 60 * 60 * 24 * 1_000_000_000 + 60;
             contract.bid_for_item(id.clone());
         });
 }
@@ -511,7 +513,7 @@ fn zero_bid_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id.clone();
-            contract.add_item_for_sale(id.clone());
+            contract.add_item_for_sale(id.clone(), DURATION);
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 0;
@@ -526,7 +528,7 @@ fn equal_bid_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id.clone();
-            contract.add_item_for_sale(id.clone());
+            contract.add_item_for_sale(id.clone(), DURATION);
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 1000;
@@ -545,7 +547,7 @@ fn smaller_bid_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id.clone();
-            contract.add_item_for_sale(id.clone());
+            contract.add_item_for_sale(id.clone(), DURATION);
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 1000;
@@ -564,7 +566,7 @@ fn smaller_2nd_bid_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id.clone();
-            contract.add_item_for_sale(id.clone());
+            contract.add_item_for_sale(id.clone(), DURATION);
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 500;
@@ -595,7 +597,7 @@ fn clearance_for_non_bidder_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             token_id = contract.create_test_corgi(42).id.clone();
-            contract.add_item_for_sale(token_id.clone());
+            contract.add_item_for_sale(token_id.clone(), DURATION);
         })
         .run_as(bob(), |contract| {
             contract.clearance_for_item(token_id.clone());
@@ -609,7 +611,7 @@ fn highest_bid_withdraw_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             token_id = contract.create_test_corgi(42).id.clone();
-            contract.add_item_for_sale(token_id.clone());
+            contract.add_item_for_sale(token_id.clone(), DURATION);
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 100;
@@ -625,7 +627,7 @@ fn clear_ongoing_auction_with_bids_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             token_id = contract.create_test_corgi(42).id.clone();
-            contract.add_item_for_sale(token_id.clone());
+            contract.add_item_for_sale(token_id.clone(), DURATION);
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 100;
@@ -645,7 +647,7 @@ fn bigger_2nd_bid_tops_bidding() {
     init_test()
         .run_as(alice(), |contract| {
             id = contract.create_test_corgi(42).id.clone();
-            auction_ends = contract.add_item_for_sale(id.clone());
+            auction_ends = contract.add_item_for_sale(id.clone(), DURATION);
         })
         .run_as(bob(), |contract| {
             contract.context.attached_deposit = 400;
@@ -691,7 +693,7 @@ fn market_auction_item() {
     init_test()
         .run_as(alice(), |contract| {
             token_id = contract.create_test_corgi(42).id.clone();
-            auction_ends = contract.add_item_for_sale(token_id.clone());
+            auction_ends = contract.add_item_for_sale(token_id.clone(), DURATION);
 
             assert_eq!(contract.get_items_for_sale()[0].id, token_id);
             assert_eq!(
@@ -775,7 +777,7 @@ fn market_auction_item() {
         })
         .run_as(alice(), |contract| {
             let token_id = contract.ids[0].0.clone();
-            contract.context.block_timestamp += 60 * 60 * 24 + 60;
+            contract.context.block_timestamp += 60 * 60 * 24 * 1_000_000_000 + 60;
             contract.clearance_for_item(token_id.clone());
 
             assert_eq!(contract.get_items_for_sale(), vec!());
