@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import { ContractContext, CorgiActionsContext } from '~contexts';
 
-import { BasicSpinner, Button, PopupWrapper } from '~modules/common';
-import { Confirmation } from '~modules/common/corgi';
+import { Confirmation, BasicSpinner, Button, PopupWrapper } from '~modules/common';
 
 import { ACTION_MESSAGES } from '~constants/corgi';
 
