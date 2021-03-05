@@ -3,9 +3,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import * as nearAPI from 'near-api-js';
+
 import getConfig from './config';
 
-import { ContractContextProvider, NearContextProvider } from '~contexts';
+import { ContractContextProvider, MarketplaceContextProvider, NearContextProvider } from '~contexts';
+
+import { CorgiMethods, MarketplaceMethods } from '~constants/contractMethods';
 
 import App from './App';
 
@@ -34,9 +37,9 @@ async function InitContract() {
   // Initializing our contract APIs by contract name and configuration.
   const contract = new nearAPI.Contract(walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis', 'get_items_for_sale'],
+    viewMethods: [...CorgiMethods.viewMethods, ...MarketplaceMethods.viewMethods],
     // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi', 'add_item_for_sale', 'bid_for_item', 'clearance_for_item'],
+    changeMethods: [...CorgiMethods.changeMethods, ...MarketplaceMethods.changeMethods],
     // Sender is the account ID to initialize transactions.
     sender: walletConnection.getAccountId(),
   });
@@ -55,7 +58,9 @@ window.nearInitPromise = InitContract()
     const app = (
       <NearContextProvider currentUser={currentUser} nearConfig={nearConfig} wallet={walletConnection} near={near}>
         <ContractContextProvider Contract={contract}>
-          <App />
+          <MarketplaceContextProvider Contract={contract}>
+            <App />
+          </MarketplaceContextProvider>
         </ContractContextProvider>
       </NearContextProvider>
     );
