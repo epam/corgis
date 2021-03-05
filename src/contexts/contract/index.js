@@ -1,6 +1,8 @@
 import React, { useReducer, useCallback, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import * as nearAPI from 'near-api-js';
+
 import {
   ACTION_START,
   ACTION_ERROR,
@@ -85,7 +87,11 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const createCorgi = useCallback(
     (name, color, background_color, quote) => {
       dispatchContract({ type: CREATE_CORGI_START });
-      Contract.create_corgi({ name, color, background_color, quote }, BOATLOAD_OF_GAS)
+      Contract.create_corgi(
+        { name, color, background_color, quote },
+        BOATLOAD_OF_GAS,
+        nearAPI.utils.format.parseNearAmount('1'),
+      )
         .then(() => {
           dispatchContract({ type: CREATE_CORGI_SUCCESS });
         })
