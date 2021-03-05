@@ -7,6 +7,7 @@ import Donation from './Donation';
 import Dropdown from './Dropdown';
 import ExternalLink from './ExternalLink';
 import Input from './Input';
+import NearIcon from './NearIcon';
 import Owner from './Owner';
 
 import {
@@ -43,6 +44,7 @@ export {
   CorgiActions,
   ExternalLink,
   Input,
+  NearIcon,
   Owner,
   Popup,
   PopupWrapper,
