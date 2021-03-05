@@ -98,7 +98,7 @@ The server that starts is for static assets and by default serves them to localh
 - `src/main.js` for the JavaScript front-end code and how to integrate contracts
 - `src/app.js` for the first react component
 
-For information about the contract, see [contract/README.md](contract/README.md).
+For information about the contract, see [contract/README.md](contract/).
 
 ### To run on Local Node (May in the old version and need update)
 

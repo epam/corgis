@@ -13,7 +13,6 @@ Here is an overview on how to develop NEAR contracts using Rust:
 To build the Corgis contract:
 
 ```sh
-cd contract
 cargo build --target wasm32-unknown-unknown --release
 ```
 
