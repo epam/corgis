@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import './CorgiSVG.scss';
+
+import * as convertSvg from 'save-svg-as-png';
 
 import { genRandomInt } from '~helpers/generators';
 
@@ -9,20 +11,24 @@ import COLORS from '~constants/Colors';
 
 import { CorgiType } from '~types/CorgiTypes';
 
+const fullWidth = 525;
+const viewBoxHeight = 374;
+
+const backPartMargin = 221;
+
+const padding = 16;
+
 const CorgiSVGPropTypes = {
-  color: CorgiType.color,
+  color: CorgiType.color.isRequired,
   sausage: PropTypes.number.isRequired,
 };
 
-const fullWidth = 525;
-const backPartMargin = 221;
-
-const CorgiSVG = ({ color, sausage }) => {
+const CorgiSVG = React.forwardRef(({ color, sausage }, ref) => {
   // add 1 point to remove stitch
   const sa = Number(sausage) + 1;
 
   const backPosition = Number(sausage) + backPartMargin;
-  const lengthFull = Number(sausage) + fullWidth;
+  const viewBoxWidth = Number(sausage) + fullWidth;
 
   const tongueAnimDelay = genRandomInt(0, 500);
   const tailAnimDelay = genRandomInt(0, 500);
@@ -30,12 +36,32 @@ const CorgiSVG = ({ color, sausage }) => {
   const tongueAnimDuration = genRandomInt(150, 250);
   const tailAnimDuration = genRandomInt(450, 550);
 
+  const svgRef = useRef();
+
+  useImperativeHandle(ref, () => ({
+    async convertToPng(name, backgroundColor) {
+      if (svgRef && svgRef.current) {
+        const config = {
+          backgroundColor,
+          height: viewBoxHeight + padding * 2,
+          width: viewBoxWidth + padding * 2,
+          left: -padding,
+          top: -padding,
+        };
+
+        await convertSvg.saveSvgAsPng(svgRef.current, name, config);
+        return convertSvg.svgAsPngUri(svgRef.current, config).then((uri) => uri);
+      }
+    },
+  }));
+
   return (
     <div className='corgi'>
       <svg
+        ref={svgRef}
         width='100%'
         height='100%'
-        viewBox={`0 0 ${lengthFull} 374`}
+        viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
         version='1.1'
         xmlns='http://www.w3.org/2000/svg'
         xlink='http://www.w3.org/1999/xlink'
@@ -383,7 +409,7 @@ const CorgiSVG = ({ color, sausage }) => {
       </svg>
     </div>
   );
-};
+});
 
 CorgiSVG.propTypes = CorgiSVGPropTypes;
 
