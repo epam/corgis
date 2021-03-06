@@ -23,9 +23,7 @@ use std::{convert::TryInto, mem::size_of, usize};
 #[global_allocator]
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
-/// Fee to pay (in yocto Ⓝ) to allow the user to store Corgis on-chain.
-const MINT_FEE: u128 = 1_000_000_000_000_000_000_000_000;
-const PAGE_LIMIT: u32 = 12;
+include!(concat!(env!("OUT_DIR"), "/config.rs"));
 
 const CORGIS: &[u8] = b"a";
 const CORGIS_BY_OWNER: &[u8] = b"b";
