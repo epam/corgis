@@ -33,6 +33,8 @@ impl<
         V: BorshDeserialize + BorshSerialize,
     > Dict<K, V>
 {
+    /// Creates a new `Dict` with zero elements.
+    /// Use `id` as a unique identifier.
     pub fn new(id: Vec<u8>) -> Self {
         Self {
             heap: Heap(UnorderedMap::new(id)),
@@ -40,6 +42,8 @@ impl<
         }
     }
 
+    /// Returns the value corresponding to `key`,
+    /// otherwise returns `None`.
     pub fn get(&self, key: &K) -> Option<V> {
         self.heap.0.get(key).map(|node| node.value)
     }
@@ -74,6 +78,8 @@ impl<
         node.value
     }
 
+    /// Removes `key` from `Dict`.
+    /// Returns the removed element, if the key was previously in the `Dict`.
     pub fn remove(&mut self, key: &K) -> Option<V> {
         match self.heap.0.remove(key) {
             None => None,
