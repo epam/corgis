@@ -444,7 +444,7 @@ fn create_and_delete_corgi() {
 }
 
 #[test]
-#[should_panic(expected = "Account `alice.mock` does not have corgis to delete from")]
+#[should_panic(expected = "You do not have corgis to delete from")]
 fn delete_should_panic_when_there_are_no_corgis() {
     init_test().run_as(alice(), |contract| {
         contract.delete_corgi(any_corgi_id());
@@ -452,7 +452,7 @@ fn delete_should_panic_when_there_are_no_corgis() {
 }
 
 #[test]
-#[should_panic(expected = "Corgi id `15T` does not belong to account `alice.mock`")]
+#[should_panic(expected = "Corgi id does not belong to account")]
 fn delete_should_panic_when_corgi_does_not_exist() {
     init_test().run_as(alice(), |contract| {
         contract.create_test_corgi(42);

@@ -8,7 +8,6 @@ pub mod tests;
 
 use crate::corgi::{decode, encode, Corgi, CorgiDTO, CorgiId, CorgiKey, Rarity};
 use crate::dict::Dict;
-use core::panic;
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
     collections::UnorderedMap,
@@ -23,7 +22,11 @@ use std::{convert::TryInto, mem::size_of, usize};
 #[global_allocator]
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
-include!(concat!(env!("OUT_DIR"), "/config.rs"));
+/// Fee to pay (in yocto Ⓝ) to allow the user to store Corgis on-chain.
+const MINT_FEE: u128 = include!(concat!(env!("OUT_DIR"), "/mint_fee.var"));
+
+/// Indicates how many Corgi are returned at most in the `get_global_corgis` method.
+const PAGE_LIMIT: u32 = include!(concat!(env!("OUT_DIR"), "/page_limit.var"));
 
 const CORGIS: &[u8] = b"a";
 const CORGIS_BY_OWNER: &[u8] = b"b";
@@ -74,7 +77,7 @@ impl Model {
         macro_rules! check {
             ($value:ident, $max:expr, $message:expr) => {{
                 if $value.len() > $max {
-                    panic!($message);
+                    env::panic($message.as_bytes());
                 }
             }};
         }
@@ -139,18 +142,31 @@ impl Model {
         env::log("delete_corgi".as_bytes());
 
         let owner = env::predecessor_account_id();
-        self.delete_corgi_from(&owner, &id);
+        match self.corgis_by_owner.get(&owner) {
+            None => env::panic("You do not have corgis to delete from".as_bytes()),
+            Some(mut list) => {
+                let key = decode(&id);
+
+                self.panic_if_corgi_is_locked(key);
+
+                if list.remove(&key).is_none() {
+                    env::panic("Corgi id does not belong to account".as_bytes());
+                }
+                self.corgis_by_owner.insert(&owner, &list);
+
+                let was_removed = self.corgis.remove(&key);
+                assert!(was_removed.is_some());
+            }
+        }
     }
 
     /// Returns a list of all `Corgi`s that have been created.
     pub fn get_global_corgis(&self) -> Vec<CorgiDTO> {
         env::log("get_global_corgis".as_bytes());
 
-        let page_limit = PAGE_LIMIT as usize;
-
         let mut result = Vec::new();
         for (key, corgi) in &self.corgis {
-            if result.len() >= page_limit as usize {
+            if result.len() >= PAGE_LIMIT as usize {
                 break;
             }
             result.push(self.get_for_sale(key, corgi));
@@ -173,7 +189,6 @@ impl Model {
         }
 
         let (key, mut corgi) = self.get_corgi(&id);
-
         assert_eq!(corgi.id, id);
 
         if sender != corgi.owner {
@@ -182,12 +197,11 @@ impl Model {
 
         self.panic_if_corgi_is_locked(key);
 
-        self.delete_corgi_from(&corgi.owner, &id);
+        self.delete_corgi(id);
 
         corgi.owner = receiver;
         corgi.sender = sender;
         corgi.modified = env::block_timestamp();
-
         self.push_corgi(key, corgi);
     }
 
@@ -241,11 +255,7 @@ impl Model {
 
         let price = env::attached_deposit() + bids.get(&bidder).map(|(p, _)| p).unwrap_or_default();
 
-        let top_price = bids
-            .into_iter()
-            .next()
-            .map(|(_, (p, _))| p)
-            .unwrap_or_default();
+        let top_price = bids.into_iter().next().map(|(_, (p, _))| p).unwrap_or(0);
         if price <= top_price {
             panic!("Bid {} does not cover top bid {}", price, top_price)
         }
@@ -322,6 +332,8 @@ impl Model {
     }
 
     fn push_corgi(&mut self, key: CorgiKey, corgi: Corgi) -> Corgi {
+        env::log("push_corgi".as_bytes());
+
         let corgi = self.corgis.push_front(&key, corgi);
 
         let mut ids = self.corgis_by_owner.get(&corgi.owner).unwrap_or_else(|| {
@@ -335,27 +347,6 @@ impl Model {
         self.corgis_by_owner.insert(&corgi.owner, &ids);
 
         corgi
-    }
-
-    fn delete_corgi_from(&mut self, owner: &AccountId, id: &CorgiId) {
-        assert!(env::predecessor_account_id() == *owner);
-
-        match self.corgis_by_owner.get(owner) {
-            None => panic!("Account `{}` does not have corgis to delete from", owner),
-            Some(mut list) => {
-                let key = decode(id);
-
-                self.panic_if_corgi_is_locked(key);
-
-                if list.remove(&key).is_none() {
-                    panic!("Corgi id `{}` does not belong to account `{}`", id, owner);
-                }
-                self.corgis_by_owner.insert(&owner, &list);
-
-                let was_removed = self.corgis.remove(&key);
-                assert!(was_removed.is_some());
-            }
-        }
     }
 
     fn panic_if_corgi_is_locked(&self, key: CorgiKey) {
