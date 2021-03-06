@@ -3,6 +3,12 @@ import fs from 'fs';
 import chalk from 'chalk';
 import getConfig from '../src/config.js';
 
+const corgiConfig = JSON.parse(fs.readFileSync('contract/config.json', 'utf8'));
+const GAS = 300000000000000;
+const MINT_FEE = corgiConfig.mint_fee.replace(/_/g, '');
+
+utils.format.parseNearAmount('asdf')
+
 const config = getConfig('development');
 const keyStore = new keyStores.InMemoryKeyStore();
 
@@ -57,11 +63,11 @@ const contract = new Contract(userAccount, contractAccount.accountId, {
   signer: userAccount.accountId
 });
 
-const GAS = 300000000000000;
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 50; i++) {
   const args = { name: 'doggy dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' };
-  const newCorgi = await contract.create_corgi(args, GAS, utils.format.parseNearAmount('1'));
-  console.debug(newCorgi.id)
+  const result = await contract.account.functionCall(contract.contractId, 'create_corgi', args, GAS, MINT_FEE);
+  const gasBurnt = Number((result.transaction_outcome.outcome.gas_burnt / 1e12).toFixed(8));
+  console.debug(gasBurnt);
   await getStats(contractAccount);
 }
