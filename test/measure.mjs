@@ -3,106 +3,119 @@ import fs from 'fs';
 import chalk from 'chalk';
 import getConfig from '../src/config.js';
 
-const corgiConfig = JSON.parse(fs.readFileSync('contract/config.json', 'utf8'));
 const GAS = 300000000000000;
-const MINT_FEE = corgiConfig.mint_fee.replace(/_/g, '');
 
-const config = getConfig('development');
-const keyStore = new keyStores.InMemoryKeyStore();
+async function createProfiler(contractPrefix, userPrefix, config, methods) {
+  const keyStore = new keyStores.InMemoryKeyStore();
+  const near = new Near({
+    deps: { keyStore: keyStore },
+    ...config
+  });
 
-function generateUniqueAccountId(prefix) {
-  return `${prefix}-${Date.now()}-${Math.round(Math.random() * 1000000)}`;
-}
+  const info = (message) => process.stdout.write(chalk.gray(message + ' ... '));
+  const done = () => process.stdout.write(chalk.green('[DONE]\n'));
 
-async function createAccount(prefix) {
-  const newKeyPair = KeyPair.fromRandom('ed25519');
-  const account = await near.createAccount(generateUniqueAccountId(prefix), newKeyPair.getPublicKey());
-  keyStore.setKey(config.networkId, account.accountId, newKeyPair);
+  const createAccount = async function (prefix) {
+    const generateUniqueAccountId = function () {
+      return `${prefix}-${Date.now()}-${Math.round(Math.random() * 1000000)}`;
+    }
 
-  return account;
-}
+    const accountId = generateUniqueAccountId();
 
-async function getState(account) {
-  const state = await account.state();
-  const balance = await account.getAccountBalance();
+    info('Creating account ' + accountId);
+    const newKeyPair = KeyPair.fromRandom('ed25519');
+    const account = await near.createAccount(accountId, newKeyPair.getPublicKey());
+    keyStore.setKey(config.networkId, account.accountId, newKeyPair);
+    done();
 
-  const amountf = (b, prop) => chalk.yellow(prop + '=Ⓝ ' + utils.format.formatNearAmount(b[prop], 8));
-  const isContract = state.code_hash == '11111111111111111111111111111111' ? '' : '\u270e';
-  console.info(`> ${isContract} ${account.accountId} ${amountf(balance, 'total')} ${amountf(balance, 'stateStaked')} ${state.storage_usage} ${amountf(balance, 'available')}`);
+    return account;
+  }
+
+  const contractAccount = await createAccount(contractPrefix);
+  const userAccount = await createAccount(userPrefix);
+  const contract = new Contract(userAccount, contractAccount.accountId, {
+    ...methods,
+    signer: userAccount.accountId
+  });
+
+  const data = []
+  const append = async function (outcome) {
+    const getState = async function (account) {
+      const state = await account.state();
+      const balance = await account.getAccountBalance();
+      const amountf = (value) => chalk.yellow(utils.format.formatNearAmount(value, 8));
+      const isContract = state.code_hash == '11111111111111111111111111111111' ? '' : '\u270e ';
+      console.info(`> ${isContract}${account.accountId} Ⓝ T ${amountf(balance.total)}=S ${amountf(balance.stateStaked)}+A ${amountf(balance.available)}`);
+
+      return { ...state, ...balance };
+    }
+
+    data.push({
+      ...outcome,
+      contract: await getState(contractAccount),
+      user: await getState(userAccount)
+    });
+  };
+
+  append({});
 
   return {
-    ...state,
-    ...balance,
-    // total: utils.format.formatNearAmount(balance.total),
-    // stateStaked: utils.format.formatNearAmount(balance.stateStaked),
-    // available: utils.format.formatNearAmount(balance.available),
+    accountId: userAccount.accountId,
+
+    deploy: async function (wasmPath) {
+      info('Deploying contract ' + wasmPath);
+      const wasmData = fs.readFileSync(wasmPath);
+      const outcome = await contractAccount.deployContract(wasmData);
+      done();
+      append(outcome);
+    },
+
+    writeTo: function (tracePath) {
+      fs.writeFileSync(tracePath, JSON.stringify(data));
+    },
+
+    ...[...methods.viewMethods, ...methods.changeMethods].reduce((self, methodName) => {
+      self[methodName] = async function (args, fee) {
+        const result = await contract.account.functionCall(contract.contractId, methodName, args, GAS, fee);
+        append(result);
+
+        const response = Buffer.from(result.status.SuccessValue, 'base64').toString();
+        return response ? JSON.parse(response) : null;
+      }
+      return self;
+    }, {}),
   };
 }
 
-const near = new Near({
-  deps: { keyStore: keyStore },
-  ...config
-});
+const corgiConfig = JSON.parse(fs.readFileSync('contract/config.json', 'utf8'));
+const MINT_FEE = corgiConfig.mint_fee.replace(/_/g, '');
 
-class Trace {
-  constructor(contractAccount, userAccount) {
-    this.contractAccount = contractAccount;
-    this.userAccount = userAccount;
-    this.data = []
-
-    this.append({});
-  }
-
-  async append(outcome) {
-    this.data.push({
-      ...outcome,
-      contract: await getState(this.contractAccount),
-      user: await getState(this.userAccount)
-    });
-  }
-}
-
-const contractAccount = await createAccount('stage')
-const userAccount = await createAccount('user');
-const trace = new Trace(contractAccount, userAccount);
-
-const wasmDataPath = 'contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm';
-const wasmData = fs.readFileSync(wasmDataPath);
-console.log(`Deploying contract..`);
-trace.append(await contractAccount.deployContract(wasmData));
-
-const contract = new Contract(userAccount, contractAccount.accountId, {
+const profiler = await createProfiler('prof', 'user', getConfig('development'), {
   viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis'],
   changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi'],
-  signer: userAccount.accountId
 });
 
-trace.append(await contract.account.functionCall(contract.contractId, 'get_global_corgis', {}, GAS));
-trace.append(await contract.account.functionCall(contract.contractId, 'get_corgis_by_owner', { owner: userAccount.accountId }, GAS));
+await profiler.deploy('contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm');
+await profiler.get_global_corgis();
+await profiler.get_corgis_by_owner({ owner: profiler.accountId });
 
 const TIMES = 50;
 const corgis = [];
 
 for (let i = 0; i < TIMES; i++) {
-  const args = { name: 'doggy dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' };
-  const result = await contract.account.functionCall(contract.contractId, 'create_corgi', args, GAS, MINT_FEE);
-
-  const corgi = JSON.parse(Buffer.from(result.status.SuccessValue, 'base64').toString());
+  const corgi = await profiler.create_corgi({ name: 'doggy dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' }, MINT_FEE);
   console.log(corgi.id)
   corgis.push(corgi);
-
-  console.log(result);
-  trace.append(result);
 }
 
-trace.append(await contract.account.functionCall(contract.contractId, 'get_corgis_by_owner', { owner: userAccount.accountId }, GAS));
+await profiler.get_corgis_by_owner({ owner: profiler.accountId });
 
-for (let i = 0; i < TIMES; i++) {
-  trace.append(await contract.account.functionCall(contract.contractId, 'get_corgi_by_id', { id: corgis[i].id }, GAS));
+for (const corgi of corgis) {
+  await profiler.get_corgi_by_id({ id: corgi.id });
 }
 
-for (let i = 0; i < TIMES; i++) {
-  trace.append(await contract.account.functionCall(contract.contractId, 'delete_corgi', { id: corgis[i].id }, GAS));
+for (const corgi of corgis) {
+  await profiler.delete_corgi({ id: corgi.id });
 }
 
-fs.writeFileSync('test/logs/trace.json', JSON.stringify(trace.data));
+profiler.writeTo('test/logs/trace.json');
