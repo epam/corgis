@@ -23,10 +23,10 @@ use std::{convert::TryInto, mem::size_of, usize};
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
 /// Fee to pay (in yocto Ⓝ) to allow the user to store Corgis on-chain.
-const MINT_FEE: u128 = include!(concat!(env!("OUT_DIR"), "/mint_fee.var"));
+const MINT_FEE: u128 = include!(concat!(env!("OUT_DIR"), "/mint_fee.val"));
 
 /// Indicates how many Corgi are returned at most in the `get_global_corgis` method.
-const PAGE_LIMIT: u32 = include!(concat!(env!("OUT_DIR"), "/page_limit.var"));
+const PAGE_LIMIT: u32 = include!(concat!(env!("OUT_DIR"), "/page_limit.val"));
 
 const CORGIS: &[u8] = b"a";
 const CORGIS_BY_OWNER: &[u8] = b"b";

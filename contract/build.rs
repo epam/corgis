@@ -26,8 +26,8 @@ fn main() -> Result<()> {
     let data = fs::read_to_string("config.json").expect("Unable to read config file");
     let config: Config = serde_json::from_str(data.as_ref())?;
 
-    writeln!(&mut get_file("mint_fee.var"), "{}", config.mint_fee).expect("Could not write");
-    writeln!(&mut get_file("page_limit.var"), "{}", config.page_limit).expect("Could not write");
+    writeln!(&mut get_file("mint_fee.val"), "{}", config.mint_fee).expect("Could not write");
+    writeln!(&mut get_file("page_limit.val"), "{}", config.page_limit).expect("Could not write");
 
     Ok(())
 }
