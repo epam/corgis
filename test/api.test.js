@@ -4,13 +4,10 @@ const getConfig = require('../src/config');
 const fs = require('fs');
 
 global.console = new CustomConsole(process.stdout, process.stderr, (_type, message) => message);
-// .split(/\n/)
-// .map(line => `[${type}] ${line}`)
-// .join('\n'));
 
 const config = getConfig('development');
 
-const corgiConfig = JSON.parse(fs.readFileSync('contract/config.json', 'utf8'));
+const corgiConfig = JSON.parse(fs.readFileSync('contract/config.json'));
 const GAS = 300000000000000;
 const MINT_FEE = corgiConfig.mint_fee.replace(/_/g, '');
 const PAGE_LIMIT = corgiConfig.page_limit;
@@ -209,7 +206,7 @@ describe('Corgis contract integration tests', () => {
     console.log(items[0].for_sale.bids);
 
     await sleep(15);
-    await alice.contract.clearance_for_item({ token_id: newCorgi.id });
+    await alice.contract.clearance_for_item({ token_id: newCorgi.id }, GAS);
 
     await balance(alice.account, 'alice');
     await balance(bob.account, 'bob');
