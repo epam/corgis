@@ -6,7 +6,7 @@ function formatBalance(balance) {
     return `Ⓝ ${amountf(balance, 'total')}=${amountf(balance, 'stateStaked')}+${amountf(balance, 'available')}`;
 }
 
-function formatNEAR(yoctoNEAR) {
+function parseNEAR(yoctoNEAR) {
     return Number(utils.format.formatNearAmount(yoctoNEAR));
 }
 
@@ -14,13 +14,12 @@ function calculateGas(result) {
     // let gasBurnt = [];
     let tokensBurnt = [];
     // gasBurnt.push(result.transaction_outcome.outcome.gas_burnt);
-    tokensBurnt.push(formatNEAR(result.transaction_outcome.outcome.tokens_burnt));
+    tokensBurnt.push(parseNEAR(result.transaction_outcome.outcome.tokens_burnt));
     for (let i = 0; i < result.receipts_outcome.length; i++) {
         // gasBurnt.push(result.receipts_outcome[i].outcome.gas_burnt);
-        tokensBurnt.push(formatNEAR(result.receipts_outcome[i].outcome.tokens_burnt));
+        tokensBurnt.push(parseNEAR(result.receipts_outcome[i].outcome.tokens_burnt));
     }
-    const gasBurnt = Number((result.transaction_outcome.outcome.gas_burnt / 1e12).toFixed(8));
-    console.debug(gasBurnt);
+    // const gasBurnt = Number((result.transaction_outcome.outcome.gas_burnt / 1e12).toFixed(8));
     return {
         // gasBurnt: gasBurnt.reduce((acc, cur) => acc + cur, 0),
         tokensBurnt: tokensBurnt.reduce((acc, curr) => acc + curr, 0),
@@ -46,8 +45,30 @@ function formatActions(transaction) {
 }
 
 const trace = JSON.parse(fs.readFileSync('test/logs/trace.json'));
+const createData = [];
+const deleteData = [];
+let last = 0;
 
 for (const entry of trace) {
     const actions = formatActions(entry.transaction);
-    console.log(`${actions}: ${formatBalance(entry.contract)} ${formatBalance(entry.user)}`)
+    const gas = entry.transaction ? calculateGas(entry).tokensBurnt : '';
+    console.log(`${actions}: ${formatBalance(entry.contract)} ${formatBalance(entry.user)} ${gas}`)
+
+    const stateStaked = parseNEAR(entry.contract.stateStaked);
+    switch (actions) {
+        case 'create_corgi':
+            createData.push(stateStaked - last);
+            break;
+        case 'delete_corgi':
+            deleteData.push(stateStaked - last);
+            break;
+    }
+    last = stateStaked;
 }
+
+const avg = (data) => data.reduce((acc, cur) => acc + cur, 0) / data.length;
+console.log(avg(createData));
+console.log(avg(deleteData));
+
+// 0.06379199999999968
+// -0.06280000000000009
