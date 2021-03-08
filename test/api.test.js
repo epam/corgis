@@ -11,18 +11,7 @@ const corgiConfig = JSON.parse(fs.readFileSync('contract/config.json'));
 const GAS = 300000000000000;
 const MINT_FEE = corgiConfig.mint_fee.replace(/_/g, '');
 const PAGE_LIMIT = corgiConfig.page_limit;
-
-const MarketMethods = {
-  viewMethods: ['get_items_for_sale'],
-  changeMethods: ['add_item_for_sale', 'bid_for_item', 'clearance_for_item'],
-};
-
-const contractMethods = {
-  // View methods are read only. They don't modify the state, but usually return some value.
-  viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis', ...MarketMethods.viewMethods],
-  // Change methods can modify the state. But you don't receive the returned value when called.
-  changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi', ...MarketMethods.changeMethods],
-};
+const METHODS = JSON.parse(fs.readFileSync('contract/methods.json'));
 
 async function initContractWithNewTestAccount() {
   const keyStore = new InMemoryKeyStore();
@@ -42,7 +31,7 @@ async function initContractWithNewTestAccount() {
   keyStore.setKey(config.networkId, account.accountId, newKeyPair);
 
   const contract = new Contract(account, config.contractName, {
-    ...contractMethods,
+    ...METHODS,
     signer: account.accountId
   });
 
@@ -237,7 +226,6 @@ function sleep(seconds) {
 }
 
 async function balance(account, user) {
-  await account.fetchState();
   const state = await account.state();
   console.log(user);
   console.log(state);
