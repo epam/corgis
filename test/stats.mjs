@@ -44,7 +44,7 @@ function formatActions(transaction) {
     return result;
 }
 
-const trace = JSON.parse(fs.readFileSync('test/logs/trace.json'));
+const trace = JSON.parse(fs.readFileSync('test/trace.json'));
 const createData = [];
 const deleteData = [];
 let last = 0;
