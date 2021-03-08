@@ -1,7 +1,6 @@
-use near_sdk::{
-    borsh::{self, BorshDeserialize, BorshSerialize},
-    collections::UnorderedMap,
-};
+use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+
+type HeapMap<K, V> = near_sdk::collections::LookupMap<K, V>;
 
 /// Keeps a mapping from `K` keys to `V` values.
 /// It combines `UnorderedMap` to store elements and implements a linked list
@@ -14,7 +13,7 @@ pub struct Dict<K, V> {
 }
 
 #[derive(BorshDeserialize, BorshSerialize)]
-pub struct Heap<K, V>(UnorderedMap<K, Node<K, V>>);
+pub struct Heap<K, V>(HeapMap<K, Node<K, V>>);
 
 #[derive(BorshDeserialize, BorshSerialize)]
 struct Node<K, V> {
@@ -37,7 +36,7 @@ impl<
     /// Use `id` as a unique identifier.
     pub fn new(id: Vec<u8>) -> Self {
         Self {
-            heap: Heap(UnorderedMap::new(id)),
+            heap: Heap(HeapMap::new(id)),
             first: K::default(),
         }
     }
