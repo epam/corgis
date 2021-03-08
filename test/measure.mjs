@@ -87,18 +87,18 @@ async function createProfiler(contractPrefix, userPrefix, config, methods) {
   };
 }
 
-
 const contractConfig = JSON.parse(fs.readFileSync('contract/config.json'));
 const MINT_FEE = contractConfig.mint_fee.replace(/_/g, '');
 const METHODS = JSON.parse(fs.readFileSync('contract/methods.json'));
-const profiler = await createProfiler('prof', 'user', getConfig('development'), METHODS);
 
+const profiler = await createProfiler('prof', 'user', getConfig('development'), METHODS);
 await profiler.deploy('contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm');
+
+const TIMES = 5;
+const corgis = [];
+
 await profiler.get_global_corgis();
 await profiler.get_corgis_by_owner({ owner: profiler.accountId });
-
-const TIMES = 50;
-const corgis = [];
 
 for (let i = 0; i < TIMES; i++) {
   const corgi = await profiler.create_corgi({
@@ -109,6 +109,8 @@ for (let i = 0; i < TIMES; i++) {
   }, MINT_FEE);
   console.log(corgi.id)
   corgis.push(corgi);
+
+  await profiler.get_corgi_by_id({ id: corgi.id });
 }
 
 await profiler.get_corgis_by_owner({ owner: profiler.accountId });
@@ -118,6 +120,7 @@ for (const corgi of corgis) {
 }
 
 for (const corgi of corgis) {
+  await profiler.get_corgi_by_id({ id: corgi.id });
   await profiler.delete_corgi({ id: corgi.id });
 }
 
