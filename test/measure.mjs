@@ -87,13 +87,11 @@ async function createProfiler(contractPrefix, userPrefix, config, methods) {
   };
 }
 
-const corgiConfig = JSON.parse(fs.readFileSync('contract/config.json', 'utf8'));
-const MINT_FEE = corgiConfig.mint_fee.replace(/_/g, '');
 
-const profiler = await createProfiler('prof', 'user', getConfig('development'), {
-  viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis'],
-  changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi'],
-});
+const contractConfig = JSON.parse(fs.readFileSync('contract/config.json'));
+const MINT_FEE = contractConfig.mint_fee.replace(/_/g, '');
+const METHODS = JSON.parse(fs.readFileSync('contract/methods.json'));
+const profiler = await createProfiler('prof', 'user', getConfig('development'), METHODS);
 
 await profiler.deploy('contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm');
 await profiler.get_global_corgis();
@@ -103,7 +101,12 @@ const TIMES = 50;
 const corgis = [];
 
 for (let i = 0; i < TIMES; i++) {
-  const corgi = await profiler.create_corgi({ name: 'doggy dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' }, MINT_FEE);
+  const corgi = await profiler.create_corgi({
+    name: 'doggy dog',
+    quote: 'best doggy ever',
+    color: 'red',
+    background_color: 'yellow'
+  }, MINT_FEE);
   console.log(corgi.id)
   corgis.push(corgi);
 }
@@ -118,4 +121,4 @@ for (const corgi of corgis) {
   await profiler.delete_corgi({ id: corgi.id });
 }
 
-profiler.writeTo('test/logs/trace.json');
+profiler.writeTo('test/trace.json');
