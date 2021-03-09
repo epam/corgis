@@ -79,7 +79,7 @@ async function createProfiler(contractPrefix, methods, ...userPrefixes) {
 
             const amountf = (value) => chalk.yellow(utils.format.formatNearAmount(value, 4));
             const isContract = state.code_hash == '11111111111111111111111111111111' ? '\u261e' : '\u270e';
-            info(`${isContract}${prefix}: Ⓝ T${amountf(balance.total)}=S${amountf(balance.stateStaked)}+A${amountf(balance.available)}`);
+            info(`${isContract}${prefix}: Ⓝ S${amountf(balance.stateStaked)}+A${amountf(balance.available)}`);
 
             return { ...state, ...balance };
         }
@@ -116,6 +116,7 @@ async function createProfiler(contractPrefix, methods, ...userPrefixes) {
         },
 
         writeTo: function (tracePath) {
+            infoln(`Writing trace to ${param(tracePath)}`);
             fs.writeFileSync(tracePath, JSON.stringify(data));
         },
 
@@ -193,15 +194,21 @@ await alice.get_items_for_sale();
 for (const corgi of corgis) {
     const DURATION = 15;
     await charlie.add_item_for_sale({ token_id: corgi.id, duration: DURATION });
-    setTimeout(async () => {
-        await charlie.clearance_for_item({ token_id: corgi.id });
 
-        await alice.get_corgi_by_id({ id: corgi.id });
-        await alice.delete_corgi({ id: corgi.id });
-    }, (DURATION + 1) * 1000);
-    await alice.bid_for_item({ token_id: corgi.id }, '1000');
-    await bob.bid_for_item({ token_id: corgi.id }, '2000');
-    await alice.bid_for_item({ token_id: corgi.id }, '1500');
+    await Promise.all([
+        new Promise((resolve) => {
+            setTimeout(resolve, (DURATION + 1) * 1000);
+        }),
+        (async () => {
+            await alice.bid_for_item({ token_id: corgi.id }, '1000');
+            await bob.bid_for_item({ token_id: corgi.id }, '2000');
+            await alice.bid_for_item({ token_id: corgi.id }, '1500');
+        })()
+    ]);
+
+    await charlie.clearance_for_item({ token_id: corgi.id });
+    await alice.get_corgi_by_id({ id: corgi.id });
+    await alice.delete_corgi({ id: corgi.id });
 }
 
 writeTo('test/trace.json');
