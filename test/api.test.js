@@ -179,7 +179,7 @@ describe('Corgis contract integration tests', () => {
     }
   });
 
-  test.only('Marketplace ', async () => {
+  test('Marketplace ', async () => {
 
     balance(alice.account, 'alice');
 
