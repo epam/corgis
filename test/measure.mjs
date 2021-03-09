@@ -8,6 +8,7 @@ import { sha256 } from 'js-sha256';
 import bs58 from 'bs58';
 import BN from 'bn.js';
 import { stringify } from 'querystring';
+import { argv } from 'process';
 
 const GAS = 300000000000000;
 
@@ -158,13 +159,13 @@ const { deploy, writeTo, alice, bob, charlie } = await createProfiler('prof', ME
 
 await deploy('contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm');
 
-const TIMES = 20;
+const numberOfCorgis = argv[2] ? Number.parseInt(argv[2]) : 5;
 const corgis = [];
 
 await alice.get_global_corgis();
 await alice.get_corgis_by_owner({ owner: alice.accountId });
 
-for (let i = 0; i < TIMES; i++) {
+for (let i = 0; i < numberOfCorgis; i++) {
     const corgi = await alice.create_corgi({
         name: 'd' + i,
         quote: 'bff',
