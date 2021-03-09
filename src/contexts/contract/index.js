@@ -36,10 +36,11 @@ const ContractContextProviderPropTypes = {
     create_corgi: PropTypes.func.isRequired,
     delete_corgi: PropTypes.func.isRequired,
   }).isRequired,
+  mintFee: PropTypes.string.isRequired,
   children: ReactChildrenTypeRequired,
 };
 
-export const ContractContextProvider = ({ Contract, children }) => {
+export const ContractContextProvider = ({ Contract, mintFee, children }) => {
   const [contractState, dispatchContract] = useReducer(contractReducer, initialContractState);
 
   const { user } = useContext(NearContext);
@@ -87,7 +88,8 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const createCorgi = useCallback(
     (corgi, amount) => {
       dispatchContract({ type: CREATE_CORGI_START });
-      Contract.create_corgi(corgi, BOATLOAD_OF_GAS, nearAPI.utils.format.parseNearAmount(`${amount}`))
+      // Contract.create_corgi(corgi, BOATLOAD_OF_GAS, nearAPI.utils.format.parseNearAmount(`${amount}`))
+      Contract.create_corgi(corgi, BOATLOAD_OF_GAS, nearAPI.utils.format.parseNearAmount(`${mintFee}`))
         .then(() => {
           dispatchContract({ type: CREATE_CORGI_SUCCESS });
         })
@@ -141,6 +143,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
     transfered: contractState.transfered,
     deleting: contractState.deleting,
     deleted: contractState.deleted,
+    mintFee,
     getCorgi,
     getActiveCorgi,
     getCorgis,

@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 
 import * as nearAPI from 'near-api-js';
 
+import fs from 'fs';
+
 import getConfig from './config';
 
 import { ContractContextProvider, MarketplaceContextProvider, NearContextProvider } from '~contexts';
@@ -11,6 +13,9 @@ import { ContractContextProvider, MarketplaceContextProvider, NearContextProvide
 import { CorgiMethods, MarketplaceMethods } from '~constants/contractMethods';
 
 import App from './App';
+
+const corgiConfig = JSON.parse(fs.readFileSync('contract/config.json'));
+const MINT_FEE = nearAPI.utils.format.formatNearAmount(corgiConfig.mint_fee.replace(/_/g, ''));
 
 // Initializing contract
 async function InitContract() {
@@ -57,7 +62,7 @@ window.nearInitPromise = InitContract()
   .then(({ contract, currentUser, nearConfig, walletConnection, near }) => {
     const app = (
       <NearContextProvider currentUser={currentUser} nearConfig={nearConfig} wallet={walletConnection} near={near}>
-        <ContractContextProvider Contract={contract}>
+        <ContractContextProvider Contract={contract} mintFee={MINT_FEE}>
           <MarketplaceContextProvider Contract={contract}>
             <App />
           </MarketplaceContextProvider>
