@@ -16,11 +16,11 @@ import { CORGI_VALIDATION_MESSAGES } from '~constants/validation/corgi';
 import { validateCorgiName } from '~validators';
 
 const MintingForm = () => {
-  const { createCorgi } = useContext(ContractContext);
+  const { mintFee, createCorgi } = useContext(ContractContext);
   const { name, quote, color, backgroundColor, setName, setColor, setBackgroundColor } = useContext(CharacterContext);
 
   const [errorMessage, setErrorMessage] = useState('');
-  const [donationNears, setDonationNears] = useState(1);
+  const [donationNears, setDonationNears] = useState(mintFee);
 
   const clearError = () => {
     setErrorMessage('');
@@ -54,9 +54,7 @@ const MintingForm = () => {
     const validationMessage = validateCorgiName(name);
 
     if (validationMessage === CORGI_VALIDATION_MESSAGES.SUCCESS) {
-      // TODO: Donate more than 1 Ⓝ
-      // donationNears
-      createCorgi({ name, color, background_color: backgroundColor, quote }, 1);
+      createCorgi({ name, color, background_color: backgroundColor, quote }, donationNears);
     } else {
       setErrorMessage(validationMessage);
     }
