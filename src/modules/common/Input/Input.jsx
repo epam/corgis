@@ -16,6 +16,7 @@ const InputPropTypes = {
   max: PropTypes.number,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
+  step: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   required: PropTypes.bool,
   type: PropTypes.oneOf(['text', 'password', 'email', 'number', 'tel', 'url']),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -29,6 +30,7 @@ const Input = ({
   max = '',
   onChange = () => {},
   placeholder = '',
+  step = 'any',
   type = 'text',
   value = '',
   required = false,
@@ -131,6 +133,7 @@ const Input = ({
         onChange={(event) => onChange(event)}
         min={min}
         max={max}
+        step={step || 'any'}
         placeholder={placeholder}
         required={required}
       />
