@@ -51,6 +51,9 @@ async function createProfiler(contractPrefix, methods, ...userPrefixes) {
             const newKeyPair = KeyPair.fromRandom('ed25519');
             const account = await near.createAccount(accountId, newKeyPair.getPublicKey());
             keyStore.setKey(config.networkId, account.accountId, newKeyPair);
+            if (!fs.existsSync('neardev')) {
+                fs.mkdirSync('neardev');
+            }
             fs.writeFileSync(`neardev/${prefix}-account`, accountId);
             done();
             return account;
