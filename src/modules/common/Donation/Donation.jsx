@@ -1,26 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './Donation.scss';
 
 import { Input, NearIcon } from '~modules/common';
+
 import { CORGI_VALIDATION_MESSAGES } from '~constants/validation/corgi';
+import { ContractContext } from '~contexts/contract';
 
 const DonationPropTypes = {
   label: PropTypes.string,
   afterword: PropTypes.string,
   handleNears: PropTypes.func,
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  min: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
-const Donation = ({ label = 'Donate', afterword = '', handleNears = () => {} }) => {
-  const [nears, setNears] = useState(1);
+const Donation = ({ label = 'Donate', afterword = '', min, value = 0, handleNears = () => {} }) => {
+  const { mintFee } = useContext(ContractContext);
+
+  const [nears, setNears] = useState(value);
 
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleNearsInput = (event) => {
     setNears(event.target.value);
 
-    if (nears >= 1) {
+    if (nears > 0) {
       handleNears(event.target.value);
     }
   };
@@ -37,12 +43,23 @@ const Donation = ({ label = 'Donate', afterword = '', handleNears = () => {} }) 
     }
   }, [errorMessage]);
 
+  useEffect(() => {
+    setNears(value);
+  }, [value]);
+
   return (
     <div className='donation'>
       <span className='donation__text'>{label}</span>
 
       <div className='donation__input'>
-        <Input type='number' min={1} value={nears} onChange={handleNearsInput} error={errorMessage} />
+        <Input
+          type='number'
+          min={parseFloat(min || mintFee)}
+          step={0.1}
+          value={nears}
+          onChange={handleNearsInput}
+          error={errorMessage}
+        />
       </div>
 
       <NearIcon />
@@ -51,5 +68,7 @@ const Donation = ({ label = 'Donate', afterword = '', handleNears = () => {} }) 
     </div>
   );
 };
+
+Donation.propTypes = DonationPropTypes;
 
 export default Donation;
