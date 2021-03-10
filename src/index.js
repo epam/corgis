@@ -10,12 +10,14 @@ import getConfig from './config';
 
 import { ContractContextProvider, MarketplaceContextProvider, NearContextProvider } from '~contexts';
 
+import { formatToNears } from '~helpers/nears';
+
 import { CorgiMethods, MarketplaceMethods } from '~constants/contractMethods';
 
 import App from './App';
 
 const corgiConfig = JSON.parse(fs.readFileSync('contract/config.json'));
-const MINT_FEE = nearAPI.utils.format.formatNearAmount(corgiConfig.mint_fee.replace(/_/g, ''));
+const MINT_FEE = formatToNears(corgiConfig.mint_fee.replace(/_/g, ''));
 
 // Initializing contract
 async function InitContract() {
