@@ -186,9 +186,9 @@ describe('Corgis contract integration tests', () => {
     const newCorgi = await create_corgi(alice.contract, { name: 'dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' });
     await alice.contract.add_item_for_sale({ token_id: newCorgi.id, duration: 15 });
 
-    await bid_for_item(bob.contract, { token_id: newCorgi.id }, '2000');
-    await bid_for_item(ted.contract, { token_id: newCorgi.id }, '5000');
-    await bid_for_item(bob.contract, { token_id: newCorgi.id }, '4000');
+    await bid_for_item(bob.contract, { token_id: newCorgi.id }, '20');
+    await bid_for_item(ted.contract, { token_id: newCorgi.id }, '50');
+    await bid_for_item(bob.contract, { token_id: newCorgi.id }, '40');
 
     await alice.contract.get_items_for_sale();
 
