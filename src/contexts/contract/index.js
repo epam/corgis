@@ -1,8 +1,6 @@
 import React, { useReducer, useCallback, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import * as nearAPI from 'near-api-js';
-
 import { contractReducer, initialContractState } from './reducer';
 import {
   ACTION_START,
@@ -20,6 +18,8 @@ import {
 } from './types';
 
 import { NearContext } from '~contexts/';
+
+import { parseNears } from '~helpers/nears';
 
 import { BOATLOAD_OF_GAS } from '~constants/corgi';
 
@@ -86,10 +86,9 @@ export const ContractContextProvider = ({ Contract, mintFee, children }) => {
   }, [Contract]);
 
   const createCorgi = useCallback(
-    (corgi, amount) => {
+    (corgi) => {
       dispatchContract({ type: CREATE_CORGI_START });
-      // Contract.create_corgi(corgi, BOATLOAD_OF_GAS, nearAPI.utils.format.parseNearAmount(`${amount}`))
-      Contract.create_corgi(corgi, BOATLOAD_OF_GAS, nearAPI.utils.format.parseNearAmount(`${mintFee}`))
+      Contract.create_corgi(corgi, BOATLOAD_OF_GAS, parseNears(`${mintFee}`))
         .then(() => {
           dispatchContract({ type: CREATE_CORGI_SUCCESS });
         })
@@ -121,14 +120,16 @@ export const ContractContextProvider = ({ Contract, mintFee, children }) => {
   const clearState = () => dispatchContract({ type: CLEAR_STATE });
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      clearState();
-      clearTimeout(timeoutId);
-    }, 100);
+    if (contractState.deleted || contractState.created || contractState.trasfered) {
+      const timeoutId = setTimeout(() => {
+        clearState();
+        clearTimeout(timeoutId);
+      }, 100);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
   }, [contractState.deleted, contractState.created, contractState.trasfered]);
 
   const value = {
