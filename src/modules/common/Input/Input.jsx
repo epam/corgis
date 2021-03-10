@@ -20,6 +20,7 @@ const InputPropTypes = {
   required: PropTypes.bool,
   type: PropTypes.oneOf(['text', 'password', 'email', 'number', 'tel', 'url']),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  disabled: PropTypes.bool,
 };
 
 const Input = ({
@@ -34,6 +35,7 @@ const Input = ({
   type = 'text',
   value = '',
   required = false,
+  disabled = false,
 }) => {
   const inputId = `input-${uuidv4()}`;
 
@@ -136,6 +138,7 @@ const Input = ({
         step={step || 'any'}
         placeholder={placeholder}
         required={required}
+        disabled={disabled}
       />
       <p className='input__error'>{errorMessage}</p>
     </div>
