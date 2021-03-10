@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" style="font-family: 'Source Code Pro', monospace">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="../node_modules/chart.js/dist/Chart.bundle.js"></script>
+    <script src="data.js"></script>
+    <title>Gas Burnt Getting Data - Rust</title>
+</head>
+<header style="text-align: center">
+    <h2 style="margin-bottom: 0">Gas Burnt Retrieving Data</h2>
+    <h3 style="margin-top: 0">...::[ RUST Contract ]::...</h3>
+</header>
+
+<body>
+    <div style="width: 33%; float: left">
+        <canvas id="cid" width="400" height="400"></canvas>
+    </div>
+    <script>
+        const ctx = document.getElementById('cid');
+        const keys = data.map(entry => entry.key);
+        const values = data.map(entry => entry.value);
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: keys,
+                datasets: [{
+                    // barPercentage: 0.5,
+                    // barThickness: 6,
+                    // maxBarThickness: 8,
+                    // minBarLength: 2,
+                    // data: [10, 20, 30, 40, 50, 60, 70]
+                    data: values
+                }]
+            },
+            // options: options
+        });
+    </script>
+</body>
+
+</html>

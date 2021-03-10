@@ -49,6 +49,7 @@ const createData = [];
 const deleteData = [];
 let last = 0;
 
+const data = [];
 for (const entry of trace) {
     const actions = formatActions(entry.transaction);
     const gas = entry.transaction ? calculateGas(entry).tokensBurnt : '';
@@ -64,7 +65,13 @@ for (const entry of trace) {
             break;
     }
     last = stateStaked;
+
+    if (actions !== '<init>') {
+        data.push({ key: actions, value: stateStaked });
+    }
 }
+
+fs.writeFileSync('test/data.js', 'const data=' + JSON.stringify(data));
 
 const avg = (data) => data.reduce((acc, cur) => acc + cur, 0) / data.length;
 console.log(avg(createData));
