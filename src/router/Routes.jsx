@@ -8,7 +8,6 @@ import GuardedRoute from '~router/GuardedRoute';
 import { CorgiPNG } from '~modules/common/corgi';
 
 import { Header } from '~modules/header';
-import { Footer } from '~modules/footer';
 
 import { CorgiPage, HomePage, MintingPage, UserPage, MarketplacePage } from '~modules/pages';
 
@@ -54,8 +53,6 @@ const Routes = () => {
               <h1>Not found This page. Please go back to continue or you can contact us about the issue.</h1>
             </Route>
           </Switch>
-
-          <Footer />
         </Route>
       </Switch>
     </Router>
