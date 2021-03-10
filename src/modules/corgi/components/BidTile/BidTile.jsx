@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import './BidTile.scss';
+
+import { NearContext } from '~contexts';
 
 import { Owner } from '~modules/common';
 import { BidAmount } from '~modules/corgi/components';
@@ -19,19 +21,23 @@ const auctionTimerOptions = {
   short: true,
 };
 
-const BidTile = ({ bid: { amount, bidder, timestamp } }) => (
-  <div className='bid'>
-    <span className='bid__info bid__info--near'>
-      <BidAmount amount={amount} />
-    </span>
+const BidTile = ({ bid: { amount, bidder, timestamp } }) => {
+  const { user } = useContext(NearContext);
 
-    <span className='bid__info bid__info--bidder'>
-      <Owner name={bidder} />
-    </span>
+  return (
+    <div className='bid'>
+      <span className='bid__info bid__info--near'>
+        <BidAmount amount={amount} />
+      </span>
 
-    <span className='bid__info bid__info--time'>{humanizeTime(timestamp, auctionTimerOptions)}</span>
-  </div>
-);
+      <span className='bid__info bid__info--bidder'>
+        <Owner name={bidder} highlight={user && user.accountId === bidder} />
+      </span>
+
+      <span className='bid__info bid__info--time'>{humanizeTime(timestamp, auctionTimerOptions)}</span>
+    </div>
+  );
+};
 
 BidTile.propTypes = BidTilePropTypes;
 

@@ -1,15 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import './Owner.scss';
 
 import { CorgiType } from '~types/CorgiTypes';
+import classNames from 'classnames';
 
-const OwnerPropTypes = { name: CorgiType.owner };
+const OwnerPropTypes = { name: CorgiType.owner, highlight: PropTypes.bool };
 
-const Owner = ({ name }) => (
+const Owner = ({ name, highlight = false }) => (
   <Link to={`/user/${name}`} className='owner' style={{ maxWidth: '100%' }}>
-    <span className='owner__name'>@{name}</span>
+    <span className={classNames('owner__name', { 'owner__name--highlight': highlight })}>@{name}</span>
   </Link>
 );
 
