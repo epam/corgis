@@ -67,10 +67,10 @@ const AuctionCard = ({ corgi }) => {
 
   useEffect(() => {
     if (highestBid) {
-      const minBid = parseFloat(formatToNears(highestBid.amount)).toFixed(1);
+      const min = parseFloat(formatToNears(highestBid.amount)).toFixed(1);
 
-      setBidNears(minBid);
-      setMinBid(minBid);
+      setBidNears(min);
+      setMinBid(min);
     }
   }, [highestBid]);
 
