@@ -106,7 +106,15 @@ const MintingForm = () => {
 
       <div className='minting-form__area'>
         <div className='minting-form__donation'>
-          <Donation label='Donate' afterword='for food' handleNears={handleNears} />
+          <Donation
+            label='Donate'
+            afterword='for food'
+            handleNears={handleNears}
+            value={donationNears}
+            min={mintFee}
+            // disabled due to fixed fee
+            disabled
+          />
         </div>
 
         <Button description='Mint Corgi' />
