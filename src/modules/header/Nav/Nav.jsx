@@ -6,6 +6,7 @@ import './Nav.scss';
 import { ContractContext, NearContext } from '~contexts';
 
 import { Button, Dropdown, ExternalLink, MintingLink } from '~modules/common';
+import classNames from 'classnames';
 
 const Nav = () => {
   const { nearContent, user, signIn, signOut } = useContext(NearContext);
@@ -20,7 +21,7 @@ const Nav = () => {
   };
 
   return (
-    <nav className='nav'>
+    <nav className={classNames('nav', { 'nav--unauth': !user })}>
       {user ? (
         <>
           <div className='nav__item nav__item--minting'>
@@ -56,9 +57,17 @@ const Nav = () => {
           </div>
         </>
       ) : (
-        <div className='nav__login'>
-          <Button description='Login with NEAR' action={signInAction} />
-        </div>
+        <>
+          <div className='nav__item'>
+            <Link to='/marketplace'>
+              <Button description='Marketplace' />
+            </Link>
+          </div>
+
+          <div className='nav__item'>
+            <Button description='Login with NEAR' action={signInAction} />
+          </div>
+        </>
       )}
     </nav>
   );

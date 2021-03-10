@@ -30,6 +30,10 @@
     &__item--minting {
       flex-grow: 0;
     }
+
+    &--unauth {
+      flex-wrap: nowrap;
+    }
   }
 }
 
@@ -47,8 +51,8 @@
       margin: 0.5rem 0 0;
     }
 
-    &__login {
-      margin: 0 auto;
+    &--unauth {
+      width: max-content;
     }
   }
 }
