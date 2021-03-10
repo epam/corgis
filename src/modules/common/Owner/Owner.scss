@@ -1,9 +1,17 @@
 @import 'variables';
 
 .owner {
-  color: $color-main;
+  max-width: 100%;
 
-  &:hover {
-    text-decoration: underline;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &__name {
+    color: $color-main;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
