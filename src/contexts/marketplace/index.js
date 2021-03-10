@@ -20,6 +20,7 @@ import {
 import { AUCTION_DURATION, BOATLOAD_OF_GAS } from '~constants/corgi';
 
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import { parseNears } from '~helpers/nears';
 
 export const MarketplaceContext = React.createContext(initialMarketplaceState);
 
@@ -56,7 +57,7 @@ export const MarketplaceContextProvider = ({ Contract, children }) => {
   const bidForCorgi = useCallback(
     (id, amount) => {
       dispatchMarketplace({ type: BID_FOR_CORGI_START });
-      Contract.bid_for_item({ token_id: id }, BOATLOAD_OF_GAS, nearAPI.utils.format.parseNearAmount(`${amount}`))
+      Contract.bid_for_item({ token_id: id }, BOATLOAD_OF_GAS, parseNears(`${amount}`))
         .then(() => dispatchMarketplace({ type: BID_FOR_CORGI_SUCCESS }))
         .catch((error) => dispatchMarketplace({ type: ACTION_ERROR, payload: { error } }));
     },
@@ -66,7 +67,7 @@ export const MarketplaceContextProvider = ({ Contract, children }) => {
   const clearanceForCorgi = useCallback(
     (id) => {
       dispatchMarketplace({ type: CLEARANCE_FOR_CORGI_START });
-      Contract.clearance_for_item({ token_id: id })
+      Contract.clearance_for_item({ token_id: id }, BOATLOAD_OF_GAS)
         .then(() => dispatchMarketplace({ type: CLEARANCE_FOR_CORGI_SUCCESS }))
         .catch((error) => dispatchMarketplace({ type: ACTION_ERROR, payload: { error } }));
     },
