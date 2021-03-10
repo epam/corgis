@@ -46,9 +46,7 @@ export const ContractContextProvider = ({ Contract, mintFee, children }) => {
   const { user } = useContext(NearContext);
 
   const getCorgi = useCallback(
-    (id) => {
-      return Contract.get_corgi_by_id({ id }).then((corgi) => corgi);
-    },
+    (id) => Contract.get_corgi_by_id({ id }).then((corgi) => corgi),
     [Contract],
   );
 
@@ -63,9 +61,7 @@ export const ContractContextProvider = ({ Contract, mintFee, children }) => {
   );
 
   const getCorgis = useCallback(
-    (owner) => {
-      return Contract.get_corgis_by_owner({ owner }).then((corgis) => corgis);
-    },
+    (owner) => Contract.get_corgis_by_owner({ owner }).then((corgis) => corgis),
     [Contract],
   );
 

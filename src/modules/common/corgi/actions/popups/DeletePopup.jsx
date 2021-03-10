@@ -7,9 +7,7 @@ import { Confirmation, BasicSpinner, Button, PopupWrapper } from '~modules/commo
 
 import { ACTION_MESSAGES } from '~constants/corgi';
 
-const {
-  DELETE: { POPUP_TITLE, POPUP_TITLE_ACTION_CONFIRMED, BUTTON_DESCRIPTION },
-} = ACTION_MESSAGES;
+const { DELETE: { POPUP_TITLE, POPUP_TITLE_ACTION_CONFIRMED, BUTTON_DESCRIPTION } } = ACTION_MESSAGES;
 
 const DeletePopupPropTypes = { asButton: PropTypes.bool };
 

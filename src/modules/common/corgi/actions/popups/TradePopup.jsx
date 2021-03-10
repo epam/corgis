@@ -7,9 +7,7 @@ import { Confirmation, BasicSpinner, Button, PopupWrapper } from '~modules/commo
 
 import { ACTION_MESSAGES } from '~constants/corgi';
 
-const {
-  TRADE: { POPUP_TITLE, BUTTON_DESCRIPTION },
-} = ACTION_MESSAGES;
+const { TRADE: { POPUP_TITLE, BUTTON_DESCRIPTION } } = ACTION_MESSAGES;
 
 const TradePopupPropTypes = { asButton: PropTypes.bool };
 

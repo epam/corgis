@@ -15,9 +15,7 @@ const CorgiPage = () => {
   const { corgi, error, loading, getActiveCorgi, deleted, transfered, clearState } = useContext(ContractContext);
   const { added, bidded, cleared } = useContext(MarketplaceContext);
 
-  const {
-    params: { id },
-  } = useRouteMatch();
+  const { params: { id } } = useRouteMatch();
 
   useEffect(() => {
     if (id) {
