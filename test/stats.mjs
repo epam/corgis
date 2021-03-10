@@ -73,7 +73,7 @@ for (const entry of trace) {
 
 fs.writeFileSync('test/data.js', 'const data=' + JSON.stringify(data));
 
-const avg = (data) => data.reduce((acc, cur) => acc + cur, 0) / data.length;
+const avg = (list) => list.reduce((acc, cur) => acc + cur, 0) / list.length;
 console.log(avg(createData));
 console.log(avg(deleteData));
 
