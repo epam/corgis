@@ -13,13 +13,17 @@ import { Footer } from '~modules/footer';
 const App = () => {
   const { user } = useContext(NearContext);
   const { created, deleted, transfered, getCorgisByCurrentUser } = useContext(ContractContext);
-  const { cleared } = useContext(MarketplaceContext);
+  const { cleared, getCorgisForSale } = useContext(MarketplaceContext);
 
   useEffect(() => {
     if (user && ((!created && !deleted && !transfered) || cleared)) {
       getCorgisByCurrentUser();
     }
   }, [user, created, deleted, transfered, cleared]);
+
+  useEffect(() => {
+    getCorgisForSale();
+  }, []);
 
   return (
     <div className='App'>

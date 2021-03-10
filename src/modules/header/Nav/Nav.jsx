@@ -3,14 +3,16 @@ import { Link } from 'react-router-dom';
 
 import './Nav.scss';
 
-import { ContractContext, NearContext } from '~contexts';
+import classNames from 'classnames';
+
+import { ContractContext, MarketplaceContext, NearContext } from '~contexts';
 
 import { Button, Dropdown, ExternalLink, MintingLink } from '~modules/common';
-import classNames from 'classnames';
 
 const Nav = () => {
   const { nearContent, user, signIn, signOut } = useContext(NearContext);
   const { corgis } = useContext(ContractContext);
+  const { corgisForSale } = useContext(MarketplaceContext);
 
   const signInAction = () => {
     signIn();
@@ -36,7 +38,7 @@ const Nav = () => {
 
           <div className='nav__item nav__item--marketplace'>
             <Link to='/marketplace'>
-              <Button description='Marketplace' stretchable />
+              <Button description='Marketplace' badge={corgisForSale ? corgisForSale.length : 0} stretchable />
             </Link>
           </div>
 
@@ -60,7 +62,7 @@ const Nav = () => {
         <>
           <div className='nav__item'>
             <Link to='/marketplace'>
-              <Button description='Marketplace' />
+              <Button description='Marketplace' badge={corgisForSale ? corgisForSale.length : 0} />
             </Link>
           </div>
 
