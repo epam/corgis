@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Activity.scss';
 
-import humanizeTime from '~helpers/humanizeTime';
+import { humanizeTime } from '~helpers/time';
 
 import { Owner } from '~modules/common';
 
