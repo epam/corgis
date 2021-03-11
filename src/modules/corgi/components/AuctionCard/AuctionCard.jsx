@@ -119,7 +119,7 @@ const AuctionCard = ({ corgi }) => {
         </>
       )}
 
-      {existedBid && <BidDifference existed={existedBid} bid={bidNears} />}
+      {!isAuctionExpired && existedBid && <BidDifference existed={existedBid} bid={bidNears} />}
 
       {isAuctionExpired && user && user.accountId === owner && (
         <>{!clearing ? <Button description='Finish auction' action={onClearance} /> : <BasicSpinner />}</>

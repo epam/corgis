@@ -104,6 +104,7 @@ const Dropdown = React.forwardRef(
   },
 );
 
+Dropdown.displayName = 'Dropdown';
 Dropdown.propTypes = DropdownPropTypes;
 
 export default Dropdown;

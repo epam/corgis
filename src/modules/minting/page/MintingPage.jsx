@@ -1,3 +1,4 @@
+/* global localStorage:true */
 import React, { useContext, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
@@ -44,6 +45,7 @@ const MintingPage = () => {
     generateRandomCharacter();
   }, [created]);
 
+  /* eslint-disable-next-line arrow-body-style */
   useEffect(() => {
     return () => {
       localStorage.removeItem('userCorgis');

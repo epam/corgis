@@ -1,8 +1,6 @@
 import React, { useReducer, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import * as nearAPI from 'near-api-js';
-
 import { marketplaceReducer, initialMarketplaceState } from './reducer';
 import {
   ACTION_ERROR,

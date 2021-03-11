@@ -4,9 +4,7 @@ import { CorgiCommon, CorgiUncommon, CorgiRare, CorgiVeryRare, SwitchCorgiPhoto 
 
 import {
   CorgiActions,
-  Confirmation,
   Share,
-  Trade,
   Transfer,
   DeletePopup,
   GiftPopup,
@@ -51,9 +49,7 @@ export {
   RarityString,
   Quote,
   CorgiActions,
-  Confirmation,
   Share,
-  Trade,
   Transfer,
   DeletePopup,
   GiftPopup,

@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { Redirect } from 'react-router';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { CorgiActionsContext, MarketplaceContext } from '~contexts';
@@ -8,9 +8,7 @@ import { Confirmation, BasicSpinner, Button, PopupWrapper } from '~modules/commo
 
 import { ACTION_MESSAGES } from '~constants/corgi';
 
-const {
-  TRADE: { POPUP_TITLE, BUTTON_DESCRIPTION },
-} = ACTION_MESSAGES;
+const { TRADE: { POPUP_TITLE, BUTTON_DESCRIPTION } } = ACTION_MESSAGES;
 
 const TradePopupPropTypes = { asButton: PropTypes.bool };
 

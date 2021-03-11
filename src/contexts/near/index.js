@@ -1,4 +1,5 @@
-import React, { useReducer, useEffect, useCallback } from 'react';
+/* global localStorage:true */
+import React, { useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { initialNearState, nearReducer } from './reducer';

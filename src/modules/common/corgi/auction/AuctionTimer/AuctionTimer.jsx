@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import useInterval from '~hooks/useInterval';
 
@@ -14,6 +15,8 @@ const auctionTimerOptions = {
   maxDecimalPoints: 0,
   short: true,
 };
+
+const AuctionTimerPropTypes = { expires: PropTypes.string };
 
 const AuctionTimer = ({ expires }) => {
   const [timeLeft, setTimeLeft] = useState(humanizeTime(expires, auctionTimerOptions));
@@ -35,13 +38,14 @@ const AuctionTimer = ({ expires }) => {
     let min = 0;
     let sec = 0;
 
+    /* eslint-disable-next-line no-plusplus */
     for (let i = 0; i < timeArr.length; i++) {
       if (timeArr[i].includes('h')) {
-        hr = parseInt(timeArr[i]);
+        hr = parseInt(timeArr[i], 10);
       } else if (timeArr[i].includes('m')) {
-        min = parseInt(timeArr[i]);
+        min = parseInt(timeArr[i], 10);
       } else if (timeArr[i].includes('s')) {
-        sec = parseInt(timeArr[i]);
+        sec = parseInt(timeArr[i], 10);
       }
     }
 
@@ -84,17 +88,23 @@ const AuctionTimer = ({ expires }) => {
 
   return (
     <div className='auction-timer'>
-      <h3 className='auction-timer__title'>Auction ends in</h3>
+      {!isAuctionExpired ? (
+        <>
+          <h3 className='auction-timer__title'>Auction ends in</h3>
 
-      <div className='auction-timer__time'>
-        <TimeTile time={hours} label='hr' />
-        <TimeTile time={minutes} label='min' />
-        <TimeTile time={seconds} label='sec' />
-      </div>
+          <div className='auction-timer__time'>
+            <TimeTile time={hours} label='hr' />
+            <TimeTile time={minutes} label='min' />
+            <TimeTile time={seconds} label='sec' />
+          </div>
+        </>
+      ) : (
+        <h3 className='auction-timer__title'>Auction ended, waiting for clearance</h3>
+      )}
     </div>
   );
 };
 
-// AuctionTimer.propTypes = AuctionTimerPropTypes;
+AuctionTimer.propTypes = AuctionTimerPropTypes;
 
 export default AuctionTimer;

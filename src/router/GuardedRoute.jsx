@@ -8,6 +8,7 @@ const GuardedRoutePropTypes = {
   children: ReactChildrenType,
   auth: PropTypes.oneOfType([PropTypes.bool.isRequired, PropTypes.instanceOf(null)]),
   isLoading: PropTypes.bool,
+  /* eslint-disable-next-line no-unused-vars */
   rest: (props, propName, componentName) => {},
 };
 

@@ -107,19 +107,24 @@ const Input = ({
   }, [timeoutId, isErrorShown, errorMessage, setTimeoutId, setErrorMessage]);
 
   useLayoutEffect(() => {
-    if (autoFocus && inputRef && inputRef.current) {
-      const focusTimeoutId = setTimeout(() => {
-        inputRef.current.focus();
-      }, 10);
+    let focusTimeoutId;
 
-      return () => {
+    if (autoFocus && inputRef && inputRef.current) {
+      focusTimeoutId = setTimeout(() => {
+        inputRef.current.focus();
         clearTimeout(focusTimeoutId);
-      };
+      }, 10);
     }
+
+    return () => {
+      if (focusTimeoutId) {
+        clearTimeout(focusTimeoutId);
+      }
+    };
   }, [inputRef]);
 
   return (
-    <div className='input' className={classNames('input', { 'input--show-error': isErrorShown && errorMessage })}>
+    <div className={classNames('input', { 'input--show-error': isErrorShown && errorMessage })}>
       {label && label.length && (
         <label className='input__label' htmlFor={inputId}>
           {label}
