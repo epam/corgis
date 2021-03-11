@@ -17,7 +17,7 @@ const CorgisShowCase = ({ corgis, title, showAuctionInfo = false }) => (
   <div className='showcase'>
     {title && <h3 className='showcase__title'>{title}</h3>}
 
-    {corgis && corgis.length && (
+    {corgis && corgis.length !== 0 && (
       <div className='showcase__grid'>
         {corgis.map((corgi) => (
           <CorgiCard corgi={corgi} key={corgi.id} showAuctionInfo={showAuctionInfo} showActions />
