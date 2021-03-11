@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import './MintingPage.scss';
@@ -9,14 +9,29 @@ import { MintingAnimation, MintingDescription, MintingForm, MintingScreen } from
 
 const MintingPage = () => {
   const { user } = useContext(NearContext);
-  const { creating, created } = useContext(ContractContext);
+  const { corgis, creating, created } = useContext(ContractContext);
   const { generateRandomCharacter } = useContext(CharacterContext);
+
+  const [isRedirected, setIsRedirected] = useState(false);
+
+  useEffect(() => {
+    const corgisLength = localStorage.getItem('corgisLength');
+
+    if (corgisLength && corgis && corgisLength !== corgis.length) {
+      localStorage.removeItem('corgisLength');
+      setIsRedirected(true);
+    }
+  }, [corgis]);
 
   useEffect(() => {
     generateRandomCharacter();
   }, [created]);
 
-  if (created) {
+  if (creating) {
+    localStorage.setItem('corgisLength', corgis ? corgis.length : 0);
+  }
+
+  if (isRedirected || created) {
     return <Redirect to={user ? `/user/${user.accountId}` : '/'} />;
   }
 
