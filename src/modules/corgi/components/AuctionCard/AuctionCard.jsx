@@ -8,6 +8,8 @@ import { BasicSpinner, Button, Donation } from '~modules/common';
 import { AuctionTimer, HighestBid } from '~modules/common/corgi';
 import { BidDifference, BidHistory } from '~modules/corgi/components';
 
+import { useHighestBid } from '~hooks';
+
 import { formatToNears } from '~helpers/nears';
 import { formatToMs } from '~helpers/time';
 
@@ -26,7 +28,7 @@ const AuctionCard = ({ corgi }) => {
 
   const isAuctionExpired = for_sale && for_sale.expires && Date.now() > formatToMs(for_sale.expires);
 
-  const [highestBid, setHighestBid] = useState(null);
+  const highestBid = useHighestBid(for_sale);
 
   const [minBid, setMinBid] = useState(0);
   const [bidNears, setBidNears] = useState(mintFee);
@@ -54,17 +56,6 @@ const AuctionCard = ({ corgi }) => {
 
     clearanceForCorgi(id);
   };
-
-  useEffect(() => {
-    if (for_sale && for_sale.bids.length) {
-      setHighestBid(
-        for_sale.bids.reduce(
-          (curr, next) => (formatToNears(next.amount) > formatToNears(curr.amount) ? next : curr),
-          for_sale.bids[0],
-        ),
-      );
-    }
-  }, [for_sale]);
 
   useEffect(() => {
     if (highestBid) {
