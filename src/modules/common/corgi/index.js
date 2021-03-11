@@ -15,6 +15,8 @@ import {
   WithdrawPopup,
 } from './actions';
 
+import { AuctionTimer, BidAmount, HighestBid } from './auction';
+
 import CorgiCard from './CorgiCard';
 import CorgiLink from './CorgiLink';
 import CorgiRate from './CorgiRate';
@@ -58,4 +60,7 @@ export {
   SharePopup,
   TradePopup,
   WithdrawPopup,
+  AuctionTimer,
+  BidAmount,
+  HighestBid,
 };

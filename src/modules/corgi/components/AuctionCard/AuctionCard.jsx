@@ -5,7 +5,8 @@ import './AuctionCard.scss';
 import { ContractContext, MarketplaceContext, NearContext } from '~contexts';
 
 import { BasicSpinner, Button, Donation } from '~modules/common';
-import { AuctionTimer, BidDifference, BidHistory, HighestBid } from '~modules/corgi/components';
+import { AuctionTimer, HighestBid } from '~modules/common/corgi';
+import { BidDifference, BidHistory } from '~modules/corgi/components';
 
 import { formatToNears } from '~helpers/nears';
 import { formatToMs } from '~helpers/time';

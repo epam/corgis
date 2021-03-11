@@ -1,14 +1,13 @@
 import React from 'react';
 
-import * as nearAPI from 'near-api-js';
-
 import './HighestBid.scss';
 
-import { NearIcon, Owner } from '~modules/common';
+import { Owner } from '~modules/common';
+import { BidAmount } from '~modules/common/corgi';
+
+import { humanizeTime } from '~helpers/time';
 
 import { BidTypeShape } from '~types/BidTypes';
-import { humanizeTime } from '~helpers/time';
-import { BidAmount } from '~modules/corgi/components';
 
 const HighestBidPropTypes = { bid: BidTypeShape.isRequired };
 
@@ -24,7 +23,8 @@ const HighestBid = ({ bid }) => {
           <BidAmount amount={amount} />
         </div>
         <span className='highest-bid__separator'>—</span>
-        {humanizeTime(timestamp)} ago by&nbsp;<Owner name={bidder} />
+        {humanizeTime(timestamp)} ago by&nbsp;
+        <Owner name={bidder} />
       </span>
     </div>
   );
