@@ -1,6 +1,6 @@
 @import 'mixins';
 
-.donation {
+.bid-input {
   @include dis-flex(space-between, center);
 
   & > * {
@@ -11,7 +11,7 @@
     white-space: nowrap;
   }
 
-  &__input {
+  &__field {
     flex-grow: 1;
   }
 

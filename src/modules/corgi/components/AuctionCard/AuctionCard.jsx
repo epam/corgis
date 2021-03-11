@@ -4,9 +4,9 @@ import './AuctionCard.scss';
 
 import { ContractContext, MarketplaceContext, NearContext } from '~contexts';
 
-import { BasicSpinner, Button, Donation } from '~modules/common';
+import { BasicSpinner, Button } from '~modules/common';
 import { AuctionTimer, HighestBid } from '~modules/common/corgi';
-import { BidDifference, BidHistory } from '~modules/corgi/components';
+import { BidDifference, BidHistory, BidInput } from '~modules/corgi/components';
 
 import { useHighestBid } from '~hooks';
 
@@ -99,7 +99,7 @@ const AuctionCard = ({ corgi }) => {
           {!bidding ? (
             <div className='auction-card__bid-field'>
               <div className='auction-card__input'>
-                <Donation
+                <BidInput
                   label='My bid'
                   handleNears={handleNears}
                   value={bidNears}

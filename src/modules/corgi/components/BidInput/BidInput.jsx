@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import './Donation.scss';
+import './BidInput.scss';
 
 import { ContractContext } from '~contexts/contract';
 
@@ -9,9 +9,8 @@ import { Input, NearIcon } from '~modules/common';
 
 import { CORGI_VALIDATION_MESSAGES } from '~constants/validation/corgi';
 
-const DonationPropTypes = {
+const BidInputPropTypes = {
   label: PropTypes.string,
-  afterword: PropTypes.string,
   handleNears: PropTypes.func,
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   min: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -20,9 +19,8 @@ const DonationPropTypes = {
   disabled: PropTypes.bool,
 };
 
-const Donation = ({
-  label = 'Donate',
-  afterword = '',
+const BidInput = ({
+  label = 'My Bid',
   min,
   value = 0,
   handleNears = () => {},
@@ -64,10 +62,10 @@ const Donation = ({
   }, [showError]);
 
   return (
-    <div className='donation'>
-      <span className='donation__text'>{label}</span>
+    <div className='bid-input'>
+      <span className='bid-input__text'>{label}</span>
 
-      <div className='donation__input'>
+      <div className='bid-input__field'>
         <Input
           type='number'
           min={parseFloat(min || mintFee)}
@@ -79,15 +77,13 @@ const Donation = ({
         />
       </div>
 
-      <div className='donation__near-icon'>
+      <div className='bid-input__near-icon'>
         <NearIcon size='1.15em' />
       </div>
-
-      {afterword && afterword.length && <span className='donation__text'>{afterword}</span>}
     </div>
   );
 };
 
-Donation.propTypes = DonationPropTypes;
+BidInput.propTypes = BidInputPropTypes;
 
-export default Donation;
+export default BidInput;
