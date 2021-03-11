@@ -59,7 +59,7 @@ const AuctionCard = ({ corgi }) => {
 
   useEffect(() => {
     if (highestBid) {
-      const min = parseFloat(formatToNears(highestBid.amount)).toFixed(1);
+      const min = formatToNears(highestBid.amount);
 
       setBidNears(min);
       setMinBid(min);
@@ -71,7 +71,7 @@ const AuctionCard = ({ corgi }) => {
       const foundBid = for_sale.bids.find((bid) => user && bid.bidder === user.accountId);
 
       if (foundBid) {
-        setExistedBid(parseFloat(formatToNears(foundBid.amount)).toFixed(1));
+        setExistedBid(formatToNears(foundBid.amount));
       }
     }
   }, [for_sale]);
@@ -119,7 +119,7 @@ const AuctionCard = ({ corgi }) => {
         </>
       )}
 
-      {!isAuctionExpired && existedBid && <BidDifference existed={existedBid} bid={bidNears} />}
+      {!isAuctionExpired && existedBid && bidNears > minBid && <BidDifference existed={existedBid} bid={bidNears} />}
 
       {isAuctionExpired && user && user.accountId === owner && (
         <>{!clearing ? <Button description='Finish auction' action={onClearance} /> : <BasicSpinner />}</>

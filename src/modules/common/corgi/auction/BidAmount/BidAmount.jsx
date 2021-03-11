@@ -12,7 +12,7 @@ const BidAmountPropTypes = { amount: BidType.amount.isRequired };
 
 const BidAmount = ({ amount }) => (
   <span className='bid-amount'>
-    {parseFloat(formatToNears(amount)).toFixed(1)}
+    {formatToNears(amount)}
     <div className='bid-amount__icon'>
       <NearIcon />
     </div>

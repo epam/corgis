@@ -38,10 +38,7 @@ const Donation = ({
 
   const handleNearsInput = (event) => {
     setNears(event.target.value);
-
-    if (nears > 0) {
-      handleNears(event.target.value);
-    }
+    handleNears(event.target.value);
   };
 
   useEffect(() => {
