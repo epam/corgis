@@ -3,43 +3,66 @@ import { Redirect } from 'react-router-dom';
 
 import './MintingPage.scss';
 
-import { CharacterContext, ContractContext, NearContext } from '~contexts';
+import { CharacterContext, ContractContext } from '~contexts';
 
 import { MintingAnimation, MintingDescription, MintingForm, MintingScreen } from '~modules/minting/components';
 
 const MintingPage = () => {
-  const { user } = useContext(NearContext);
   const { corgis, creating, created } = useContext(ContractContext);
   const { generateRandomCharacter } = useContext(CharacterContext);
 
-  const [isRedirected, setIsRedirected] = useState(false);
+  const [isAnimPlaying, setIsAnimPlaying] = useState(creating);
+  const [createdCorgiId, setCreatedCorgiId] = useState(null);
 
   useEffect(() => {
-    const corgisLength = localStorage.getItem('corgisLength');
+    const userCorgis = localStorage.getItem('userCorgis');
 
-    if (corgisLength && corgis && corgisLength !== corgis.length) {
-      localStorage.removeItem('corgisLength');
-      setIsRedirected(true);
+    if (userCorgis) {
+      const { ids } = JSON.parse(userCorgis);
+
+      if (creating || ids.length) {
+        setIsAnimPlaying(true);
+      }
+
+      if (corgis) {
+        if (corgis.length && ids.length !== 0) {
+          if (ids.length !== corgis.length) {
+            const newId = corgis.reduce((curr, next) => (!ids.includes(next.id) ? next.id : curr), null);
+
+            if (newId) {
+              setCreatedCorgiId(newId);
+            }
+          }
+        } else if (corgis.length === 1 && ids.length === 0) {
+          setCreatedCorgiId(corgis[0].id);
+        }
+      }
     }
-  }, [corgis]);
+  }, [corgis, creating]);
 
   useEffect(() => {
     generateRandomCharacter();
   }, [created]);
 
+  useEffect(() => {
+    return () => {
+      localStorage.removeItem('userCorgis');
+    };
+  }, []);
+
   if (creating) {
-    localStorage.setItem('corgisLength', corgis ? corgis.length : 0);
+    localStorage.setItem('userCorgis', JSON.stringify({ ids: corgis ? corgis.map((corgi) => corgi.id) : [] }));
   }
 
-  if (isRedirected || created) {
-    return <Redirect to={user ? `/user/${user.accountId}` : '/'} />;
+  if (createdCorgiId) {
+    return <Redirect to={`/corgi/${createdCorgiId}`} />;
   }
 
   return (
     <div className='minting'>
       <h1 className='minting__title'>{creating ? 'Minting...' : 'Create a Corgi'}</h1>
 
-      {creating ? (
+      {isAnimPlaying ? (
         <MintingAnimation />
       ) : (
         <div className='minting__field'>
