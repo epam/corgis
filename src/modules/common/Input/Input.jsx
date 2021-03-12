@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import './Input.scss';
 
-import { v4 as uuidv4 } from 'uuid';
 import classNames from 'classnames';
+import { v4 as uuid } from 'uuid';
 
 import { usePrevious } from '~hooks/';
 
@@ -37,7 +37,7 @@ const Input = ({
   required = false,
   disabled = false,
 }) => {
-  const inputId = `input-${uuidv4()}`;
+  const inputId = `input-${uuid()}`;
 
   const inputRef = useRef(null);
 
