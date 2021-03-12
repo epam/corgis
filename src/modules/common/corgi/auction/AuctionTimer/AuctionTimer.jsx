@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import useInterval from '~hooks/useInterval';
+import './AuctionTimer.scss';
 
 import { TimeTile } from '~modules/corgi/components';
 
-import { formatToMs, humanizeTime } from '~helpers/time';
+import { useInterval, useIsAuctionExpired } from '~hooks';
 
-import './AuctionTimer.scss';
+import { humanizeTime } from '~helpers/time';
 
 const auctionTimerOptions = {
   largest: 3,
@@ -25,7 +25,7 @@ const AuctionTimer = ({ expires }) => {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
-  const [isAuctionExpired, setIsAuctionExpired] = useState(false);
+  const isAuctionExpired = useIsAuctionExpired(expires);
 
   const calculateTime = () => {
     if (!isAuctionExpired) {
@@ -52,10 +52,6 @@ const AuctionTimer = ({ expires }) => {
     setHours(hr);
     setMinutes(min);
     setSeconds(sec);
-
-    if (hr === 0 && min === 0 && sec === 0) {
-      setIsAuctionExpired(true);
-    }
   };
 
   useInterval(calculateTime, 1000);
@@ -67,24 +63,12 @@ const AuctionTimer = ({ expires }) => {
   }, [timeLeft]);
 
   useEffect(() => {
-    if (!isAuctionExpired && hours === 0 && minutes === 0 && seconds === 0) {
-      setIsAuctionExpired(true);
-    }
-  }, [isAuctionExpired, hours, minutes, seconds]);
-
-  useEffect(() => {
     if (isAuctionExpired) {
       setHours(0);
       setMinutes(0);
       setSeconds(0);
     }
   }, [isAuctionExpired]);
-
-  useEffect(() => {
-    if (expires && Date.now() > formatToMs(expires)) {
-      setIsAuctionExpired(true);
-    }
-  }, []);
 
   return (
     <div className='auction-timer'>
@@ -99,7 +83,7 @@ const AuctionTimer = ({ expires }) => {
           </div>
         </>
       ) : (
-        <h3 className='auction-timer__title'>Auction ended, waiting for clearance</h3>
+        <h3 className='auction-timer__title'>Auction ended</h3>
       )}
     </div>
   );
