@@ -59,6 +59,9 @@ $padding-dropdown-item-tight: 0.25rem;
 $padding-dropdown-item-semi-tight: $padding-dropdown-item-tight $padding-dropdown-item-tight * 3;
 $padding-dropdown-item: $padding-dropdown-item-tight 1.5rem;
 
+$padding-nav: 0.5rem 0 0.5rem 1rem;
+$padding-header: 1rem 0;
+
 $padding-poster: 0 1rem;
 $margin-poster: 0;
 $padding-poster-description: 1rem;
@@ -88,6 +91,8 @@ $border-radius-dropdown-list: 0 0 $border-radius-basic $border-radius-basic;
 // shadows
 
 // fonts
+
+$nav-font-size: 1em;
 
 $poster-text-font-size: 2em;
 $poster-text-font-weight: 500;
