@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import './Dropdown.scss';
 
 import classNames from 'classnames';
+import { v4 as uuid } from 'uuid';
 
 import { useDetectClickOutside } from '~hooks';
 
@@ -86,12 +87,8 @@ const Dropdown = React.forwardRef(
 
         <ul className='dropdown__list' style={listStyles}>
           {children.length > 1 ? (
-            children.map((child, index) => (
-              // TODO: item ids
-              <DropdownItem
-                key={`dropdownItem-idSlug${index}`}
-                isDivider={child.props && child.props.divider === 'true'}
-              >
+            children.map((child) => (
+              <DropdownItem key={`dropdown-item-${uuid()}`} isDivider={child.props && child.props.divider === 'true'}>
                 {child}
               </DropdownItem>
             ))
