@@ -12,11 +12,9 @@ const BidDifferencePropTypes = {
   bid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
-// const format = (amount) => parseFloat(amount).toFixed(1);
-
 const BidDifference = ({ existed, bid }) => (
   <>
-    {bid - existed !== 0 ? (
+    {Big(bid).minus(existed) !== 0 ? (
       <div className='difference'>
         <span className='difference__text'>
           To bid {bid}
@@ -27,7 +25,7 @@ const BidDifference = ({ existed, bid }) => (
         </span>
 
         <span className='difference__text'>
-          you will need to pay {Big(bid).minus(existed).toString()}
+          you will need to pay {Big(bid).minus(existed).round(25).toFixed()}
           <i className='difference__near-icon'>
             <NearIcon />
           </i>
