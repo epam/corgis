@@ -123,19 +123,17 @@ const AuctionCard = ({ corgi }) => {
         <BidDifference existed={existedBid} bid={bidNears} />
       )}
 
-      {user &&
-        (!clearing ? (
-          user.accountId === owner && isAuctionExpired ? (
-            <Button description={'Finish auction'} action={onClearance} />
-          ) : (
-            existedBid &&
-            !(highestBid && user.accountId === highestBid.bidder) && (
-              <Button description={'Claim my bid back'} action={onClearance} />
-            )
-          )
-        ) : (
-          <BasicSpinner />
-        ))}
+      {user && !clearing ? (
+        <>
+          {user.accountId === owner && isAuctionExpired && <Button description='Finish auction' action={onClearance} />}
+
+          {existedBid && !(highestBid && user.accountId === highestBid.bidder) && (
+            <Button description='Claim my bid back' action={onClearance} />
+          )}
+        </>
+      ) : (
+        user && <BasicSpinner />
+      )}
 
       <div className='auction-card__history'>
         <BidHistory bids={for_sale.bids} />
