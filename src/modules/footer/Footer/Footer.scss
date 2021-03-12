@@ -9,8 +9,8 @@
 
   max-width: 100%;
 
-  padding: $padding-footer;
-  margin: $margin-footer;
+  padding: $footer-padding;
+  margin: $footer-margin;
 
   background-color: $color-gray-light;
 
@@ -21,13 +21,13 @@
   &__watermark {
     @include bootstrap-col(sm, 5);
 
-    padding: $padding-footer-item;
+    padding: $footer-item-padding;
   }
 
   &__description {
     @include bootstrap-col(sm, 3);
 
-    padding: $padding-footer-description;
+    padding: $footer-description-padding;
 
     color: $text-color-dark;
   }
@@ -36,7 +36,7 @@
     @include bootstrap-col(sm, 4);
     @include dis-flex(flex-end, center);
 
-    padding: $padding-footer-item;
+    padding: $footer-item-padding;
   }
 }
 
@@ -45,7 +45,7 @@
     &__watermark {
       @include bootstrap-col-auto;
 
-      padding: $padding-footer-item;
+      padding: $footer-item-padding;
     }
 
     &__description {

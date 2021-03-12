@@ -13,7 +13,7 @@
   &__description {
     @include dis-flex-column;
 
-    padding-left: $padding-watermark;
+    padding-left: $watermark-padding-left;
 
     white-space: nowrap;
   }
@@ -39,7 +39,7 @@
   &__divider {
     height: $watermark-divider-height;
 
-    margin: $margin-watermark-divider;
+    margin: $watermark-divider-margin;
 
     border-left: $border-basic-gray;
   }

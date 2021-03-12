@@ -9,14 +9,14 @@
   padding: $auction-card-padding;
 
   & > * {
-    @include margin-between(0.5rem, column);
+    @include margin-between($auction-card-items-gap, column);
   }
 
   &__bid-field {
     @include dis-flex(space-between, center);
 
     & > * {
-      @include margin-between(0.5rem, row);
+      @include margin-between($auction-card-bid-field-items-gap, row);
 
       width: 50%;
     }

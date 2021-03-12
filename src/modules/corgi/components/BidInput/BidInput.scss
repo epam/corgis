@@ -1,10 +1,11 @@
 @import 'mixins';
+@import 'variables';
 
 .bid-input {
   @include dis-flex(space-between, center);
 
   & > * {
-    @include margin-between(0.25rem, row);
+    @include margin-between($bid-input-items-gap, row);
   }
 
   &__text {

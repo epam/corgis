@@ -13,7 +13,7 @@
     @include dis-flex(flex-start, center);
 
     & > * {
-      @include margin-between(0.25rem);
+      @include margin-between($auction-timer-tiles-gap);
     }
   }
 }

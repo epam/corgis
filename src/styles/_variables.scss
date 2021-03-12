@@ -68,6 +68,8 @@ $corgi-rate-max-width: 15rem;
 $corgi-card-image-height: 10rem;
 $corgi-card-image-big-height: $corgi-card-image-height * 2;
 
+$corgi-page-card-max-width: 30rem;
+
 $corgi-anim-size: 10rem;
 
 $auction-card-max-width: 30rem;
@@ -90,12 +92,10 @@ $minting-animation-width: 100%;
 
 // margins and paddings
 
-$padding-page: 0 5%;
+$page-padding: 0 5%;
 
-$padding-button-square: 0.25rem;
-$padding-button: $padding-button-square 1.5rem;
-
-$padding-infotile: $padding-button;
+$button-padding-square: 0.25rem;
+$button-padding: $button-padding-square 1.5rem;
 
 $colorpicker-title-margin: 0 0 0 1rem;
 
@@ -128,9 +128,8 @@ $auction-timer-title-margin-bottom: 0.15rem;
 $transfer-input-margin: 0 0.25rem 0 0;
 $transfer-submit-margin: 0 0 0 0.25rem;
 
-$padding-dropdown-item-tight: 0.25rem;
-$padding-dropdown-item-semi-tight: $padding-dropdown-item-tight $padding-dropdown-item-tight * 3;
-$padding-dropdown-item: $padding-dropdown-item-tight 1.5rem;
+$dropdown-item-tight-padding: 0.25rem;
+$dropdown-item-padding: $dropdown-item-tight-padding 1.5rem;
 
 $auction-card-padding: 1rem;
 
@@ -138,39 +137,76 @@ $bid-history-empty-padding-left: 1.25rem;
 $bid-history-empty-margin: 0;
 
 $near-icon-auction-card-margin-left: 0.25rem;
+
 $near-icon-bid-difference-margin-left: 0.15rem;
 
 $bid-tile-margin: 0;
+
 $bid-tile-info-padding: 0.25rem;
+
 $bid-tile-near-icon-margin-left: 0.5rem;
 
-$padding-time-tile: 0 1.25rem;
+$time-tile-padding: 0 1.25rem;
 $time-tile-margin-bottom: 0.15rem;
 
-$padding-footer: $padding-page;
-$margin-footer: 1rem 0 0;
-$padding-footer-item: 0;
-$padding-footer-description: 0 1rem;
+$footer-padding: $page-padding;
+$footer-margin: 1rem 0 0;
 
-$margin-community: 0;
+$footer-item-padding: 0;
 
-$padding-watermark: 1rem;
-$margin-watermark-divider: 0 0.25rem;
+$footer-description-padding: 0 1rem;
 
-$padding-nav: 0.5rem 0 0.5rem 1rem;
-$padding-header: 1rem 0;
+$community-margin: 0;
 
-$padding-poster: 0 1rem;
-$margin-poster: 0;
-$padding-poster-description: 1rem;
-$padding-poster-text: 0;
-$margin-poster-text: 1rem 0;
+$watermark-padding-left: 1rem;
 
-$padding-minting-form: 1rem;
-$padding-minting-description-list: 1rem;
-$padding-minting-screen: 4rem 0;
+$watermark-divider-margin: 0 0.25rem;
+
+$nav-padding: 0.5rem 0 0.5rem 1rem;
+
+$header-padding: 1rem 0;
+
+$poster-padding: 0 1rem;
+$poster-margin: 0;
+
+$poster-description-padding: 1rem;
+
+$poster-text-padding: 0;
+$poster-text-margin: 1rem 0;
+
+$minting-form-padding: 1rem;
+$minting-form-header-margin-bottom: 0.75rem;
+
+$minting-form-icon-margin-left: 0.5rem;
+$minting-form-icon-padding: 0.25rem;
+
+$minting-description-list-padding-left: 1rem;
+
+$minting-screen-padding: 4rem 0;
 
 // gaps
+
+$confirmation-buttons-gap: 0.5rem;
+
+$auction-timer-tiles-gap: 0.25rem;
+
+$corgi-rate-items-gap: 0.5rem;
+$corgi-rate-items-gap-big: $corgi-rate-items-gap * 2;
+
+$auction-card-items-gap: 0.5rem;
+$auction-card-bid-field-items-gap: 0.5rem;
+
+$bid-input-items-gap: 0.25rem;
+
+$corgi-page-items-gap: 1rem;
+
+$nav-items-gap: 0.5rem;
+$nav-items-gap-small: $nav-items-gap / 2;
+
+$minting-description-items-gap: 0.75rem;
+
+$minting-form-items-gap: 1rem;
+$minting-form-colorpickers-gap: 0.5rem;
 
 // borders
 
@@ -230,6 +266,10 @@ $poster-text-font-size: 2em;
 $poster-text-font-weight: 500;
 $poster-text-font-size-small: 1em;
 $poster-text-font-weight-small: 300;
+
+$minting-form-icon-font-size: 1rem;
+$minting-form-title-font-size: 1.5em;
+$minting-form-title-font-weight: 600;
 
 // transition
 

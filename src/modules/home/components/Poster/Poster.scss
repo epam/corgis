@@ -6,8 +6,8 @@
 
   width: 100%;
 
-  margin: $margin-poster;
-  padding: $padding-poster;
+  margin: $poster-margin;
+  padding: $poster-padding;
 
   border-radius: $border-radius-big;
 
@@ -19,14 +19,14 @@
     @include bootstrap-col(lg, 4);
     @include dis-flex-column(space-evenly, center);
 
-    padding: $padding-poster-description;
+    padding: $poster-description-padding;
 
     box-sizing: border-box;
   }
 
   &__text {
-    margin: $margin-poster-text;
-    padding: $padding-poster-text;
+    margin: $poster-text-margin;
+    padding: $poster-text-padding;
 
     color: $text-color-dark;
 

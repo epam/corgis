@@ -17,7 +17,7 @@
   }
 
   &__item {
-    @include margin-between(0.5rem, column);
+    @include margin-between($corgi-rate-items-gap, column);
   }
 }
 
@@ -30,7 +30,7 @@
     }
 
     .corgi-rate__item {
-      @include margin-between(1rem, row);
+      @include margin-between($corgi-rate-items-gap-big, row);
     }
   }
 }
@@ -45,7 +45,7 @@
     }
 
     .corgi-rate__item {
-      @include margin-between(1rem, column);
+      @include margin-between($corgi-rate-items-gap-big, column);
     }
   }
 }
