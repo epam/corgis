@@ -1,13 +1,49 @@
 @import 'mixins';
+@import 'variables';
 
 .bid-amount {
   @include dis-flex(flex-end, center);
 
   width: 100%;
 
+  &__info {
+    position: relative;
+  }
+
+  &__popup {
+    @include dis-flex(flex-start, center);
+
+    position: absolute;
+    bottom: 100%;
+    left: -0.25rem;
+
+    padding: 0.25rem;
+
+    border: $border-basic-gray;
+    border-radius: $border-radius-basic;
+
+    background-color: $color-white;
+
+    visibility: hidden;
+    opacity: 0;
+
+    transition: opacity 0.1s 0s, visibility 0s 0.2s;
+  }
+
   &__icon {
     @include flex-center;
 
     margin-left: 0.25rem;
   }
+
+  &__info:hover {
+    .bid-amount__popup {
+      visibility: visible;
+      opacity: 1;
+
+      transition: opacity 0.1s 0s, visibility 0s 0s;
+    }
+  }
 }
+
+// 0\.\d*?([^0])\.\.\.
