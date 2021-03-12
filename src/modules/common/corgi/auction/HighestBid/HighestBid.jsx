@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './HighestBid.scss';
 
@@ -9,7 +10,7 @@ import { humanizeTime } from '~helpers/time';
 
 import { BidTypeShape } from '~types/BidTypes';
 
-const HighestBidPropTypes = { bid: BidTypeShape.isRequired };
+const HighestBidPropTypes = { bid: BidTypeShape.isRequired, isExpired: PropTypes.bool };
 
 const HighestBid = ({ bid, isExpired = false }) => {
   const { amount, bidder, timestamp } = bid;
