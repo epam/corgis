@@ -13,4 +13,12 @@
   &__list {
     @include dis-flex-column(flex-start, stretch);
   }
+
+  &__empty {
+    padding-left: 1.25rem;
+    margin: 0;
+
+    font-size: 1rem;
+    font-weight: 500;
+  }
 }
