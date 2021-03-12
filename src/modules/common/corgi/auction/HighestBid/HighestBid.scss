@@ -5,6 +5,10 @@
   &__title {
     @extend .page-title;
 
+    @include dis-flex(flex-start, center);
+
+    max-width: 100%;
+
     margin-bottom: 0.15rem;
   }
 
