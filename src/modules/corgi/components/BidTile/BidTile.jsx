@@ -27,7 +27,7 @@ const BidTile = ({ bid: { amount, bidder, timestamp } }) => {
   return (
     <div className='bid'>
       <span className='bid__info bid__info--near'>
-        <BidAmount amount={amount} />
+        <BidAmount amount={amount} trim />
       </span>
 
       <span className='bid__info bid__info--bidder'>
