@@ -15,10 +15,10 @@
   }
 
   &__empty {
-    padding-left: 1.25rem;
-    margin: 0;
+    padding-left: $bid-history-empty-padding-left;
+    margin: $bid-history-empty-margin;
 
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: $bid-history-empty-font-size;
+    font-weight: $bid-history-empty-font-weight;
   }
 }

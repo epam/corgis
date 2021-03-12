@@ -43,6 +43,16 @@ $minting-link-size-big: 4rem;
 
 $colorpicker-size: 3rem;
 
+$auction-card-max-width: 30rem;
+
+$near-icon-size: 1rem;
+
+$bid-tile-info-near-width: 20%;
+$bid-tile-info-bidder-width: 65%;
+$bid-tile-info-time-width: 15%;
+
+$time-tile-height: 4rem;
+
 $footer-height: 6.5rem;
 $footer-width: 100%;
 
@@ -63,6 +73,21 @@ $padding-infotile: $padding-button;
 $padding-dropdown-item-tight: 0.25rem;
 $padding-dropdown-item-semi-tight: $padding-dropdown-item-tight $padding-dropdown-item-tight * 3;
 $padding-dropdown-item: $padding-dropdown-item-tight 1.5rem;
+
+$auction-card-padding: 1rem;
+
+$bid-history-empty-padding-left: 1.25rem;
+$bid-history-empty-margin: 0;
+
+$near-icon-auction-card-margin-left: 0.25rem;
+$near-icon-bid-difference-margin-left: 0.15rem;
+
+$bid-tile-margin: 0;
+$bid-tile-info-padding: 0.25rem;
+$bid-tile-near-icon-margin-left: 0.5rem;
+
+$padding-time-tile: 0 1.25rem;
+$time-tile-margin-bottom: 0.15rem;
 
 $padding-footer: $padding-page;
 $margin-footer: 1rem 0 0;
@@ -106,6 +131,12 @@ $border-radius-dropdown-list: 0 0 $border-radius-basic $border-radius-basic;
 // shadows
 
 // fonts
+
+$bid-history-empty-font-size: 1rem;
+$bid-history-empty-font-weight: 500;
+
+$time-tile-font-size: 1.25em;
+$time-tile-font-weight: 500;
 
 $footer-font-family: Inter, 'Poppins', sans-serif;
 $footer-font-size: 0.75rem;

@@ -15,9 +15,6 @@
     max-width: 30rem;
   }
 
-  // &__content {
-  // }
-
   &__additional {
     @include dis-flex-column(space-between, stretch);
 
@@ -43,9 +40,9 @@
 
     .corgi-page__content {
       @include dis-flex(space-between, stretch);
-  
+
       flex: 1 1 auto;
-  
+
       & > * {
         @include margin-between(1rem, row);
         width: 50%;
