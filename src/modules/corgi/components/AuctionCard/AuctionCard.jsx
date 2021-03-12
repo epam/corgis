@@ -132,7 +132,7 @@ const AuctionCard = ({ corgi }) => {
           )}
         </>
       ) : (
-        user && <BasicSpinner />
+        user && highestBid && <BasicSpinner />
       )}
 
       <div className='auction-card__history'>
