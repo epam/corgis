@@ -2,18 +2,17 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import './AuctionCard.scss';
 
-import { ContractContext, MarketplaceContext, NearContext } from '~contexts';
+import Big from 'big.js';
+
+import { MarketplaceContext, NearContext } from '~contexts';
 
 import { BasicSpinner, Button } from '~modules/common';
 import { AuctionTimer, HighestBid } from '~modules/common/corgi';
 import { BidDifference, BidHistory, BidInput } from '~modules/corgi/components';
 
-import { useHighestBid } from '~hooks';
+import { useHighestBid, useIsAuctionExpired } from '~hooks';
 
 import { formatToNears } from '~helpers/nears';
-import { formatToMs } from '~helpers/time';
-
-import { CORGI_VALIDATION_MESSAGES } from '~constants/validation/corgi';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
 
@@ -22,16 +21,14 @@ const AuctionCardPropTypes = { corgi: CorgiTypeShape.isRequired };
 const AuctionCard = ({ corgi }) => {
   const { bidding, clearing, bidForCorgi, clearanceForCorgi } = useContext(MarketplaceContext);
   const { user } = useContext(NearContext);
-  const { mintFee } = useContext(ContractContext);
 
   const { id, owner, for_sale } = corgi;
 
-  const isAuctionExpired = for_sale && for_sale.expires && Date.now() > formatToMs(for_sale.expires);
-
   const highestBid = useHighestBid(for_sale);
+  const isAuctionExpired = useIsAuctionExpired(for_sale && for_sale.expires);
 
+  const [bidNears, setBidNears] = useState(0);
   const [minBid, setMinBid] = useState(0);
-  const [bidNears, setBidNears] = useState(mintFee);
 
   const [isErrorShown, setIsErrorShown] = useState(false);
 
@@ -39,15 +36,19 @@ const AuctionCard = ({ corgi }) => {
 
   const handleNears = (amount) => {
     setBidNears(amount);
+
+    if (Big(minBid).gt(amount)) {
+      setIsErrorShown(true);
+    }
   };
 
   const onBid = (event) => {
     event.preventDefault();
 
-    if (bidNears <= minBid) {
-      setIsErrorShown(true);
+    if (Big(bidNears).gt(minBid)) {
+      bidForCorgi(id, existedBid ? Big(bidNears).minus(existedBid).toFixed() : bidNears);
     } else {
-      bidForCorgi(id, existedBid ? formatToNears(existedBid.amount) - bidNears : bidNears);
+      setIsErrorShown(true);
     }
   };
 
@@ -90,7 +91,7 @@ const AuctionCard = ({ corgi }) => {
 
       {highestBid && (
         <div className='auction-card__highest-bid'>
-          <HighestBid bid={highestBid} />
+          <HighestBid bid={highestBid} isExpired={isAuctionExpired} />
         </div>
       )}
 
@@ -105,7 +106,6 @@ const AuctionCard = ({ corgi }) => {
                   value={bidNears}
                   min={minBid}
                   showError={isErrorShown}
-                  error={highestBid ? CORGI_VALIDATION_MESSAGES.BID : CORGI_VALIDATION_MESSAGES.NEARS}
                 />
               </div>
 
@@ -119,11 +119,23 @@ const AuctionCard = ({ corgi }) => {
         </>
       )}
 
-      {!isAuctionExpired && existedBid && bidNears > minBid && <BidDifference existed={existedBid} bid={bidNears} />}
-
-      {isAuctionExpired && user && user.accountId === owner && (
-        <>{!clearing ? <Button description='Finish auction' action={onClearance} /> : <BasicSpinner />}</>
+      {!isAuctionExpired && existedBid && Big(bidNears).gt(existedBid) && (
+        <BidDifference existed={existedBid} bid={bidNears} />
       )}
+
+      {user &&
+        (!clearing ? (
+          user.accountId === owner && isAuctionExpired ? (
+            <Button description={'Finish auction'} action={onClearance} />
+          ) : (
+            existedBid &&
+            !(highestBid && user.accountId === highestBid.bidder) && (
+              <Button description={'Claim my bid back'} action={onClearance} />
+            )
+          )
+        ) : (
+          <BasicSpinner />
+        ))}
 
       <div className='auction-card__history'>
         <BidHistory bids={for_sale.bids} />
