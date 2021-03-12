@@ -59,6 +59,12 @@ $padding-dropdown-item-tight: 0.25rem;
 $padding-dropdown-item-semi-tight: $padding-dropdown-item-tight $padding-dropdown-item-tight * 3;
 $padding-dropdown-item: $padding-dropdown-item-tight 1.5rem;
 
+$padding-poster: 0 1rem;
+$margin-poster: 0;
+$padding-poster-description: 1rem;
+$padding-poster-text: 0;
+$margin-poster-text: 1rem 0;
+
 $padding-minting-form: 1rem;
 $padding-minting-description-list: 1rem;
 $padding-minting-screen: 4rem 0;
@@ -82,6 +88,11 @@ $border-radius-dropdown-list: 0 0 $border-radius-basic $border-radius-basic;
 // shadows
 
 // fonts
+
+$poster-text-font-size: 2em;
+$poster-text-font-weight: 500;
+$poster-text-font-size-small: 1em;
+$poster-text-font-weight-small: 300;
 
 // transition
 

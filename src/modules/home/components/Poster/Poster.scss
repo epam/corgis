@@ -6,8 +6,8 @@
 
   width: 100%;
 
-  margin: 0;
-  padding: 0 1rem;
+  margin: $margin-poster;
+  padding: $padding-poster;
 
   border-radius: $border-radius-big;
 
@@ -19,25 +19,25 @@
     @include bootstrap-col(lg, 4);
     @include dis-flex-column(space-evenly, center);
 
-    padding: 1rem;
+    padding: $padding-poster-description;
 
     box-sizing: border-box;
   }
 
   &__text {
-    margin: 1rem 0;
-    padding: 0;
+    margin: $margin-poster-text;
+    padding: $padding-poster-text;
 
-    color: #24272a;
+    color: $text-color-dark;
 
-    font-size: 2em;
-    font-weight: 500;
+    font-size: $poster-text-font-size;
+    font-weight: $poster-text-font-weight;
 
     letter-spacing: 1px;
 
     &--small {
-      font-size: 1em;
-      font-weight: 300;
+      font-size: $poster-text-font-size-small;
+      font-weight: $poster-text-font-weight-small;
     }
   }
 
