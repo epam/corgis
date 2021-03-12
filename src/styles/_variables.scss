@@ -43,6 +43,11 @@ $minting-link-size-big: 4rem;
 
 $colorpicker-size: 3rem;
 
+$footer-height: 6.5rem;
+$footer-width: 100%;
+
+$watermark-divider-height: 1.25em;
+
 $minting-animation-height: 30rem;
 $minting-animation-width: 100%;
 
@@ -58,6 +63,16 @@ $padding-infotile: $padding-button;
 $padding-dropdown-item-tight: 0.25rem;
 $padding-dropdown-item-semi-tight: $padding-dropdown-item-tight $padding-dropdown-item-tight * 3;
 $padding-dropdown-item: $padding-dropdown-item-tight 1.5rem;
+
+$padding-footer: $padding-page;
+$margin-footer: 1rem 0 0;
+$padding-footer-item: 0;
+$padding-footer-description: 0 1rem;
+
+$margin-community: 0;
+
+$padding-watermark: 1rem;
+$margin-watermark-divider: 0 0.25rem;
 
 $padding-nav: 0.5rem 0 0.5rem 1rem;
 $padding-header: 1rem 0;
@@ -91,6 +106,14 @@ $border-radius-dropdown-list: 0 0 $border-radius-basic $border-radius-basic;
 // shadows
 
 // fonts
+
+$footer-font-family: Inter, 'Poppins', sans-serif;
+$footer-font-size: 0.75rem;
+$footer-font-weight: 300;
+
+$community-font-size: 1.125rem;
+$community-line-height: 1.15em;
+$community-font-weight: 600;
 
 $nav-font-size: 1em;
 
