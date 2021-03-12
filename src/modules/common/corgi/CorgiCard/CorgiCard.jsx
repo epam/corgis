@@ -16,7 +16,7 @@ import {
   RarityString,
 } from '~modules/common/corgi';
 
-import { useHighestBid } from '~hooks';
+import { useHighestBid, useIsAuctionExpired } from '~hooks';
 
 import { SAUSAGE } from '~constants/corgi';
 
@@ -33,6 +33,7 @@ const CorgiCard = ({ corgi, hideActions = false, big = false, showAuctionInfo = 
   const { id, background_color, color, quote, name, rate, owner, sender, created, modified, for_sale } = corgi;
 
   const highestBid = useHighestBid(for_sale);
+  const isAuctionExpired = useIsAuctionExpired(for_sale && for_sale.expires);
 
   return (
     <div className={classNames('corgi-card', { 'corgi-card--big': big })}>
@@ -58,7 +59,7 @@ const CorgiCard = ({ corgi, hideActions = false, big = false, showAuctionInfo = 
       <div className='corgi-card__footer'>
         {showAuctionInfo && for_sale ? (
           <>
-            {highestBid && <HighestBid bid={highestBid} />}
+            {highestBid && <HighestBid bid={highestBid} isExpired={isAuctionExpired} />}
             <hr className='corgi-card__hr' />
             <AuctionTimer expires={for_sale.expires} />
           </>
