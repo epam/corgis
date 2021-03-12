@@ -43,6 +43,9 @@ $minting-link-size-big: 4rem;
 
 $colorpicker-size: 3rem;
 
+$minting-animation-height: 30rem;
+$minting-animation-width: 100%;
+
 // margins and paddings
 
 $padding-page: 0 5%;
@@ -55,6 +58,10 @@ $padding-infotile: $padding-button;
 $padding-dropdown-item-tight: 0.25rem;
 $padding-dropdown-item-semi-tight: $padding-dropdown-item-tight $padding-dropdown-item-tight * 3;
 $padding-dropdown-item: $padding-dropdown-item-tight 1.5rem;
+
+$padding-minting-form: 1rem;
+$padding-minting-description-list: 1rem;
+$padding-minting-screen: 4rem 0;
 
 // gaps
 

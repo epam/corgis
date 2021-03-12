@@ -4,7 +4,7 @@
 .minting-description {
   @include fill-parent;
 
-  padding: 1rem;
+  padding: $padding-minting-form;
 
   border-radius: $border-radius-big;
 
@@ -15,7 +15,7 @@
 
     height: 100%;
 
-    padding-left: 1rem;
+    padding-left: $padding-minting-description-list;
 
     list-style-type: disc;
   }

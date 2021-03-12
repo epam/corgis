@@ -5,7 +5,7 @@
   @include dis-flex-column(space-between, stretch);
   @include fill-parent;
 
-  padding: 0.5rem;
+  padding: $padding-minting-form;
 
   border-radius: $border-radius-big;
 
@@ -39,6 +39,10 @@
     font-size: 1rem;
 
     cursor: pointer;
+
+    &:hover {
+      background-color: lighten($color-black, 15%);
+    }
   }
 
   &__colorpicker {
