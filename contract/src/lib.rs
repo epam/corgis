@@ -29,17 +29,22 @@ const MINT_FEE: u128 = include!(concat!(env!("OUT_DIR"), "/mint_fee.val"));
 /// Indicates how many Corgi are returned at most in the `get_global_corgis` method.
 const PAGE_LIMIT: u32 = include!(concat!(env!("OUT_DIR"), "/page_limit.val"));
 
+/// Keys used to identify our structures within the NEAR blockchain.
 const CORGIS: &[u8] = b"a";
 const CORGIS_BY_OWNER: &[u8] = b"b";
 const CORGIS_BY_OWNER_PREFIX: &str = "B";
 const AUCTIONS: &[u8] = b"d";
 const AUCTIONS_PREFIX: &str = "D";
 
+/// Holds our data model.
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
+    /// A mapping from `CorgiKey` to `Corgi` to have quick access to corgis.
     corgis: Dict<CorgiKey, Corgi>,
+    /// Represents which account holds which `Corgi`.
     corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiKey, ()>>,
+    /// Internal structure to store auctions for a given corgi.
     auctions: UnorderedMap<CorgiKey, (Dict<AccountId, (Balance, u64)>, u64)>,
 }
 
@@ -139,6 +144,7 @@ impl Model {
         self.delete_corgi_from(id, owner);
     }
 
+    /// Deletes the given corgi with `id` and owned by `owner`.
     fn delete_corgi_from(&mut self, id: CorgiId, owner: AccountId) {
         match self.corgis_by_owner.get(&owner) {
             None => env::panic("You do not have corgis to delete from".as_bytes()),
@@ -194,6 +200,8 @@ impl Model {
         self.move_corgi(key, id, sender, receiver, corgi)
     }
 
+    /// Returns all `Corgi`s currently for sale.
+    /// That is, all `Corgi`s which are in auction.
     pub fn get_items_for_sale(&self) -> Vec<CorgiDTO> {
         let mut result = Vec::new();
         for (key, item) in self.auctions.iter() {
@@ -206,6 +214,8 @@ impl Model {
         result
     }
 
+    /// Puts the given `Corgi` for sale.
+    /// `duration` indicates for how long the auction should last, in seconds.
     pub fn add_item_for_sale(&mut self, token_id: CorgiId, duration: u32) -> U64 {
         let (key, corgi) = self.get_corgi(&token_id);
         if corgi.owner != env::predecessor_account_id() {
@@ -223,6 +233,9 @@ impl Model {
         }
     }
 
+    /// Makes a bid for a `Corgi` already in auction.
+    /// This is a `payable` method, meaning the contract will escrow the `attached_deposit`
+    /// until the auction ends.
     #[payable]
     pub fn bid_for_item(&mut self, token_id: CorgiId) {
         let (key, mut bids, auction_ends) = self.get_auction(&token_id);
@@ -248,6 +261,9 @@ impl Model {
         self.auctions.insert(&key, &(bids, auction_ends));
     }
 
+    /// Makes a clearance for the given `Corgi`.
+    /// Only the corgi `owner` or the highest bidder can end an auction after it expires.
+    /// All other bidders can get their money back when calling this method.
     pub fn clearance_for_item(&mut self, token_id: CorgiId) {
         let (key, mut bids, auction_ends) = self.get_auction(&token_id);
         let corgi = {
@@ -291,6 +307,7 @@ impl Model {
         }
     }
 
+    /// Internal method to transfer a corgi.
     fn move_corgi(
         &mut self,
         key: CorgiKey,
@@ -307,6 +324,7 @@ impl Model {
         self.push_corgi(key, corgi);
     }
 
+    /// Gets the `Corgi` with `id`.
     fn get_corgi(&self, id: &CorgiId) -> (CorgiKey, Corgi) {
         let key = decode(id);
         match self.corgis.get(&key) {
@@ -318,6 +336,7 @@ impl Model {
         }
     }
 
+    /// Gets auction information for the `Corgi` with `token_id` or panics.
     fn get_auction(&self, token_id: &CorgiId) -> (CorgiKey, Dict<AccountId, (u128, u64)>, u64) {
         let key = decode(&token_id);
         match self.auctions.get(&key) {
@@ -326,6 +345,7 @@ impl Model {
         }
     }
 
+    /// Gets sale information for a given `Corgi`.
     fn get_for_sale(&self, key: CorgiKey, corgi: Corgi) -> CorgiDTO {
         match self.auctions.get(&key) {
             None => CorgiDTO::new(corgi),
@@ -333,6 +353,7 @@ impl Model {
         }
     }
 
+    /// Inserts a `Corgi` into the top the dictionary.
     fn push_corgi(&mut self, key: CorgiKey, corgi: Corgi) -> Corgi {
         env::log("push_corgi".as_bytes());
 
@@ -351,6 +372,7 @@ impl Model {
         corgi
     }
 
+    /// Ensures the given `Corgi` with `key` is not for sale.
     fn panic_if_corgi_is_locked(&self, key: CorgiKey) {
         if self.auctions.get(&key).is_some() {
             env::panic("Corgi is currently locked".as_bytes());
