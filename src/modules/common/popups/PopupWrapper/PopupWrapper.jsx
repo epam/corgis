@@ -7,7 +7,7 @@ import { useDetectClickOutside } from '~hooks/';
 import { Popup } from '~modules/common';
 
 import { PopupTypeShape } from '~types/PopupTypes';
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenTypes';
 
 const PopupWrapperPropTypes = {
   popup: PopupTypeShape,

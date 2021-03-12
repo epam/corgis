@@ -15,10 +15,11 @@ import {
   CLEAR_STATE,
 } from './types';
 
+import { parseNears } from '~helpers/nears';
+
 import { AUCTION_DURATION, BOATLOAD_OF_GAS } from '~constants/corgi';
 
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
-import { parseNears } from '~helpers/nears';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenTypes';
 
 export const MarketplaceContext = React.createContext(initialMarketplaceState);
 

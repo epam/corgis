@@ -8,7 +8,7 @@ import { v4 as uuid } from 'uuid';
 
 import { useDetectClickOutside } from '~hooks';
 
-import { ReactChildrenType } from '~types/ReactChildrenType';
+import { ReactChildrenType } from '~types/ReactChildrenTypes';
 import StylesType from '~types/StylesType';
 import DropdownItem from './DropdownItem';
 

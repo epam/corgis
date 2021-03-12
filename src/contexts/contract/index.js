@@ -23,7 +23,7 @@ import { parseNears } from '~helpers/nears';
 
 import { BOATLOAD_OF_GAS } from '~constants/corgi';
 
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenTypes';
 
 export const ContractContext = React.createContext(initialContractState);
 
