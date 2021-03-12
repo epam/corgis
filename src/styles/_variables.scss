@@ -36,12 +36,39 @@ $button-background-color-disabled: $color-gray;
 $dropdown-item-background-color: $color-white;
 $dropdown-item-background-color-hover: $color-gray-light;
 
+$corgi-card-header-background-color: transparent;
+
 // component sizes
 
 $minting-link-size: 2.5rem;
 $minting-link-size-big: 4rem;
 
 $colorpicker-size: 3rem;
+
+$dropdown-arrow-wrapper-size: 24px;
+
+$input-error-width: max-content;
+$input-error-max-width: 25rem;
+
+$popup-width: max-content;
+$popup-max-width: 17.5rem;
+
+$corgi-spinner-wrapper-width: 100%;
+$corgi-spinner-wrapper-max-width: 100%;
+
+$corgi-spinner-size: 6rem;
+$corgi-spinner-gradient-size: 150%;
+$corgi-spinner-gradient-after-size: 50%;
+$corgi-spinner-image-size: 75%;
+
+$egg-shadow-width: 147px;
+
+$corgi-rate-max-width: 15rem;
+
+$corgi-card-image-height: 10rem;
+$corgi-card-image-big-height: $corgi-card-image-height * 2;
+
+$corgi-anim-size: 10rem;
 
 $auction-card-max-width: 30rem;
 
@@ -69,6 +96,37 @@ $padding-button-square: 0.25rem;
 $padding-button: $padding-button-square 1.5rem;
 
 $padding-infotile: $padding-button;
+
+$colorpicker-title-margin: 0 0 0 1rem;
+
+$input-error-padding: 0.5rem;
+$input-error-margin: 0;
+
+$corgi-spinner-padding: 3rem 0;
+$corgi-spinner-margin: 3.5rem auto;
+$corgi-spinner-image-margin: 0;
+
+$egg-svg-margin: 0;
+$egg-svg-with-shadow-margin-bottom: 10px;
+
+$showcase-title-margin-bottom: 0.5rem;
+
+$corgi-rate-margin-bottom: 0.5rem;
+
+$corgi-card-image-padding: 1rem;
+$corgi-card-footer-padding: 0.5rem 1rem;
+
+$highest-bid-title-margin-bottom: 0.15rem;
+$highest-bid-info-padding-left: 1.25rem;
+$highest-bid-separator-margin: 0 0.5rem;
+
+$bid-amount-popup-padding: 0.25rem;
+$bid-amount-icon-margin-left: 0.25rem;
+
+$auction-timer-title-margin-bottom: 0.15rem;
+
+$transfer-input-margin: 0 0.25rem 0 0;
+$transfer-submit-margin: 0 0 0 0.25rem;
 
 $padding-dropdown-item-tight: 0.25rem;
 $padding-dropdown-item-semi-tight: $padding-dropdown-item-tight $padding-dropdown-item-tight * 3;
@@ -130,7 +188,27 @@ $border-radius-dropdown-list: 0 0 $border-radius-basic $border-radius-basic;
 
 // shadows
 
+$input-field-box-shadow: inset 0 0 0.25rem 1px $color-red;
+
 // fonts
+
+$rarity-font-size: 0.85em;
+$rarity-font-weight: 500;
+
+$quote-font-size: 1rem;
+
+$showcase-title-font-size: 1.2rem;
+$showcase-title-font-weight: 500;
+
+$corgi-rate-font-weight: 500;
+
+$corgi-card-font-size: 1.25em;
+$corgi-card-font-weight: 500;
+
+$button-font-weight: 600;
+$button-letter-spacing: 0;
+
+$colorpicker-title-font-weight: 600;
 
 $bid-history-empty-font-size: 1rem;
 $bid-history-empty-font-weight: 500;

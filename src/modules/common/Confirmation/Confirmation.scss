@@ -4,14 +4,6 @@
   @include dis-flex(space-between, center);
 
   &__button {
-    margin: 0 0.5rem;
-
-    &:first-child {
-      margin-left: 0;
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
+    @include margin-between(0.5rem, row);
   }
 }

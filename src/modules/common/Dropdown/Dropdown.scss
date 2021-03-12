@@ -34,7 +34,7 @@
   }
 
   &__arrow-wrapper {
-    @include basicSquare(24px);
+    @include basicSquare($dropdown-arrow-wrapper-size);
 
     transform: scale(0.5);
     transform-origin: right;

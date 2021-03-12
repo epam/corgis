@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './NearIcon.scss';
-
 const NearIconPropTypes = {
   size: PropTypes.string,
   color: PropTypes.string,

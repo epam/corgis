@@ -12,12 +12,9 @@
 
   &__popup {
     @include dis-flex(flex-start, center);
+    @include absolute-bottom-left(100%, -$bid-amount-popup-padding);
 
-    position: absolute;
-    bottom: 100%;
-    left: -0.25rem;
-
-    padding: 0.25rem;
+    padding: $bid-amount-popup-padding;
 
     border: $border-basic-gray;
     border-radius: $border-radius-basic;
@@ -33,7 +30,7 @@
   &__icon {
     @include flex-center;
 
-    margin-left: 0.25rem;
+    margin-left: $bid-amount-icon-margin-left;
   }
 
   &__info:hover {

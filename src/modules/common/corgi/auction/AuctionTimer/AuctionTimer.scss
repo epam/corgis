@@ -1,11 +1,12 @@
 @import 'classes';
 @import 'mixins';
+@import 'variables';
 
 .auction-timer {
   &__title {
     @extend .page-title;
 
-    margin-bottom: 0.15rem;
+    margin-bottom: $auction-timer-title-margin-bottom;
   }
 
   &__time {

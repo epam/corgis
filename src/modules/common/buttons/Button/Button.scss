@@ -11,9 +11,9 @@
   background-color: $button-background-color;
   color: $button-text-color;
 
-  font-weight: 600;
+  font-weight: $button-font-weight;
 
-  letter-spacing: 0;
+  letter-spacing: $button-letter-spacing;
   white-space: nowrap;
 
   box-sizing: border-box;
