@@ -19,6 +19,8 @@ use near_sdk::{
     AccountId, Balance, Promise,
 };
 use std::{convert::TryInto, mem::size_of, usize};
+use corgi::Bids;
+use corgi::Auction;
 
 #[global_allocator]
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
@@ -50,12 +52,10 @@ pub struct Model {
     /// The inner `Dict` acts as a set, since it is mapped to `()`.
     corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiKey, ()>>,
     /// Internal structure to store auctions for a given corgi.
-    /// It is a mapping from `CorgiKey` to a tuple.
-    /// The first component of the tuple is a `Dict`, which represents the bids for that corgi.
-    /// Each entry in this `Dict` maps the bidder (`AccountId`) to the bid price and bidding timestamp.
-    /// The seconds component of the tuple represents the expiration of the auction,
-    /// as a timestamp in nanoseconds.
-    auctions: UnorderedMap<CorgiKey, (Dict<AccountId, (Balance, u64)>, u64)>,
+    /// It is a mapping from `CorgiKey` to an `Auction` tuple that keeps
+    /// all bids for that corgi, the expiration of the auction,
+    /// as a timestamp in nanoseconds and "Buy now" price, in yoctoNEAR.
+    auctions: UnorderedMap<CorgiKey, Auction>,
 }
 
 impl Default for Model {
@@ -235,7 +235,7 @@ impl Model {
 
     /// Puts the given `Corgi` for sale.
     /// The `duration` indicates for how long the auction should last, in seconds.
-    pub fn add_item_for_sale(&mut self, token_id: CorgiId, duration: u32) -> U64 {
+    pub fn add_item_for_sale(&mut self, token_id: CorgiId, duration: u32, buy_now_price: Balance) -> U64 {
         let (key, corgi) = self.get_corgi(&token_id);
         if corgi.owner != env::predecessor_account_id() {
             env::panic("Only token owner can add item for sale".as_bytes())
@@ -244,7 +244,7 @@ impl Model {
         if let None = self.auctions.get(&key) {
             let bids = Dict::new(get_collection_key(AUCTIONS_PREFIX, token_id));
             let expires = env::block_timestamp() + duration as u64 * 1_000_000_000;
-            self.auctions.insert(&key, &(bids, expires));
+            self.auctions.insert(&key, &(bids, expires, buy_now_price));
 
             U64(expires)
         } else {
@@ -257,7 +257,7 @@ impl Model {
     /// until the auction ends.
     #[payable]
     pub fn bid_for_item(&mut self, token_id: CorgiId) {
-        let (key, mut bids, auction_ends) = self.get_auction(&token_id);
+        let (key, mut bids, auction_ends, buy_now_price) = self.get_auction(&token_id);
         let bidder = env::predecessor_account_id();
 
         if bidder == self.corgis.get(&key).expect("Corgi not found").owner {
@@ -277,14 +277,14 @@ impl Model {
 
         bids.remove(&bidder);
         bids.push_front(&bidder, (price, env::block_timestamp()));
-        self.auctions.insert(&key, &(bids, auction_ends));
+        self.auctions.insert(&key, &(bids, auction_ends, buy_now_price));
     }
 
     /// Makes a clearance for the given `Corgi`.
     /// Only the corgi `owner` or the highest bidder can end an auction after it expires.
     /// All other bidders can get their money back when calling this method.
     pub fn clearance_for_item(&mut self, token_id: CorgiId) {
-        let (key, mut bids, auction_ends) = self.get_auction(&token_id);
+        let (key, mut bids, auction_ends, _) = self.get_auction(&token_id);
         let corgi = {
             let corgi = self.corgis.get(&key);
             assert!(corgi.is_some());
@@ -356,11 +356,11 @@ impl Model {
     }
 
     /// Gets auction information for the `Corgi` with `token_id` or panics.
-    fn get_auction(&self, token_id: &CorgiId) -> (CorgiKey, Dict<AccountId, (u128, u64)>, u64) {
+    fn get_auction(&self, token_id: &CorgiId) -> (CorgiKey, Bids, u64, Balance) {
         let key = decode(&token_id);
         match self.auctions.get(&key) {
             None => env::panic("Corgi is not available for sale".as_bytes()),
-            Some((bids, expires)) => (key, bids, expires),
+            Some((bids, expires, buy_now_price)) => (key, bids, expires, buy_now_price),
         }
     }
 
