@@ -153,7 +153,7 @@ impl CorgiDTO {
 
     /// Creates a new `CorgiDTO` from an existing `Corgi`, using the provided sale information.
     pub fn for_sale(corgi: Corgi, item: Auction) -> CorgiDTO {
-            let bids = item
+        let bids = item
             .0
             .into_iter()
             .map(|(bidder, (amount, timestamp))| Bid::new(bidder, amount, timestamp))
