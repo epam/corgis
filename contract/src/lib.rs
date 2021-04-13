@@ -19,8 +19,7 @@ use near_sdk::{
     AccountId, Balance, Promise,
 };
 use std::{convert::TryInto, mem::size_of, usize};
-use corgi::Bids;
-use corgi::Auction;
+use corgi::{Auction, Bids};
 
 #[global_allocator]
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
@@ -259,8 +258,10 @@ impl Model {
     pub fn bid_for_item(&mut self, token_id: CorgiId) {
         let (key, mut bids, auction_ends, buy_now_price) = self.get_auction(&token_id);
         let bidder = env::predecessor_account_id();
+        let corgi = self.corgis.get(&key).expect("Corgi not found");
+        let owner = corgi.owner.clone();
 
-        if bidder == self.corgis.get(&key).expect("Corgi not found").owner {
+        if bidder == owner {
             env::panic("You cannot bid for your own Corgi".as_bytes())
         }
 
@@ -270,14 +271,27 @@ impl Model {
 
         let price = env::attached_deposit() + bids.get(&bidder).map(|(p, _)| p).unwrap_or_default();
 
-        let top_price = bids.into_iter().next().map(|(_, (p, _))| p).unwrap_or(0);
-        if price <= top_price {
-            panic!("Bid {} does not cover top bid {}", price, top_price)
-        }
+        if buy_now_price > 0 && price >= buy_now_price {
 
-        bids.remove(&bidder);
-        bids.push_front(&bidder, (price, env::block_timestamp()));
-        self.auctions.insert(&key, &(bids, auction_ends, buy_now_price));
+            self.auctions.remove(&key);
+            bids.remove(&bidder);
+            self.move_corgi(key, token_id, owner.clone(), bidder, corgi);
+            Promise::new(owner).transfer(price);
+
+            let it = bids.into_iter();
+            for (receiver, (amount, _)) in it {
+                Promise::new(receiver).transfer(amount);
+            }
+        } else {
+            let top_price = bids.into_iter().next().map(|(_, (p, _))| p).unwrap_or(0);
+            if price <= top_price {
+                panic!("Bid {} does not cover top bid {}", price, top_price)
+            }
+
+            bids.remove(&bidder);
+            bids.push_front(&bidder, (price, env::block_timestamp()));
+            self.auctions.insert(&key, &(bids, auction_ends, buy_now_price));
+        }
     }
 
     /// Makes a clearance for the given `Corgi`.

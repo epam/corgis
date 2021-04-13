@@ -942,3 +942,140 @@ fn delete_an_item_for_sale_should_panic() {
         contract.delete_corgi(token_id);
     });
 }
+
+#[test]
+fn add_item_for_sale_with_buy_now_price() {
+    init_test().run_as(alice(), |contract| {
+        let token_id = contract.create_test_corgi(42).id.clone();
+        let auction_ends = contract.add_item_for_sale(token_id.clone(), DURATION, 100001000);
+
+        assert_eq!(contract.get_items_for_sale()[0].id, token_id);
+        assert_eq!(
+            contract.get_items_for_sale()[0].for_sale.as_ref().unwrap(),
+            &ForSale {
+                bids: vec!(),
+                expires: auction_ends,
+                buy_now_price: U128(100001000),
+            }
+            );
+    });
+ }
+
+#[test]
+fn buy_now_bid_trigger_clearance() {
+    let mut token_id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            token_id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(token_id.clone(), DURATION, 400);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 400;
+            contract.bid_for_item(token_id.clone());
+
+            assert_eq!(contract.get_items_for_sale(), vec!());
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).owner, bob());
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).for_sale, None);
+        });
+}
+
+#[test]
+fn buy_now_bid_into_two_steps_trigger_clearance() {
+    let mut token_id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            token_id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(token_id.clone(), DURATION, 400);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 300;
+            contract.bid_for_item(token_id.clone());
+        })
+        .run_as(diana(), |contract| {
+            contract.context.attached_deposit = 301;
+            contract.bid_for_item(token_id.clone());
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 300;
+            contract.bid_for_item(token_id.clone());
+
+            assert_eq!(contract.get_items_for_sale(), vec!());
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).owner, bob());
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).for_sale, None);
+        });
+}
+
+#[test]
+fn buy_now_not_reach_then_auction_continue() {
+    let mut token_id = String::new();
+    let mut auction_ends = U64(0);
+    init_test()
+        .run_as(alice(), |contract| {
+            token_id = contract.create_test_corgi(42).id.clone();
+            auction_ends = contract.add_item_for_sale(token_id.clone(), DURATION, 400);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 300;
+            contract.bid_for_item(token_id.clone());
+
+            assert_eq!(contract.get_items_for_sale()[0].id, token_id);
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).owner, alice());
+            assert_eq!(
+                contract.get_corgi_by_id(token_id.clone()).for_sale.as_ref().unwrap(),
+                &ForSale {
+                    bids: vec![
+                        Bid::new(bob(), 300, contract.context.block_timestamp),
+                    ],
+                    expires: auction_ends,
+                    buy_now_price: U128(400),
+                }
+            );
+        });
+}
+
+#[test]
+fn auto_clearance_return_bids_to_participants() {
+    let mut token_id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            token_id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(token_id.clone(), DURATION, 400);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 300;
+            contract.bid_for_item(token_id.clone());
+        })
+        .run_as(charlie(), |contract| {
+            contract.context.attached_deposit = 360;
+            contract.bid_for_item(token_id.clone());
+        })
+        .run_as(diana(), |contract| {
+            contract.context.attached_deposit = 420;
+            contract.bid_for_item(token_id.clone());
+
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).owner, diana());
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).for_sale, None);
+
+            // TODO
+            // check_balance!(diana(), 100_000 - 420);
+            // check_balance!(charlie(), 100_000);
+            // check_balance!(bob(), 100_000);
+        });
+}
+
+#[test]
+#[should_panic(expected = "Corgi is not available for sale")]
+fn bid_after_buy_now_should_panic() {
+    let mut token_id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            token_id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(token_id.clone(), DURATION, 400);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 400;
+            contract.bid_for_item(token_id.clone());
+            contract.context.attached_deposit = 410;
+            contract.bid_for_item(token_id.clone());
+        });
+}
