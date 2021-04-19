@@ -23,12 +23,17 @@ pub type CorgiId = String;
 /// to the bid price and bidding timestamp.
 pub type Bids = Dict<AccountId, (Balance, u64)>;
 
-/// Internal structure to store auction.
-/// The first component of the tuple represents the bids for that corgi.
-/// The seconds component of the tuple represents the expiration of the auction,
-/// as a timestamp in nanoseconds.
-/// The third component of the tuple represents "Buy now" price, in yoctoNEAR.
-pub type Auction = (Bids, u64, Balance);
+/// Internal structure to store an auction.
+#[derive(BorshDeserialize, BorshSerialize)]
+pub struct Auction {
+    /// The bids collection for that corgi.
+    pub bids: Bids,
+    /// The expiration of the auction,
+    /// as a timestamp in nanoseconds.
+    pub expiration: u64,
+    /// The "Buy now" price, in yoctoNEAR.
+    pub immediate_price: Balance,
+}
 
 /// Represents a `Corgi` together with auction information.
 /// In addition, we implement both `PartialEq` and `Debug` traits,
@@ -154,7 +159,7 @@ impl CorgiDTO {
     /// Creates a new `CorgiDTO` from an existing `Corgi`, using the provided sale information.
     pub fn for_sale(corgi: Corgi, item: Auction) -> CorgiDTO {
         let bids = item
-            .0
+            .bids
             .into_iter()
             .map(|(bidder, (amount, timestamp))| Bid::new(bidder, amount, timestamp))
             .collect::<Vec<Bid>>();
@@ -162,8 +167,8 @@ impl CorgiDTO {
             corgi,
             for_sale: Some(ForSale {
                 bids,
-                expires: U64(item.1),
-                buy_now_price: U128(item.2),
+                expires: U64(item.expiration),
+                buy_now_price: U128(item.immediate_price),
             }),
         }
     }

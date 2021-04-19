@@ -241,11 +241,15 @@ impl Model {
         }
 
         if let None = self.auctions.get(&key) {
-            let bids = Dict::new(get_collection_key(AUCTIONS_PREFIX, token_id));
-            let expires = env::block_timestamp() + duration as u64 * 1_000_000_000;
-            self.auctions.insert(&key, &(bids, expires, buy_now_price));
+            let auction_ends = env::block_timestamp() + duration as u64 * 1_000_000_000;
+            self.auctions.insert(&key,
+                                 &Auction {
+                                    bids: Dict::new(get_collection_key(AUCTIONS_PREFIX, token_id)),
+                                    expiration: auction_ends,
+                                    immediate_price: buy_now_price,
+                                 });
 
-            U64(expires)
+            U64(auction_ends)
         } else {
             env::panic("Corgi already for sale".as_bytes());
         }
@@ -290,8 +294,13 @@ impl Model {
 
             bids.remove(&bidder);
             bids.push_front(&bidder, (price, env::block_timestamp()));
-            self.auctions.insert(&key, &(bids, auction_ends, buy_now_price));
-        }
+            self.auctions.insert(&key,
+                                 &Auction {
+                                    bids: bids,
+                                    expiration: auction_ends,
+                                    immediate_price: buy_now_price,
+                                 });
+}
     }
 
     /// Makes a clearance for the given `Corgi`.
@@ -374,7 +383,7 @@ impl Model {
         let key = decode(&token_id);
         match self.auctions.get(&key) {
             None => env::panic("Corgi is not available for sale".as_bytes()),
-            Some((bids, expires, buy_now_price)) => (key, bids, expires, buy_now_price),
+            Some(auction) => (key, auction.bids, auction.expiration, auction.immediate_price),
         }
     }
 
